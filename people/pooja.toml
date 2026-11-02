@@ -1,0 +1,28 @@
+id = "pooja"
+number = 30
+name = "Pooja"
+age = 35
+job = "Agency video editor"
+profile = "study/profiles/media/video-editor.md"
+status = "draft"
+
+[situation]
+place = "At an agency workstation"
+hands = "Keyboard and mouse"
+time = "Evening, the client review is in an hour"
+device = "Agency workstation"
+mood = "Under pressure, practical."
+
+[habits]
+reads = "Reads what she needs, skips the rest."
+words = ["ad", "format", "export", "cut"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

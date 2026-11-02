@@ -10,3 +10,18 @@ Get a JPG copy of it, smaller than the original, saved on your device.
 """
 files = [{ name = "photo.png", kind = "photo", width = 1600, height = 1200 }]
 done = { download_ext = ["jpg", "jpeg"], smaller_than_input = true }
+
+[[task]]
+id = "batch-webp"
+story = """
+Five product photos are on your device, and the website only takes WEBP images.
+Turn all five into WEBP and save them.
+"""
+files = [
+  { name = "product-1.png", kind = "photo", width = 1000, height = 1000 },
+  { name = "product-2.png", kind = "photo", width = 1000, height = 1000 },
+  { name = "product-3.png", kind = "photo", width = 1000, height = 1000 },
+  { name = "product-4.png", kind = "photo", width = 1000, height = 1000 },
+  { name = "product-5.png", kind = "photo", width = 1000, height = 1000 },
+]
+done = { download_ext = ["zip", "webp"] }

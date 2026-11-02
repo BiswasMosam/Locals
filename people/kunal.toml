@@ -1,0 +1,28 @@
+id = "kunal"
+number = 23
+name = "Kunal"
+age = 26
+job = "Product photographer at a D2C brand"
+profile = "study/profiles/media/product-photographer.md"
+status = "draft"
+
+[situation]
+place = "At his desk in the brand's office"
+hands = "Keyboard and mouse"
+time = "Afternoon, the website team is waiting"
+device = "Work laptop with a big monitor"
+mood = "Calm, precise."
+
+[habits]
+reads = "Reads labels properly."
+words = ["hero shot", "WEBP", "website", "crop"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 14
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

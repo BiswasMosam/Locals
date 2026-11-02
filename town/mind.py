@@ -11,7 +11,7 @@ DECISION = {
     "properties": {
         "thought": {"type": "string"},
         "action": {"type": "string", "enum": ["tap", "type", "set", "scroll", "back", "wait", "done", "stuck"]},
-        "target": {"type": "integer"},
+        "target": {"type": "string"},
         "text": {"type": "string"},
         "feeling": {"type": "string", "enum": ["fine", "unsure", "annoyed"]},
     },
@@ -43,9 +43,11 @@ Rules:
 - You only know what is on the screen described to you. You have never used this app before.
 - Text ending in … is where they stopped reading. They did not see the rest.
 - Choose exactly one action per turn:
-  tap (target = number), type (target = number, text = what they type), set (target = number, text = the new value, such as 40 for a slider or an option's words for a dropdown; never empty),
-  scroll, back, wait, done (the goal is reached), stuck (they cannot see any way forward).
-- "target" is the number in square brackets of the thing they use, like 4 for [4]. Use 0 for scroll, back, wait, done and stuck.
+  tap (target = letter), type (target = letter, text = what they type), set (target = letter, text = the new value, such as 40 for a slider or an option's words for a dropdown; never empty),
+  scroll, back, wait (when the screen says something is still happening, like Converting… or Loading…),
+  done (the goal is reached), stuck (they cannot see any way forward).
+- "target" is the letter in square brackets of the thing they use, like D for [D]. Use an empty string for scroll, back, wait, done and stuck.
+- Only things under "What they can tap or use" can be tapped. Lines under "What they can read" are just text on the screen.
 - "thought" is one short sentence in their own plain voice about what they are looking for or noticing. No accent, no acting.
 - If they finished, say done. If nothing on screen helps, say stuck and say what they were looking for."""
 

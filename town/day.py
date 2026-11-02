@@ -81,7 +81,8 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
 
             began = time.time()
             decision = mind.decide(system, mind.describe(screen, local, history, notes), seed + n)
-            act, target, text = decision["action"], decision.get("target"), decision.get("text", "")
+            act, text = decision["action"], decision.get("text", "")
+            target = str(decision.get("target") or "").strip("[] ").upper() or None
             thought = decision["thought"].strip()
             record = {"step": n, "screen": screen, "decision": decision}
 

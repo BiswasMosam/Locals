@@ -1,0 +1,28 @@
+id = "nisha"
+number = 28
+name = "Nisha"
+age = 23
+job = "Freelance reels editor"
+profile = "study/profiles/media/video-editor.md"
+status = "draft"
+
+[situation]
+place = "At her desk at home"
+hands = "Keyboard shortcuts, headphones on"
+time = "Late night, three reels due by morning"
+device = "A mid range laptop"
+mood = "Fast and impatient."
+
+[habits]
+reads = "Skims, relies on speed."
+words = ["export", "reel", "thumbnail", "changes"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.04
+device = "laptop"

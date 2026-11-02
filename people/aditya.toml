@@ -1,0 +1,28 @@
+id = "aditya"
+number = 29
+name = "Aditya"
+age = 29
+job = "YouTube editor for creators"
+profile = "study/profiles/media/video-editor.md"
+status = "draft"
+
+[situation]
+place = "At his desk with two screens"
+hands = "Keyboard and mouse"
+time = "Afternoon, a creator's video goes live tonight"
+device = "Desktop with two monitors"
+mood = "Steady, detail minded."
+
+[habits]
+reads = "Reads properly."
+words = ["thumbnail", "render", "timeline", "notes"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 14
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

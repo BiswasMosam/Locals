@@ -1,0 +1,28 @@
+id = "tenzin"
+number = 26
+name = "Tenzin"
+age = 32
+job = "Event videographer"
+profile = "study/profiles/media/videographer.md"
+status = "draft"
+
+[situation]
+place = "At the back of a conference hall"
+hands = "One hand on the camera, phone in the other"
+time = "Afternoon, a session is on stage"
+device = "An Android phone on silent"
+mood = "Careful, quiet."
+
+[habits]
+reads = "Reads properly when he gets a moment."
+words = ["session", "audio", "footage", "clip"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 9
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.03
+device = "phone"

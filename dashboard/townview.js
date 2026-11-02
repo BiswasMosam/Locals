@@ -11,10 +11,13 @@ const TownView = (() => {
   const SHIRTS = ['#5b8def', '#e06c75', '#98c379', '#c678dd', '#d19a66', '#56b6c2', '#e5c07b', '#ebe7dc'];
   const PARTY = ['#ffc94d', '#8fcf7a', '#5b8def', '#e06c75', '#c678dd', '#ebe7dc', '#56b6c2'];
   const WORKPLACE = { 'fabricator': 'fab', 'food-stall': 'stall', 'trial-advocate': 'court', 'junior-advocate': 'court',
-    'firm-associate': 'firm', 'in-house-counsel': 'office' };
+    'firm-associate': 'firm', 'in-house-counsel': 'office', 'wedding-photographer': 'hall', 'videographer': 'hall',
+    'product-photographer': 'studio', 'video-editor': 'studio', 'social-media-manager': 'itpark' };
   // The street from left to right. Workplaces for the families still being studied are already standing.
   const STREET = [['home', 30], ['chai', 14], ['fab', 24], ['stall', 22], ['medical', 16], ['court', 28], ['firm', 24],
-    ['office', 24], ['itpark', 28], ['studio', 20], ['hospital', 26], ['school', 24], ['factory', 28], ['site', 28], ['home2', 26]];
+    ['office', 24], ['itpark', 28], ['studio', 20], ['hall', 30], ['hospital', 26], ['school', 24], ['factory', 28], ['site', 28], ['home2', 26]];
+  // Locals 1 to 18 live in the first block of flats, 19 to 33 in the second; one window each.
+  const homeOf = number => (number <= 18 ? 'home' : 'home2');
   const TREES_AFTER = new Set(['chai', 'medical', 'studio', 'school']);
 
   const PERSON = {
@@ -109,7 +112,7 @@ const TownView = (() => {
     far = towers(0.35, 8, 18, 40, 115);
     mid = towers(0.65, 12, 24, 30, 75);
     lit = {};
-    for (const key of ['firm', 'office', 'itpark', 'hospital', 'home2']) lit[key] = Array.from({ length: 60 }, () => rand());
+    for (const key of ['firm', 'office', 'itpark', 'hospital']) lit[key] = Array.from({ length: 60 }, () => rand());
     cars = [['auto', 30, 1], ['car', 120, -1], ['bus', 200, 1], ['auto', 260, -1], ['car', 340, 1]]
       .map(([kind, cx, dir]) => ({ kind, x: cx, dir }));
   }
@@ -124,7 +127,11 @@ const TownView = (() => {
     const top = -Math.ceil(oy / p), rand = rng(21);
     stars = Array.from({ length: Math.round(view * 0.5) }, () => [rand() * view, top + 4 + Math.floor(rand() * (70 - top))]);
     cam = camTarget = clampCam(cam);
-    for (const l of locals.values()) { l.tx = slot(l); if (l.mode !== 'walk' && l.mode !== 'home') l.x = l.tx; }
+    for (const l of locals.values()) {
+      l.tx = slot(l);
+      if (l.mode === 'home') l.x = building(homeOf(l.info.number)).door;
+      else if (l.mode !== 'walk') l.x = l.tx;
+    }
   }
 
   const clampCam = c => width <= view ? (width - view) / 2 : Math.max(0, Math.min(width - view, c));
@@ -186,10 +193,24 @@ const TownView = (() => {
       }
       case 'home2':
         R(x, 40, w, 50, C.slab); R(x - 1, 38, w + 2, 2, C.slab2);
-        grid(b, 44, 3, 5, 4, 4, 4, 'home2', 0.45, C.dimLight);
+        for (let i = 0; i < 15; i++) {
+          const who = [...locals.values()].find(l => l.info.number === 19 + i);
+          const color = !who ? C.dark : who.mode === 'home' ? C.light : C.dimLight;
+          R(x + 3 + (i % 3) * 8, 44 + Math.floor(i / 3) * 8, 4, 4, color);
+        }
         for (let r = 0; r < 5; r++) R(x + 1, 49 + r * 8, w - 2, 1, C.line);
         R(door - 3, 82, 6, 8, C.slab2);
         break;
+      case 'hall': {
+        R(x, 58, w, 32, C.slab); R(x - 1, 56, w + 2, 2, C.slab2);
+        const shift = calm() ? 0 : Math.floor(t / 500);
+        for (let i = 0; i < w; i += 2) R(x + i, 55, 1, 1, ['#ff9fb2', C.light, '#ff9f43'][(i / 2 + shift) % 3]); // always a wedding somewhere
+        sign(x + 2, 60, w - 4, 'BANQUET');
+        for (let i = 0; i < 3; i++) { R(x + 3 + i * 9, 69, 6, 9, C.dimLight); R(x + 4 + i * 9, 68, 4, 1, C.dimLight); }
+        R(door - 4, 80, 8, 10, C.dimLight);
+        for (let i = 0; i < 8; i++) R(door - 4 + i, 79 + (i % 2), 1, 1, i % 2 ? '#ff9f43' : C.yellow); // marigold garland
+        break;
+      }
       case 'chai':
         R(x, 70, w, 20, C.slab); sign(x + 1, 71, w - 2, 'CHAI', 1.9);
         for (let i = 0; i < 7; i++) R(x + i * 2, 77, 2, 3, i % 2 ? C.dark : C.yellow);
@@ -512,8 +533,8 @@ const TownView = (() => {
     order = ids.filter(id => people.has(id));
     const t = now(), home = building('home').door;
     order.forEach((id, i) => {
-      const info = people.get(id);
-      locals.set(id, { id, info, place: WORKPLACE[info.group] || 'office', x: home, tx: home, mode: settled ? 'wait' : 'home',
+      const info = people.get(id), door = building(homeOf(info.number)).door;
+      locals.set(id, { id, info, place: WORKPLACE[info.group] || 'office', x: door, tx: door, mode: settled ? 'wait' : 'home',
         leaveAt: t + 400 + i * 700, active: false, bubble: null, until: 0, badge: null, shake: 0 });
     });
     for (const l of locals.values()) { l.tx = slot(l); if (settled) l.x = l.tx; }

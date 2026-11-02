@@ -1,0 +1,28 @@
+id = "riya"
+number = 31
+name = "Riya"
+age = 26
+job = "Social media manager, agency"
+profile = "study/profiles/media/social-media-manager.md"
+status = "draft"
+
+[situation]
+place = "Walking between desks at the agency"
+hands = "Phone in one hand, laptop under the arm"
+time = "Morning, a post goes out at ten"
+device = "A recent Android phone with six brands' apps"
+mood = "Juggling, quick."
+
+[habits]
+reads = "Reads the first line of everything."
+words = ["creative", "post", "approval", "calendar"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.04
+device = "phone"

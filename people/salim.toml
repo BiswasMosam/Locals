@@ -1,0 +1,28 @@
+id = "salim"
+number = 27
+name = "Salim"
+age = 38
+job = "Videography crew lead"
+profile = "study/profiles/media/videographer.md"
+status = "draft"
+
+[situation]
+place = "Next to the drone case at an outdoor venue"
+hands = "Gloves off, phone in hand"
+time = "Evening, wind picking up"
+device = "A rugged Android phone"
+mood = "Responsible for everyone's footage."
+
+[habits]
+reads = "Reads instructions carefully."
+words = ["drone", "card", "backup", "crew"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.04
+device = "phone"

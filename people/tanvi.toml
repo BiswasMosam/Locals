@@ -1,0 +1,28 @@
+id = "tanvi"
+number = 33
+name = "Tanvi"
+age = 24
+job = "Community manager"
+profile = "study/profiles/media/social-media-manager.md"
+status = "draft"
+
+[situation]
+place = "On the sofa at home, still on shift"
+hands = "Phone in both hands"
+time = "Night, comments pouring in"
+device = "A recent phone, notifications nonstop"
+mood = "Fast, a little drained."
+
+[habits]
+reads = "Skims, thumbs ahead of her eyes."
+words = ["DM", "comment", "reply", "story"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.06
+typo_rate = 0.05
+device = "phone"

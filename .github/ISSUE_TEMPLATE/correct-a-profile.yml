@@ -17,6 +17,11 @@ body:
         - Junior advocate
         - Law firm associate
         - In-house counsel
+        - Wedding photographer
+        - Product photographer
+        - Videographer
+        - Video editor
+        - Social media manager
         - A job that is not in the town yet
     validations:
       required: true

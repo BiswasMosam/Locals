@@ -1,0 +1,28 @@
+id = "joseph"
+number = 21
+name = "Joseph"
+age = 46
+job = "Neighbourhood studio photographer"
+profile = "study/profiles/media/wedding-photographer.md"
+status = "draft"
+
+[situation]
+place = "At the counter of his photo studio"
+hands = "A customer waiting at the counter"
+time = "Afternoon"
+device = "An older Android phone his nephew set up"
+mood = "Patient with customers, wary of new apps."
+
+[habits]
+reads = "Reads slowly, avoids anything that looks like settings."
+words = ["print", "album", "passport photo", "copy"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 5
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.08
+typo_rate = 0.06
+device = "phone"

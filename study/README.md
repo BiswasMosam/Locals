@@ -56,6 +56,16 @@ Five findings shape every rule below.
 | Law firm associate | Partners, redlines and timesheets | [Draft](profiles/law/firm-associate.md) |
 | In-house counsel | Colleagues who need it signed today | [Draft](profiles/law/in-house-counsel.md) |
 
+**[Media](profiles/media/README.md)**
+
+| Type | The day in one line | Profile |
+|---|---|---|
+| Wedding photographer | Follows the muhurat, not the clock; teasers the same night | [Draft](profiles/media/wedding-photographer.md) |
+| Product photographer | Batches, marketplace rules, sellers in a hurry | [Draft](profiles/media/product-photographer.md) |
+| Videographer | Gimbal in hand, every card backed up | [Draft](profiles/media/videographer.md) |
+| Video editor | A timeline, renders and rounds of revisions | [Draft](profiles/media/video-editor.md) |
+| Social media manager | The content calendar, approvals and replies, all on a phone | [Draft](profiles/media/social-media-manager.md) |
+
 **Engineering**
 
 | Type | The day in one line | Profile |

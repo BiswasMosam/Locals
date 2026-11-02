@@ -16,6 +16,8 @@ SEE = """() => {
       && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth; };
   const CONTROLS = 'a[href],button,input,select,textarea,[role=button],[role=link],[role=checkbox],[role=tab],[role=menuitem],[role=switch],[contenteditable=true]';
   document.querySelectorAll('[data-local-id]').forEach(e => e.removeAttribute('data-local-id'));
+  // Letters, not numbers: a small model reads "product-1.png" as [1] if the labels are numbers.
+  const code = i => { let s = ''; for (i += 1; i > 0; i = Math.floor((i - 1) / 26)) s = String.fromCharCode(65 + (i - 1) % 26) + s; return s; };
   const items = []; let n = 0;
   for (const el of document.querySelectorAll(CONTROLS)) {
     if (!visible(el)) continue;
@@ -28,7 +30,7 @@ SEE = """() => {
     const text = lines.join(' ');
     let hint = el.getAttribute('aria-label') || el.getAttribute('title') || el.getAttribute('placeholder') || '';
     if (!hint && el.labels && el.labels.length) hint = el.labels[0].innerText.trim();
-    const r = el.getBoundingClientRect(); const id = ++n;
+    const r = el.getBoundingClientRect(); const id = code(n++);
     el.setAttribute('data-local-id', id);
     items.push({ id, role, text: text.slice(0, 300), lines: lines.slice(0, 10).map(s => s.slice(0, 200)), hint: hint.slice(0, 160), disabled: !!el.disabled || el.getAttribute('aria-disabled') === 'true',
       active: el.classList.contains('active') || el.getAttribute('aria-pressed') === 'true' || el.getAttribute('aria-selected') === 'true',
@@ -95,8 +97,11 @@ class Web:
             elif action == "type":
                 el.fill(text, timeout=4000)
             elif action == "set":
-                if el.evaluate("e => e.tagName") == "SELECT":
+                tag = el.evaluate("e => e.tagName")
+                if tag == "SELECT":
                     el.select_option(label=text, timeout=4000)
+                elif tag not in ("INPUT", "TEXTAREA"):
+                    el.click(timeout=4000)  # "setting" a button means pressing it
                 else:
                     el.evaluate("(e, v) => { e.value = v; e.dispatchEvent(new Event('input', {bubbles: true}));"
                                 " e.dispatchEvent(new Event('change', {bubbles: true})); }", text)

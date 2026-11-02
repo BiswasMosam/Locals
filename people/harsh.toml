@@ -1,0 +1,28 @@
+id = "harsh"
+number = 25
+name = "Harsh"
+age = 27
+job = "Wedding videographer and reels"
+profile = "study/profiles/media/videographer.md"
+status = "draft"
+
+[situation]
+place = "At a wedding venue during a break"
+hands = "Gimbal on his shoulder, phone in one hand"
+time = "Night, the family wants a reel"
+device = "A recent Android phone, battery low"
+mood = "Hurried, excited."
+
+[habits]
+reads = "Skims everything."
+words = ["reel", "footage", "teaser", "card"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.07
+typo_rate = 0.05
+device = "phone"

@@ -273,3 +273,70 @@ patience = -1
 when = "pandemic:reopening"
 who = ["food-stall"]
 says = "Takeaway only, and only until the evening."
+
+# ---- Media ----
+
+[[effect]]
+when = "period:wedding-season"
+who = ["wedding-photographer", "videographer"]
+says = "It is wedding season: back to back shoots and very little sleep."
+patience = -2
+slip = 0.02
+
+[[effect]]
+when = "period:wedding-season"
+who = ["video-editor"]
+says = "Wedding season: a pile of films is waiting to be delivered."
+patience = -1
+
+[[effect]]
+when = "sunday"
+who = ["wedding-photographer", "videographer"]
+says = "Sunday means a shoot, like most weekends."
+patience = -1
+
+[[effect]]
+when = "holiday"
+who = ["social-media-manager"]
+says = "It is {holiday}: the greeting post has to go out this morning."
+patience = -1
+
+[[effect]]
+when = "festival:Diwali"
+who = ["social-media-manager"]
+says = "Diwali campaign week: posts every hour and approvals stuck with the client."
+patience = -2
+
+[[effect]]
+when = "festival:Diwali"
+who = ["product-photographer"]
+says = "Every seller wants festive catalogue shots before the sale."
+patience = -1
+
+[[effect]]
+when = "festival:Ganeshotsav"
+who = ["social-media-manager"]
+says = "Festival posts to schedule on top of the usual ones."
+patience = -1
+
+[[effect]]
+when = "festival:Navratri"
+who = ["social-media-manager"]
+says = "Festival posts to schedule on top of the usual ones."
+patience = -1
+
+[[effect]]
+when = "festival:Christmas and New Year"
+who = ["social-media-manager"]
+says = "Year end posts and sale banners, all due at once."
+patience = -1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["wedding-photographer", "videographer"]
+says = "Weddings are cancelled or tiny, and the work has dried up."
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["video-editor", "social-media-manager", "product-photographer"]
+says = "Everyone is online, so there is more work, not less."

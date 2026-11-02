@@ -1,0 +1,28 @@
+id = "meghna"
+number = 22
+name = "Meghna"
+age = 30
+job = "Product photographer for online sellers"
+profile = "study/profiles/media/product-photographer.md"
+status = "draft"
+
+[situation]
+place = "At her studio desk next to the light stands"
+hands = "Mouse in one hand, a product in the other"
+time = "Evening, a seller wants the batch tonight"
+device = "Studio laptop"
+mood = "Focused, a little impatient."
+
+[habits]
+reads = "Scans for the button she needs."
+words = ["batch", "white BG", "WEBP", "listing"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.02
+device = "laptop"

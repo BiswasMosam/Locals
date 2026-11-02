@@ -1,0 +1,28 @@
+id = "farah"
+number = 20
+name = "Farah"
+age = 34
+job = "Wedding photographer, runs a studio"
+profile = "study/profiles/media/wedding-photographer.md"
+status = "draft"
+
+[situation]
+place = "In her studio office after a shoot"
+hands = "Both hands free, a team asking questions"
+time = "Evening, three deliveries due this week"
+device = "Studio laptop and a phone with the team group"
+mood = "Organised but stretched thin."
+
+[habits]
+reads = "Reads a line, decides fast."
+words = ["delivery", "album", "client", "gallery"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.02
+device = "laptop"
