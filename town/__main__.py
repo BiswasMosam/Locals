@@ -2,9 +2,9 @@
 import argparse
 import sys
 from collections import Counter
-from datetime import datetime
+from datetime import date, datetime
 
-from . import day, mind, people, tasks
+from . import day, mind, people, tasks, year
 from .people import ROOT
 
 
@@ -21,6 +21,9 @@ def main():
     run.add_argument("locals", nargs="+", help="local ids, or all")
     run.add_argument("--watch", action="store_true", help="show the browser while they work")
     run.add_argument("--seed", type=int, default=7, help="same seed, same run")
+    run.add_argument("--date", action="append", default=[], help="a day in the calendar, like 2026-09-14; repeat for more")
+    run.add_argument("--year", type=int, help="a year in twelve days, like 2026")
+    run.add_argument("--pandemic", choices=["lockdown", "reopening"], help="run the days during a pandemic")
     args = ap.parse_args()
 
     if args.cmd == "dashboard":
@@ -34,8 +37,16 @@ def main():
 
     task = tasks.load(args.task)
     who = people.everyone() if args.locals == ["all"] else [people.load(i) for i in args.locals]
-    folder = ROOT / "runs" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
     print(f"DAY · {task.app} · {len(who)} local{'s' if len(who) != 1 else ''} · {mind.MODEL}")
+    if args.date or args.year:
+        days = year.sample(args.year) if args.year else sorted(date.fromisoformat(d) for d in args.date)
+        summary = day.run_year(task, who, days, ROOT / "runs", args.watch, args.seed, pandemic=args.pandemic)
+        results = Counter(k for d in summary for k in d["results"].values())
+        for d in summary:
+            print(f"  {d['label']:<60} {', '.join(d['results'].values())}")
+        print(f"\n{', '.join(f'{v} {k.lower()}' for k, v in results.items())} · replay in runs/")
+        return
+    folder = ROOT / "runs" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
     results = Counter(day.run_day(task, who, folder, args.watch, args.seed).values())
     print(f"\n{', '.join(f'{v} {k.lower()}' for k, v in results.items())} · replay in {folder.relative_to(ROOT)}")
 

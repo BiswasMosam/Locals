@@ -19,8 +19,9 @@ DECISION = {
 }
 
 
-def system_prompt(local, story, files=()):
+def system_prompt(local, story, files=(), today=""):
     s, h = local.situation, local.habits
+    today = f"\nToday: {today}" if today else ""
     gallery = ", ".join(f"{p.name} ({p.stat().st_size / 1_048_576:.1f} MB)" for p in files)
     if gallery:
         story += f"\n\nFiles already on their {local.limits.device}, ready to pick when an app asks for one: {gallery}"
@@ -31,7 +32,7 @@ Where they are: {s['place']}
 Hands and attention: {s['hands']}
 Time: {s['time']}
 Their {local.limits.device}: {s['device']}
-Mood: {s['mood']}
+Mood: {s['mood']}{today}
 How they read screens: {h['reads']}
 Words they use at work: {', '.join(h['words'])}
 
@@ -42,7 +43,7 @@ Rules:
 - You only know what is on the screen described to you. You have never used this app before.
 - Text ending in … is where they stopped reading. They did not see the rest.
 - Choose exactly one action per turn:
-  tap (target = number), type (target = number, text = what they type), set (target = number, text = value, for sliders and dropdowns),
+  tap (target = number), type (target = number, text = what they type), set (target = number, text = the new value, such as 40 for a slider or an option's words for a dropdown; never empty),
   scroll, back, wait, done (the goal is reached), stuck (they cannot see any way forward).
 - "target" is the number in square brackets of the thing they use, like 4 for [4]. Use 0 for scroll, back, wait, done and stuck.
 - "thought" is one short sentence in their own plain voice about what they are looking for or noticing. No accent, no acting.

@@ -3,8 +3,9 @@ import hashlib
 import json
 import random
 import time
+from datetime import datetime
 
-from . import mind, tasks
+from . import mind, tasks, year
 from .feed import Feed
 from .limits import slip, typo
 from .people import ROOT
@@ -29,12 +30,16 @@ def size(path):
     return f"{path.stat().st_size / 1_048_576:.1f} MB"
 
 
-def run(local, task, out, watch=False, seed=7, listen=None, stop=None):
+def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=None):
+    told = ""
+    if today is not None:
+        local, told = year.shape(local, today)
+        seed += today.day.toordinal() % 997  # a different date is a different day, not a replay
     rng = random.Random(f"{seed}-{local.id}-{task.id}")
     out.mkdir(parents=True, exist_ok=True)
     inputs = tasks.make_files(task, out / "device")
     feed = Feed(out, local, task, listen)
-    system = mind.system_prompt(local, task.story, inputs)
+    system = mind.system_prompt(local, task.story, inputs, told)
     limits, when_stuck = local.limits, local.habits["when_stuck"]
     history, seen, stuck_on, was_stuck, said_stuck_on = [], {}, set(), False, None
     outcome, thought = None, ""
@@ -45,7 +50,9 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None):
         feed.event(kind, says)
 
     with Web(task.url, limits.device, inputs, out / "device", watch) as web:
-        feed.event("START", f"{local.job}, on a {limits.device}")
+        feed.event("START", f"{local.job}, on a {limits.device}" + (f" · {local.situation['place']}" if today else ""))
+        if told:
+            feed.event("TODAY", told)
         for n in range(1, limits.patience_steps + 1):
             if stop is not None and stop.is_set():
                 finish("STOPPED", "The day was stopped.")
@@ -146,19 +153,21 @@ def done_line(file, n, feed, was_stuck):
     return f"{saved}{n} steps · {feed.clock()}" + (" · after being stuck" if was_stuck else "")
 
 
-def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None):
+def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None, today=None, index=None):
     """Sends each local to the task in turn; they share one model, so they take turns."""
     listen = listen or (lambda entry: None)
     ids = [l.id for l in who]
     meta = {"day": folder.name, "task": f"{task.app}: {task.id}", "ref": task.ref, "url": task.url,
-            "locals": ids, "model": mind.MODEL}
+            "locals": ids, "model": mind.MODEL, "index": index or [1, 1]}
+    if today is not None:
+        meta.update(date=today.day.isoformat(), today=today.label(), scene=today.scene())
     listen({"type": "day", "phase": "start", **meta})
     results = {}
     for local in who:
         if stop is not None and stop.is_set():
             break
         try:
-            results[local.id] = run(local, task, folder / local.id, watch, seed, listen, stop)
+            results[local.id] = run(local, task, folder / local.id, watch, seed, listen, stop, today)
         except Exception as e:
             results[local.id] = "ERROR"
             print(f"  ERROR      {type(e).__name__}: {e}", flush=True)
@@ -172,3 +181,23 @@ def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None):
     (folder / "day.json").write_text(json.dumps({**meta, "results": results}, indent=2), encoding="utf-8")
     listen({"type": "day", "phase": "end", **meta, "results": results, "ended_at": time.time()})
     return results
+
+
+def run_year(task, who, days, runs, watch=False, seed=7, listen=None, stop=None, pandemic=None):
+    """The same locals and task on several dates in one year, one day after another."""
+    listen = listen or (lambda entry: None)
+    listen({"type": "year", "phase": "start", "task": f"{task.app}: {task.id}", "dates": [d.isoformat() for d in days],
+            "locals": [l.id for l in who], "pandemic": pandemic})
+    summary = []
+    for i, d in enumerate(days, 1):
+        if stop is not None and stop.is_set():
+            break
+        folder = runs / datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        while folder.exists():
+            time.sleep(1)
+            folder = runs / datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        t = year.today(d, pandemic)
+        results = run_day(task, who, folder, watch, seed, listen, stop, today=t, index=[i, len(days)])
+        summary.append({"date": d.isoformat(), "label": t.label(), "day": folder.name, "results": results})
+    listen({"type": "year", "phase": "end", "task": f"{task.app}: {task.id}", "days": summary, "ended_at": time.time()})
+    return summary

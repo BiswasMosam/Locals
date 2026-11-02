@@ -139,7 +139,14 @@ canvas { display: block; width: 100%; height: 100%; }
 .kind-btn.on { background: var(--slab2); color: var(--light); }
 .kind-pane { display: none; }
 .kind-pane.on { display: block; }
-select, input[type=url], .pair input, textarea {
+.when { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: 14px; }
+input[type=date] { color-scheme: dark; }
+.picks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pick { padding: 9px 12px; background: var(--panel); color: var(--dim); font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: .04em; }
+.pick:hover { color: var(--ink); }
+.pick.on { background: var(--slab2); color: var(--light); }
+.when-label { margin-top: 12px; font-size: 23px; }
+select, input[type=url], input[type=date], .pair input, textarea {
   width: 100%; background: var(--panel); color: var(--ink); border: 2px solid var(--line); border-radius: 0;
   font: 22px 'VT323', ui-monospace, monospace; padding: 8px 12px; outline: none; resize: vertical;
 }

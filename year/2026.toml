@@ -1,0 +1,147 @@
+# Mumbai, 2026. Sources and tags in study/year.md.
+year = 2026
+place = "Mumbai"
+
+# Maharashtra public holidays, GAD notification for 2026 [D]. Islamic holidays may move a day with the moon.
+holidays = [
+  ["2026-01-26", "Republic Day"],
+  ["2026-02-15", "Mahashivratri"],
+  ["2026-02-19", "Chhatrapati Shivaji Maharaj Jayanti"],
+  ["2026-03-03", "Holi"],
+  ["2026-03-19", "Gudhi Padwa"],
+  ["2026-03-21", "Ramzan Id"],
+  ["2026-03-26", "Ram Navami"],
+  ["2026-03-31", "Mahavir Janmakalyanak"],
+  ["2026-04-03", "Good Friday"],
+  ["2026-04-14", "Dr. Babasaheb Ambedkar Jayanti"],
+  ["2026-05-01", "Maharashtra Din and Buddha Pournima"],
+  ["2026-05-28", "Bakri Id"],
+  ["2026-06-26", "Muharram"],
+  ["2026-08-15", "Independence Day and Parsi New Year"],
+  ["2026-08-26", "Id-e-Milad"],
+  ["2026-09-14", "Ganesh Chaturthi"],
+  ["2026-10-02", "Gandhi Jayanti"],
+  ["2026-10-20", "Dasara"],
+  ["2026-11-08", "Diwali, Laxmi Pujan"],
+  ["2026-11-10", "Diwali, Bali Pratipada"],
+  ["2026-11-11", "Bhaubeej"],
+  ["2026-11-24", "Guru Nanak Jayanti"],
+  ["2026-12-25", "Christmas"],
+]
+
+# Festival seasons: anchor dates [D], length of each season [G]. "lights" picks how the town is decorated.
+[[festival]]
+name = "Ramzan"
+from = "2026-02-19"
+to = "2026-03-21"
+lights = "ramzan"
+
+[[festival]]
+name = "Holi"
+from = "2026-03-02"
+to = "2026-03-03"
+lights = "holi"
+
+[[festival]]
+name = "Ganeshotsav"
+from = "2026-09-14"
+to = "2026-09-24"
+lights = "ganesh"
+
+[[festival]]
+name = "Navratri"
+from = "2026-10-11"
+to = "2026-10-20"
+lights = "navratri"
+
+[[festival]]
+name = "Diwali"
+from = "2026-11-06"
+to = "2026-11-11"
+lights = "diwali"
+
+[[festival]]
+name = "Christmas and New Year"
+from = "2026-12-24"
+to = "2026-12-31"
+lights = "christmas"
+
+# Stretches of the year that change one kind of work.
+[[period]]
+key = "court-vacation"
+name = "court summer vacation"
+from = "2026-05-11"
+to = "2026-06-07"
+
+[[period]]
+key = "court-vacation"
+name = "court Diwali vacation"
+from = "2026-11-06"
+to = "2026-11-18"
+
+[[period]]
+key = "court-vacation"
+name = "court Christmas vacation"
+from = "2026-12-25"
+to = "2026-12-31"
+
+[[period]]
+key = "fy-end"
+name = "financial year end"
+from = "2026-03-16"
+to = "2026-03-31"
+
+# Weather. Monsoon onset and withdrawal are IMD normals for Mumbai [D]; daily chances are [G].
+[[season]]
+key = "winter"
+from = "2026-01-01"
+to = "2026-02-15"
+
+[[season]]
+key = "summer"
+from = "2026-04-01"
+to = "2026-06-10"
+
+[[season]]
+key = "monsoon"
+from = "2026-06-11"
+to = "2026-10-08"
+rain = 0.55
+heavy = 0.1
+
+[[season]]
+key = "monsoon"
+from = "2026-07-01"
+to = "2026-08-15"
+rain = 0.8
+heavy = 0.25
+
+[[season]]
+key = "winter"
+from = "2026-11-15"
+to = "2026-12-31"
+
+# Days worth trying first, offered in setup.
+[[pick]]
+label = "An ordinary Tuesday"
+date = "2026-02-10"
+
+[[pick]]
+label = "Ramzan evening"
+date = "2026-03-12"
+
+[[pick]]
+label = "Court summer vacation"
+date = "2026-05-20"
+
+[[pick]]
+label = "Ganesh Chaturthi"
+date = "2026-09-14"
+
+[[pick]]
+label = "Diwali night"
+date = "2026-11-08"
+
+[[pick]]
+label = "New Year's Eve"
+date = "2026-12-31"

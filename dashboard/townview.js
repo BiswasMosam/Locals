@@ -45,6 +45,13 @@ const TownView = (() => {
   let stars = [], far = [], mid = [], buildings = [], lamps = [], trees = [], cars = [], lit = {};
   let people = new Map(), locals = new Map(), order = [], selected = null, onPick = () => {};
   let confetti = [], sparks = [], rockets = [], partyUntil = 0, nextRocket = 0;
+  let scene = null; // the day: rain, festival lights, a pandemic
+  const STRINGS = {
+    diwali: ['#ffc94d', '#ff9f43', '#ffe08a'], ganesh: ['#ff7a45', '#ffc94d', '#e85d5d'],
+    navratri: ['#e06c75', '#98c379', '#5b8def', '#c678dd', '#ffc94d'], christmas: ['#e06c75', '#98c379', '#ebe7dc'],
+    ramzan: ['#98c379', '#ebe7dc', '#ffc94d'], holi: ['#e06c75', '#c678dd', '#5b8def', '#98c379', '#ffc94d'],
+  };
+  const SHUT = new Set(['chai', 'fab', 'stall']); // shops that close in a lockdown; the medical store stays open
   const now = () => performance.now();
   const calm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -135,8 +142,10 @@ const TownView = (() => {
     ox = 0;
     R(0, -Math.ceil(oy / p), view + 1, rows + Math.ceil(oy / p), C.night);
     for (const [x, y] of stars) R(Math.floor(x), y, 1, 1, C.star);
-    sprite(['..XXXX..', '.XXXXXX.', 'XXXXXXXX', 'XXXXXXXX', 'XXXXXXXX', 'XXXXXXXX', '.XXXXXX.', '..XXXX..'],
-      Math.round(view * 0.72), 8 - Math.floor(oy / p), { X: C.moon });
+    const moon = scene?.lights === 'ramzan'
+      ? ['..XXX...', '.XXX....', 'XXX.....', 'XXX.....', 'XXX.....', 'XXX.....', '.XXX....', '..XXX...'] // a crescent in Ramzan
+      : ['..XXXX..', '.XXXXXX.', 'XXXXXXXX', 'XXXXXXXX', 'XXXXXXXX', 'XXXXXXXX', '.XXXXXX.', '..XXXX..'];
+    sprite(moon, Math.round(view * 0.72), 8 - Math.floor(oy / p), { X: C.moon });
   }
 
   function drawSkyline(list, factor, body, win, dark, size) {
@@ -261,6 +270,54 @@ const TownView = (() => {
     }
   }
 
+  // ---------- The day: festival lights, lanterns, colour, rain ----------
+
+  function drawFestival(t) {
+    const colors = STRINGS[scene?.lights];
+    if (!colors) return;
+    const shift = calm() ? 0 : Math.floor(t / 600);
+    // A string of lights sagging between each pair of lamp posts.
+    const posts = [buildings[0].x - 2, ...lamps];
+    for (let i = 0; i < posts.length - 1; i++) {
+      const a = posts[i], b = posts[i + 1];
+      for (let x = a + 1, k = 0; x < b; x += 3, k++) {
+        const f = (x - a) / (b - a);
+        R(x, 72 + Math.round(Math.sin(f * Math.PI) * 3), 1, 1, colors[(k + shift) % colors.length]);
+      }
+    }
+    if (scene.lights === 'diwali') {
+      // Akash kandils hanging from the flats.
+      for (const b of buildings.filter(b => b.key === 'home' || b.key === 'home2')) {
+        for (const dx of [2, b.w - 5]) {
+          R(b.x + dx + 1, 28, 1, 3, C.line);
+          sprite(['.X.', 'XXX', 'XYX', 'XXX', '.X.'], b.x + dx, 31, { X: '#ff9f43', Y: C.light });
+        }
+      }
+    }
+    if (scene.lights === 'christmas') {
+      const o = buildings.find(b => b.key === 'office');
+      sprite(['..X..', '.XXX.', 'XXXXX', '.XXX.', '.X.X.'], o.door - 2, 14, { X: C.light });
+    }
+    if (scene.lights === 'holi') {
+      const rand = rng(3);
+      for (let i = 0; i < Math.round(width / 3); i++) R(Math.floor(rand() * width), 91 + Math.floor(rand() * 9), 1, 1, colors[i % colors.length]);
+    }
+  }
+
+  function drawRain(t) {
+    if (!scene?.rain || calm()) return;
+    const heavy = scene.rain === 'heavy', drops = heavy ? 320 : 140, fall = cv.height * (heavy ? 1.6 : 1.1);
+    ctx.fillStyle = heavy ? '#6a7488' : '#4c5568';
+    ctx.globalAlpha = heavy ? 0.7 : 0.5;
+    const w = Math.max(1, Math.round(p / 3)), h = p * (heavy ? 3 : 2);
+    for (let i = 0; i < drops; i++) {
+      const y = ((t / 1000) * fall + i * 137.7) % (cv.height + 40) - 20;
+      const x = (((i * 0.6180339) % 1) * (cv.width + 60) - y * 0.12) % (cv.width + 60);
+      ctx.fillRect(Math.round(x), Math.round(y), w, h);
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawStreet(t) {
     ox = cam;
     R(cam - 1, 90, view + 2, 10, C.walk); R(cam - 1, 100, view + 2, 1, C.line); R(cam - 1, 101, view + 2, 40, C.street);
@@ -275,7 +332,8 @@ const TownView = (() => {
   }
 
   function drawCars(dt) {
-    for (const c of cars) {
+    const shown = scene?.pandemic === 'lockdown' ? [] : scene?.pandemic === 'reopening' ? cars.slice(0, 2) : cars;
+    for (const c of shown) {
       const v = VEHICLES[c.kind];
       c.x += c.dir * v.speed * dt;
       if (c.dir > 0 && c.x > width + 20) c.x = -30;
@@ -292,6 +350,7 @@ const TownView = (() => {
     const hop = t < partyUntil && (l.badge === 'done' || l.badge === 'says') && !calm() ? -Math.round(Math.abs(Math.sin(t / 170 + l.info.number)) * 3) : 0;
     const x = Math.round(l.x) - 2 + shake, frame = l.mode === 'walk' && Math.floor(t / 250) % 2 ? PERSON.a : PERSON.b;
     sprite(frame, x, 89 + hop, { H: C.hair, S: C.skin, B: SHIRTS[l.info.number % SHIRTS.length], L: C.legs, F: C.feet });
+    if (scene?.pandemic) R(x + 1, 91 + hop, 3, 1, '#c9d3dc'); // a mask
     if (l.active && l.mode !== 'walk') R(x + 4, 93 + hop, 1, 2, C.light); // the phone in hand, lit while they work
     label(String(l.info.number).padStart(2, '0'), x + 7.5, 90, 1.7, l.active ? C.light : '#8a8f9c', 'left');
 
@@ -389,11 +448,20 @@ const TownView = (() => {
     drawSkyline(far, 0.35, C.far, C.farWin, C.far, 1);
     drawSkyline(mid, 0.65, C.mid, C.midWin, C.midDark, 2);
     ox = cam;
-    for (const b of buildings) if ((b.x + b.w + 6 - cam) * p > 0 && (b.x - 6 - cam) * p < cv.width) drawBuilding(b, t);
+    for (const b of buildings) {
+      if ((b.x + b.w + 6 - cam) * p < 0 || (b.x - 6 - cam) * p > cv.width) continue;
+      drawBuilding(b, t);
+      if (scene?.pandemic === 'lockdown' && SHUT.has(b.key)) {
+        for (let y = 76; y < 90; y += 2) R(b.x + 2, y, b.w - 4, 1, C.slab2); // shutters down
+        R(b.x + 2, 77, b.w - 4, 13, 'rgba(12,14,19,0.55)');
+      }
+    }
     drawStreet(t);
+    drawFestival(t);
     drawCars(dt);
     ox = cam;
     [...locals.values()].sort((a, b) => a.x - b.x).forEach(l => drawLocal(l, t));
+    drawRain(t);
     if (t < partyUntil + 4000 || sparks.length || confetti.length) party(dt, t);
     requestAnimationFrame(frame);
   }
@@ -469,6 +537,7 @@ const TownView = (() => {
   }
 
   function select(id) { selected = id; }
+  function setScene(s) { scene = s; }
 
-  return { init, startDay, event, step, select, celebrate };
+  return { init, startDay, event, step, select, celebrate, setScene };
 })();

@@ -5,12 +5,12 @@ import re
 import secrets
 import threading
 import webbrowser
-from datetime import datetime
+from datetime import date, datetime
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from . import day, machine, mind, people, tasks
+from . import day, machine, mind, people, tasks, year
 from .people import ROOT
 
 WEB = ROOT / "dashboard"
@@ -48,13 +48,13 @@ class Town:
     def busy(self):
         return self.thread is not None and self.thread.is_alive()
 
-    def start(self, task, who, watch):
-        folder = RUNS / datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    def start(self, task, who, watch, days, pandemic):
         with self.lock:
             self.log = []
         self.stop.clear()
-        self.day = folder.name
-        self.thread = threading.Thread(target=day.run_day, args=(task, who, folder, watch, 7, self.emit, self.stop), daemon=True)
+        self.day = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        self.thread = threading.Thread(target=day.run_year, args=(task, who, days, RUNS, watch, 7, self.emit, self.stop, pandemic),
+                                       daemon=True)
         self.thread.start()
 
 
@@ -74,8 +74,23 @@ def town_info():
         group = groups.setdefault(key, {"key": key, "label": profile_title(l.profile), "profile": l.profile, "people": []})
         group["people"].append({"id": l.id, "number": l.number, "name": l.name, "age": l.age, "job": l.job,
                                 "status": l.status, "situation": l.situation, "habits": l.habits, "limits": vars(l.limits)})
+    years = year.years()
+    now = date.today()
+    calendar = {"years": years, "picks": year.picks(years[-1]) if years else [],
+                "sample": [d.isoformat() for d in year.sample(years[-1])] if years else [],
+                "default": (now if now.year in years else date(years[-1], 2, 10)).isoformat() if years else None}
     return {"groups": list(groups.values()), "tasks": tasks.catalogue(), "busy": TOWN.busy(), "day": TOWN.day,
+            "calendar": calendar,
             "machine": {"gpu": machine.gpu(), "memory": machine.memory(), "model": machine.model(), "pace": machine.pace()}}
+
+
+def parse_days(values):
+    days = sorted({date.fromisoformat(v) for v in values})
+    if not 1 <= len(days) <= 12:
+        raise ValueError("Choose between one and twelve days.")
+    for d in days:
+        year.data(d.year)  # raises if there is no calendar for that year
+    return days
 
 
 def days():
@@ -134,6 +149,13 @@ class Handler(SimpleHTTPRequestHandler):
             if not DAY_ID.fullmatch(day_id) or not (RUNS / day_id / "day.json").exists():
                 return self.send_error(404)
             return self.send_json(day_log(day_id))
+        if path == "/api/today":
+            query = parse_qs(urlparse(self.path).query)
+            try:
+                t = year.today(date.fromisoformat(query.get("date", [""])[0]), query.get("pandemic", [""])[0] or None)
+            except ValueError as e:
+                return self.send_json({"error": str(e)}, 400)
+            return self.send_json(t.scene())
         if path == "/api/events":
             return self.events()
         if path.startswith("/runs/"):
@@ -194,9 +216,11 @@ class Handler(SimpleHTTPRequestHandler):
             site = body.get("site")
             ref = tasks.add_site(site["url"], site["goal"], site["check"], site.get("value", ""), site.get("files", [])) if site else body["task"]
             task = tasks.load(ref)
+            days = parse_days(body.get("dates") or [date.today().isoformat()])
         except (ValueError, KeyError, SystemExit) as e:
             return self.send_json({"error": str(e)}, 400)
-        TOWN.start(task, [people.load(i) for i in ids], bool(body.get("watch")))
+        pandemic = body.get("pandemic") if body.get("pandemic") in year.PANDEMIC else None
+        TOWN.start(task, [people.load(i) for i in ids], bool(body.get("watch")), days, pandemic)
         self.send_json({"ok": True, "ref": ref})
 
 

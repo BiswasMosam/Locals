@@ -38,6 +38,18 @@ The last quarter is the feed: every step and every thought, with STUCK, SLIP, DO
 
 At the end of every day the town gives a verdict. When at least three locals went out and 90% or more got the job done, the city celebrates your app by name with fireworks and confetti, and the locals jump. Anything less gets a plain count and a pointer to where people got stuck.
 
+## A year in the town
+
+<p align="center">
+  <img src="brand/dashboard-monsoon.png" alt="A real day in the dashboard: Wednesday 1 July 2026, heavy rain falling over the pixel city. The feed shows Sunil's day: wet hands and drops on the screen, roads flooded, trains stopped." width="100%">
+</p>
+
+The same app meets a different person on a different day. Pick any day of the year in setup, or **a year in twelve days**, and the date decides what each local's day is like: weekdays and Sundays, the 24 public holidays of the year, festival seasons (Ramzan, Holi, Ganeshotsav, Navratri, Diwali, Christmas and New Year), court vacations, the end of the financial year, the monsoon with rain fixed by the date, and an optional pandemic in lockdown or reopening.
+
+Each local gets a "Today" in their situation, and code changes their limits: Diwali week rushes the fabricator, a red alert downpour wets everyone's screen, a lockdown sends everyone home on a slow network. The town shows it too, with rain, festival lights, lanterns, a crescent moon in Ramzan, and an empty masked street in a lockdown. Festivals change the city, never a person's faith: no local's name decides what they observe.
+
+It already found something. On Ganesh Chaturthi, Sunil, rushed by the crowd from the pandal next door, aimed for **JPG** in PixelShift twice and hit **BMP**, its neighbour on a phone, both times, and gave up. On an ordinary day he finishes in three steps. The calendar, its sources and every effect are in the [year study](study/year.md).
+
 ## A real run
 
 Rohit is a junior advocate standing in a court corridor with files under one arm and an old phone in the other hand. He reads the first six words of anything. His task: turn a large photo into a smaller JPG in [PixelShift](https://github.com/BiswasMosam/PixelShift). This is his actual run on the live site, with his longer thoughts shortened:
@@ -133,6 +145,8 @@ python -m town dashboard                                 # the town in your brow
 python -m town people                                    # everyone who lives in the town
 python -m town run pixelshift:small-jpg rohit sunil      # send two locals to a task
 python -m town run pixelshift:small-jpg all --watch      # everyone, with the browser visible
+python -m town run pixelshift:small-jpg sunil --date 2026-09-14   # Ganesh Chaturthi
+python -m town run pixelshift:small-jpg rohit --year 2026        # a year in twelve days
 ```
 
 Each run lands in `runs/` with the feed, every step the local took, and a screenshot of each screen. Locals live in [people/](people), one file each; tasks live in [tasks/](tasks), one file per app. Set `LOCALS_MODEL` to try another model.
@@ -145,7 +159,7 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 - [x] Eighteen draft locals that use web apps in a real browser
 - [x] Dashboard: the town, the live feed, replay, setup with machine meters, your own sites
 - [x] A whole city, and a celebration when 90% get it done
-- [ ] A simulated year: weekdays and weekends, monsoon, festivals across religions, a pandemic
+- [x] A simulated year: weekdays and weekends, monsoon, festivals across religions, a pandemic
 - [ ] Media family: photographers, videographers, video editors, social media teams
 - [ ] Engineering family: eight types
 - [ ] Locals on Android: drop an APK, starting with Pops on the emulator

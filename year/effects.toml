@@ -1,0 +1,275 @@
+# What a kind of day does to each job. Read by town/year.py; the reasons are in study/year.md.
+#
+# when      sunday | holiday | festival:<name> | rain | heavy_rain | summer | period:<key> | pandemic:lockdown | pandemic:reopening
+# who       profile names from study/profiles (fabricator, food-stall, trial-advocate, junior-advocate,
+#           firm-associate, in-house-counsel), or "*" for everyone
+# says      one sentence added to the local's "Today"; {holiday} and {festival} are filled in
+# place     replaces where the local is
+# patience, read, slip   change the local's limits by this much (code applies them, the prompt never does)
+#
+# Festivals change the city, never a person's faith.
+
+# ---- The week ----
+
+[[effect]]
+when = "sunday"
+who = ["fabricator"]
+says = "It is Sunday: the shop opens late and closes early."
+patience = 1
+
+[[effect]]
+when = "sunday"
+who = ["food-stall"]
+says = "Sunday night: families are out and the queue is long."
+patience = -1
+read = -1
+
+[[effect]]
+when = "sunday"
+who = ["trial-advocate", "junior-advocate"]
+place = "At home on the sofa"
+says = "Court is closed today; they are catching up on the week."
+patience = 3
+read = 3
+
+[[effect]]
+when = "sunday"
+who = ["firm-associate"]
+place = "At home with the work laptop"
+says = "Sunday, but a deadline means working from home."
+patience = 1
+
+[[effect]]
+when = "sunday"
+who = ["in-house-counsel"]
+place = "At home on the sofa"
+says = "Sunday. Work can wait, but a message from a colleague came in."
+patience = 2
+read = 2
+
+# ---- Public holidays ----
+
+[[effect]]
+when = "holiday"
+who = ["trial-advocate", "junior-advocate"]
+place = "At home"
+says = "Courts are closed for {holiday}."
+patience = 3
+read = 3
+
+[[effect]]
+when = "holiday"
+who = ["in-house-counsel"]
+place = "At home"
+says = "The office is closed for {holiday}."
+patience = 2
+read = 2
+
+[[effect]]
+when = "holiday"
+who = ["firm-associate"]
+says = "It is {holiday}, but the firm is still working."
+
+[[effect]]
+when = "holiday"
+who = ["fabricator"]
+place = "At home"
+says = "The shop is shut for {holiday}, but customers still call."
+patience = 1
+
+[[effect]]
+when = "holiday"
+who = ["food-stall"]
+says = "It is {holiday}: more people are out tonight."
+patience = -1
+
+# ---- Festival seasons ----
+
+[[effect]]
+when = "festival:Ganeshotsav"
+who = ["*"]
+says = "It is Ganeshotsav: pandals, drums and processions on the roads, and the traffic is jammed."
+read = -1
+
+[[effect]]
+when = "festival:Ganeshotsav"
+who = ["food-stall"]
+says = "Crowds from the pandal next door keep the orders coming."
+patience = -2
+slip = 0.02
+
+[[effect]]
+when = "festival:Ganeshotsav"
+who = ["fabricator"]
+says = "Site visits take twice as long in the traffic."
+patience = -1
+
+[[effect]]
+when = "festival:Navratri"
+who = ["*"]
+says = "It is Navratri: garba music late into the night."
+
+[[effect]]
+when = "festival:Navratri"
+who = ["food-stall"]
+says = "People stop for food on the way back from garba."
+patience = -1
+
+[[effect]]
+when = "festival:Diwali"
+who = ["*"]
+says = "It is Diwali week: lights everywhere and the markets are packed."
+
+[[effect]]
+when = "festival:Diwali"
+who = ["fabricator"]
+says = "Everyone wants their grills and windows done before Diwali."
+patience = -2
+
+[[effect]]
+when = "festival:Diwali"
+who = ["food-stall"]
+says = "Festival crowds: every table is taken."
+patience = -1
+
+[[effect]]
+when = "festival:Diwali"
+who = ["firm-associate"]
+says = "Half the office is on leave, so it is quiet."
+patience = 1
+
+[[effect]]
+when = "festival:Diwali"
+who = ["in-house-counsel"]
+says = "Everything needs approving before the Diwali break."
+patience = -1
+
+[[effect]]
+when = "festival:Ramzan"
+who = ["*"]
+says = "It is Ramzan: the food streets come alive after sunset."
+
+[[effect]]
+when = "festival:Ramzan"
+who = ["food-stall"]
+says = "The late evening rush is bigger than usual."
+patience = -1
+
+[[effect]]
+when = "festival:Holi"
+who = ["*"]
+says = "It is Holi: colour on the streets and people out celebrating."
+slip = 0.01
+
+[[effect]]
+when = "festival:Christmas and New Year"
+who = ["*"]
+says = "It is the last week of the year: party nights, offices winding down."
+
+[[effect]]
+when = "festival:Christmas and New Year"
+who = ["food-stall"]
+says = "Year end crowds, and New Year's Eve is the busiest night of all."
+patience = -2
+
+[[effect]]
+when = "festival:Christmas and New Year"
+who = ["firm-associate", "in-house-counsel"]
+says = "Most of the team is away, so nobody is chasing them."
+patience = 1
+
+# ---- Weather ----
+
+[[effect]]
+when = "rain"
+who = ["*"]
+says = "It is raining: wet hands and drops on the screen."
+slip = 0.04
+read = -1
+
+[[effect]]
+when = "rain"
+who = ["fabricator"]
+says = "The site visit is under a building's porch, out of the rain."
+patience = -1
+
+[[effect]]
+when = "heavy_rain"
+who = ["*"]
+says = "Heavy rain and a red alert: roads are flooded and trains have stopped."
+slip = 0.06
+read = -1
+patience = -2
+
+[[effect]]
+when = "heavy_rain"
+who = ["trial-advocate", "junior-advocate"]
+place = "On a crowded station platform, trains stopped"
+says = "They may not reach court today."
+
+[[effect]]
+when = "heavy_rain"
+who = ["firm-associate", "in-house-counsel"]
+place = "At home; the office told everyone to stay in"
+
+[[effect]]
+when = "summer"
+who = ["fabricator", "food-stall"]
+says = "A hot, humid day: sweat on the screen."
+slip = 0.02
+patience = -1
+
+# ---- Work calendars ----
+
+[[effect]]
+when = "period:court-vacation"
+who = ["trial-advocate", "junior-advocate"]
+says = "It is the {period}: only urgent matters are listed."
+patience = 2
+
+[[effect]]
+when = "period:fy-end"
+who = ["in-house-counsel", "firm-associate"]
+says = "The financial year ends this month, so everything is urgent."
+patience = -2
+
+# ---- A pandemic ----
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["*"]
+place = "At home"
+says = "A lockdown is on. Everyone is at home, the network is slow and the news is worrying."
+patience = -1
+read = -1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["food-stall"]
+says = "The stall has been shut for weeks and money is tight."
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["fabricator"]
+says = "Site visits are not allowed; work happens by phone or not at all."
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["trial-advocate", "junior-advocate"]
+says = "Courts are closed; only urgent matters are heard by video."
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["firm-associate", "in-house-counsel"]
+says = "Working from home with video calls all day."
+
+[[effect]]
+when = "pandemic:reopening"
+who = ["*"]
+says = "Things are reopening: masks, limited hours and long queues."
+patience = -1
+
+[[effect]]
+when = "pandemic:reopening"
+who = ["food-stall"]
+says = "Takeaway only, and only until the evening."

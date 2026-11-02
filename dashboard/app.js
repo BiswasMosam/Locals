@@ -15,7 +15,7 @@ const icon = map => `<svg viewBox="0 0 ${map[0].length} ${map.length}" shape-ren
 document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = icon(ICONS[el.dataset.icon]); });
 
 const S = {
-  info: null, people: new Map(), groups: [], counts: {}, kind: 'saved', files: [],
+  info: null, people: new Map(), groups: [], counts: {}, kind: 'saved', files: [], when: { mode: 'one', date: null, pandemic: '' },
   entries: [], results: {}, day: null, running: false, filter: null, showSteps: true, replay: null,
 };
 
@@ -37,16 +37,23 @@ function connect() {
   es.onmessage = m => handle(JSON.parse(m.data));
 }
 
+const fresh = e => e.ended_at && Date.now() / 1000 - e.ended_at < 30;
+
 function handle(e) {
-  if (e.type === 'day' && e.phase === 'start') {
-    S.day = e; S.running = true; S.entries = []; S.results = {}; S.filter = null;
+  if (e.type === 'year' && e.phase === 'start') {
+    S.running = true;
     $('#verdict').hidden = true;
-    TownView.startDay(e.locals); TownView.select(null);
+  } else if (e.type === 'year' && e.phase === 'end') {
+    S.running = false;
+    if (e.days.length > 1 && fresh(e)) yearVerdict(e);
+  } else if (e.type === 'day' && e.phase === 'start') {
+    S.day = e; S.running = true; S.entries = []; S.results = {}; S.filter = null;
+    TownView.startDay(e.locals); TownView.setScene(e.scene || null); TownView.select(null);
     renderWho(); renderFeed();
   } else if (e.type === 'day' && e.phase === 'end') {
-    S.running = false; S.results = e.results;
+    S.results = e.results;
     $('#now').hidden = true;
-    if (e.ended_at && Date.now() / 1000 - e.ended_at < 30) verdict(e);
+    if (!(e.index && e.index[1] > 1)) { S.running = false; if (fresh(e)) verdict(e); }
   } else {
     S.entries.push(e);
     if (e.type === 'event') {
@@ -72,33 +79,53 @@ function hud() {
   $('#feed-foot').hidden = !S.running;
   $('#hud-setup').hidden = S.running;
   if (!d) return;
-  const finished = Object.keys(S.results).length;
-  $('#hud-day').textContent = `DAY · ${d.task}`.toUpperCase();
-  $('#hud-sub').textContent = `${finished} of ${d.locals.length} finished · ${d.model}` + (S.running ? '' : ' · the day is over');
+  const finished = Object.keys(S.results).length, many = d.index && d.index[1] > 1;
+  $('#hud-day').textContent = `${many ? `DAY ${d.index[0]} OF ${d.index[1]}` : 'DAY'} · ${d.task}`.toUpperCase();
+  $('#hud-sub').textContent = [d.today, `${finished} of ${d.locals.length} finished`, d.model, S.running ? '' : 'the day is over']
+    .filter(Boolean).join(' · ');
 }
 
 // The end of a day: 90% or more, with at least three locals, is a celebration; anything else is a plain count.
 const WORDS = { 'GAVE UP': 'gave up', 'ASKED': 'asked for help', 'WRONG DONE': 'thought they were done but were not', 'ERROR': 'hit an error' };
 
+const succeeded = k => k === 'DONE' || k === 'SAYS DONE';
+const appName = task => { const app = task.split(':')[0].trim(); return /[.:]/.test(app) ? 'YOUR SITE' : app.toUpperCase(); };
+
+function showVerdict(win, head, sub, note) {
+  const box = $('#verdict');
+  box.classList.toggle('win', win);
+  $('#v-head').textContent = head;
+  $('#v-sub').textContent = sub;
+  $('#v-note').textContent = note;
+  box.hidden = false;
+  if (win) TownView.celebrate();
+}
+
 function verdict(e) {
   const results = Object.values(e.results || {}), total = results.length;
   if (!total || results.includes('STOPPED')) return;
-  const ok = results.filter(k => k === 'DONE' || k === 'SAYS DONE').length, pct = Math.round(ok / total * 100);
-  const app = e.task.split(':')[0].trim(), name = /[.:]/.test(app) ? 'YOUR SITE' : app.toUpperCase();
+  const ok = results.filter(succeeded).length, pct = Math.round(ok / total * 100);
   const others = Object.entries(WORDS).map(([k, w]) => [results.filter(r => r === k).length, w]).filter(([n]) => n).map(([n, w]) => `${n} ${w}`);
-  const win = pct >= 90 && total >= 3, box = $('#verdict');
-  box.classList.toggle('win', win);
-  if (win) {
-    $('#v-head').textContent = `${name} IS GREAT`;
-    $('#v-sub').textContent = `${ok} of ${total} locals got it done in their real day · ${pct}%`;
-    $('#v-note').textContent = 'Busy hands, small screens, no patience to spare, and it still worked.';
-    TownView.celebrate();
+  if (pct >= 90 && total >= 3) {
+    showVerdict(true, `${appName(e.task)} IS GREAT`, `${ok} of ${total} locals got it done in their real day · ${pct}%`,
+      'Busy hands, small screens, no patience to spare, and it still worked.');
   } else {
-    $('#v-head').textContent = `${ok} OF ${total} GOT IT DONE`;
-    $('#v-sub').textContent = [`${pct}%`, ...others].join(' · ');
-    $('#v-note').textContent = pct >= 90 ? 'Send at least three locals to earn the fireworks.' : 'Click a local in the town to see where they got stuck.';
+    showVerdict(false, `${ok} OF ${total} GOT IT DONE`, [`${pct}%`, ...others].join(' · '),
+      pct >= 90 ? 'Send at least three locals to earn the fireworks.' : 'Click a local in the town to see where they got stuck.');
   }
-  box.hidden = false;
+}
+
+// A year: every local on every day counts once; the hardest day is named so you know where to look.
+function yearVerdict(e) {
+  const all = e.days.flatMap(d => Object.values(d.results)), total = all.length;
+  if (!total || all.includes('STOPPED')) return;
+  const ok = all.filter(succeeded).length, pct = Math.round(ok / total * 100);
+  const rate = d => { const r = Object.values(d.results); return r.filter(succeeded).length / r.length; };
+  const hardest = e.days.reduce((a, d) => (rate(d) < rate(a) ? d : a));
+  const hard = Object.values(hardest.results);
+  const note = rate(hardest) < 1 ? `Hardest day: ${hardest.label}, ${hard.filter(succeeded).length} of ${hard.length} done.` : 'Every single day went well.';
+  if (pct >= 90 && total >= 3) showVerdict(true, `${appName(e.task)} IS GREAT ALL YEAR`, `${ok} of ${total} local days done across ${e.days.length} days · ${pct}%`, note);
+  else showVerdict(false, `${ok} OF ${total} LOCAL DAYS DONE`, `${pct}% across ${e.days.length} days`, note);
 }
 $('#v-close').addEventListener('click', () => { $('#verdict').hidden = true; });
 
@@ -298,10 +325,11 @@ function renderMeters() {
       team.length ? 'Chrome for the local who is working, about 0.6 GB. One at a time.' : 'Nothing extra until someone is chosen.');
   }
 
-  const pace = m.pace, typical = team.reduce((s, p) => s + Math.min(p.limits.patience_steps, pace.steps_per_task) * pace.secs_per_step, 0);
-  const worst = team.reduce((s, p) => s + p.limits.patience_steps * pace.secs_per_step, 0);
+  const pace = m.pace, n = days().length;
+  const typical = n * team.reduce((s, p) => s + Math.min(p.limits.patience_steps, pace.steps_per_task) * pace.secs_per_step, 0);
+  const worst = n * team.reduce((s, p) => s + p.limits.patience_steps * pace.secs_per_step, 0);
   html += meter('TIME', team.length ? `ABOUT ${minutes(typical)}` : '0', [[typical, 'a'], [worst - typical, 'b']], Math.max(worst, 1),
-    team.length ? `${team.length} local${team.length === 1 ? '' : 's'}, one at a time. Up to ${minutes(worst).toLowerCase()} if everyone uses all their patience. ` +
+    team.length ? `${team.length} local${team.length === 1 ? '' : 's'}${n > 1 ? ` on ${n} days` : ''}, one at a time. Up to ${minutes(worst).toLowerCase()} if everyone uses all their patience. ` +
       (pace.measured ? `${pace.secs_per_step} seconds a step, measured on this machine.` : 'Estimated at 6 seconds a step until a day has run here.')
       : 'Choose who goes out.');
   $('#meters').innerHTML = html;
@@ -322,6 +350,7 @@ function setupError(text) {
 async function refreshMachine() {
   S.info = await getJSON('/api/town');
   buildSetup();
+  buildWhen();
 }
 
 // Files the locals keep on their phone for upload tasks.
@@ -341,8 +370,55 @@ async function upload(files) {
   $('#file-list').textContent = S.files.length ? S.files.map(f => f.name).join(', ') : 'Drop files here if the task needs something to upload.';
 }
 
+// ---------- When: one day, or a year in twelve days ----------
+
+const days = () => S.when.mode === 'year' ? S.info.calendar.sample : [S.when.date];
+const shortDate = iso => new Date(iso + 'T12:00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+
+function buildWhen() {
+  const cal = S.info.calendar, input = $('#when-date');
+  if (!cal.years.length) { $('#when-label').textContent = 'No calendar found in year/.'; return; }
+  input.min = `${cal.years[0]}-01-01`;
+  input.max = `${cal.years[cal.years.length - 1]}-12-31`;
+  S.when.date = S.when.date || cal.default;
+  input.value = S.when.date;
+  const picks = $('#when-picks');
+  picks.innerHTML = '';
+  const add = (label, on, act) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'pick' + (on ? ' on' : ''); b.textContent = label.toUpperCase();
+    b.addEventListener('click', act);
+    picks.append(b);
+  };
+  for (const p of cal.picks) add(p.label, S.when.mode === 'one' && S.when.date === p.date, () => setWhen('one', p.date));
+  add(`A year in ${cal.sample.length} days`, S.when.mode === 'year', () => setWhen(S.when.mode === 'year' ? 'one' : 'year'));
+  input.disabled = S.when.mode === 'year';
+  previewWhen();
+}
+
+function setWhen(mode, date) {
+  S.when.mode = mode;
+  if (date) S.when.date = date;
+  buildWhen();
+  renderMeters();
+}
+
+async function previewWhen() {
+  const label = $('#when-label');
+  if (S.when.mode === 'year') {
+    label.textContent = `${S.info.calendar.sample.length} days, one after another: ` + S.info.calendar.sample.map(shortDate).join(', ');
+    return;
+  }
+  const r = await fetch(`/api/today?date=${S.when.date}&pandemic=${S.when.pandemic}`);
+  const t = await r.json();
+  label.textContent = r.ok ? t.label : t.error;
+}
+
+$('#when-date').addEventListener('change', e => { if (e.target.value) setWhen('one', e.target.value); });
+$('#pandemic').addEventListener('change', e => { S.when.pandemic = e.target.value; previewWhen(); });
+
 $('#start').addEventListener('click', async () => {
-  const body = { locals: chosen().map(p => p.id), watch: $('#watch').checked };
+  const body = { locals: chosen().map(p => p.id), watch: $('#watch').checked, dates: days(), pandemic: S.when.pandemic };
   if (S.kind === 'saved') body.task = $('#task-select').value;
   else body.site = { url: $('#site-url').value.trim(), goal: $('#site-goal').value.trim(), check: $('#site-check').value,
     value: $('#site-value').value.trim(), files: S.files };
@@ -372,7 +448,7 @@ async function loadDays() {
     li.className = 'day-item';
     li.tabIndex = 0;
     li.innerHTML = `<span class="day-when">${esc(when(d.day))}</span>` +
-      `<div><div class="t">${esc(d.task)}</div><div class="n">${d.locals.map(who).map(esc).join(' · ')}</div></div>` +
+      `<div><div class="t">${esc(d.task)}</div>${d.today ? `<div class="n">${esc(d.today)}</div>` : ''}<div class="n">${d.locals.map(who).map(esc).join(' · ')}</div></div>` +
       `<div class="chips">${Object.entries(counts).map(([k, n]) => `<b class="${k.replace(/ /g, '-')}">${n} ${esc(k)}</b>`).join('') || '<span>NOTHING SAVED</span>'}</div>`;
     const open = () => openDay(d.day);
     li.addEventListener('click', open);
@@ -387,6 +463,7 @@ async function openDay(id) {
   S.day = meta; S.entries = entries; S.results = meta.results || {}; S.filter = null;
   $('#verdict').hidden = true;
   TownView.startDay(meta.locals, true);
+  TownView.setScene(meta.scene || null);
   TownView.select(null);
   entries.filter(e => e.type === 'event').forEach(e => TownView.event(e));
   $('#now').hidden = true;
@@ -402,6 +479,7 @@ async function openDay(id) {
   for (const g of S.groups) for (const p of g.people) S.people.set(p.id, { ...p, group: g.key });
   TownView.init($('#canvas'), { people: S.people, onPick: pick });
   buildSetup();
+  buildWhen();
   renderFeed();
   connect();
 })();
