@@ -161,10 +161,14 @@ def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None):
             results[local.id] = run(local, task, folder / local.id, watch, seed, listen, stop)
         except Exception as e:
             results[local.id] = "ERROR"
-            print(f"  ERROR      {type(e).__name__}: {e}")
-            listen({"type": "event", "local": local.id, "kind": "ERROR", "says": f"{type(e).__name__}: {e}"[:300],
-                    "at": "", "shot": None})
+            print(f"  ERROR      {type(e).__name__}: {e}", flush=True)
+            entry = {"type": "event", "local": local.id, "kind": "ERROR", "says": f"{type(e).__name__}: {e}"[:300],
+                     "at": "", "shot": None}
+            (folder / local.id).mkdir(parents=True, exist_ok=True)
+            with (folder / local.id / "feed.jsonl").open("a", encoding="utf-8") as f:
+                f.write(json.dumps(entry) + "\n")
+            listen(entry)
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "day.json").write_text(json.dumps({**meta, "results": results}, indent=2), encoding="utf-8")
-    listen({"type": "day", "phase": "end", **meta, "results": results})
+    listen({"type": "day", "phase": "end", **meta, "results": results, "ended_at": time.time()})
     return results

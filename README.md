@@ -26,9 +26,17 @@
   <img src="brand/dashboard-town.png" alt="The Locals dashboard during a real day. Pixel art town at night: Sunil stands at the Chinese stall with a thinking bubble and his phone lit, Kavita waits at the court, Neha at the law firm. The feed on the right shows his first step." width="100%">
 </p>
 
-This is the dashboard during a real day, not a mock up. Three quarters of the screen is the town. Each local walks out of their flat (their window dims as they leave) to their workplace and waits their turn. The one at work holds a lit phone and thinks in a bubble; a stuck local gets a blinking `!`; everyone ends the day with a mark for how it went. The bar along the bottom shows what the working local is doing right now.
+This is the dashboard during a real day, not a mock up. Three quarters of the screen is the city: a skyline behind one long street of shops, a court, a law firm, offices, an IT park, a studio, a hospital, a school, a factory and a building site, with autos and buses going past. Each local walks out of their flat (their window dims as they leave) to their workplace and waits their turn. The one at work holds a lit phone and thinks in a bubble; a stuck local gets a blinking `!`; everyone ends the day with a mark for how it went. The view follows whoever is working; drag or scroll to look around. The bar along the bottom shows what the working local is doing right now.
 
 The last quarter is the feed: every step and every thought, with STUCK, SLIP, DONE and GAVE UP called out. Click any line and you see the exact screen the local was looking at, then step through their run with PREV and NEXT. Click a local in the town to follow just them. Past days are kept and can be opened again.
+
+## When it works
+
+<p align="center">
+  <img src="brand/dashboard-celebration.png" alt="End of a real day: a band reads PIXELSHIFT IS GREAT, 3 of 3 locals got it done, 100%. Fireworks burst over the skyline and confetti falls while three locals with green ticks stand outside their workplaces." width="100%">
+</p>
+
+At the end of every day the town gives a verdict. When at least three locals went out and 90% or more got the job done, the city celebrates your app by name with fireworks and confetti, and the locals jump. Anything less gets a plain count and a pointer to where people got stuck.
 
 ## A real run
 
@@ -136,6 +144,7 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 - [x] Law family: four types of lawyer drafted
 - [x] Eighteen draft locals that use web apps in a real browser
 - [x] Dashboard: the town, the live feed, replay, setup with machine meters, your own sites
+- [x] A whole city, and a celebration when 90% get it done
 - [ ] A simulated year: weekdays and weekends, monsoon, festivals across religions, a pandemic
 - [ ] Media family: photographers, videographers, video editors, social media teams
 - [ ] Engineering family: eight types

@@ -78,6 +78,18 @@ canvas { display: block; width: 100%; height: 100%; }
 .now .act { color: var(--ink); margin-right: 10px; }
 .now .thought { color: var(--dim); }
 
+/* The verdict at the end of a day */
+.verdict { position: absolute; left: 0; right: 0; top: 30%; background: var(--rail); border-top: 2px solid var(--line);
+  border-bottom: 2px solid var(--line); padding: 30px 28px 26px; text-align: center; animation: arrive .5s steps(5) both; }
+.verdict[hidden] { display: none; }
+.verdict.win { border-color: var(--light); }
+.v-head { font-family: 'Silkscreen', monospace; font-size: clamp(22px, 2.6vw, 36px); letter-spacing: .04em; }
+.verdict.win .v-head { color: var(--light); font-size: clamp(28px, 4.2vw, 60px); }
+.v-sub { font-size: 30px; margin-top: 12px; }
+.v-note { color: var(--dim); font-size: 25px; margin-top: 6px; }
+.verdict .btn { margin-top: 18px; }
+@keyframes arrive { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
 /* Feed */
 .feed { background: var(--panel); border-left: 2px solid var(--line); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
 .feed-head { display: flex; align-items: center; gap: 16px; padding: 22px 22px 16px; border-bottom: 2px solid var(--line); }
@@ -190,4 +202,4 @@ h2.gap { margin-top: 40px; }
   .days { padding: 28px 20px; }
   .day-item { grid-template-columns: 1fr; gap: 4px; }
 }
-@media (prefers-reduced-motion: reduce) { .live::before { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .live::before, .verdict { animation: none; } }

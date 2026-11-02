@@ -95,6 +95,12 @@ def decide(system, user, seed):
     }
     req = urllib.request.Request(f"{OLLAMA}/api/chat", data=json.dumps(body).encode(),
                                  headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=180) as r:
-        reply = json.load(r)
-    return json.loads(reply["message"]["content"])
+    # One retry: Ollama can stall while another app on this machine makes it swap models.
+    for attempt in (1, 2):
+        try:
+            with urllib.request.urlopen(req, timeout=240) as r:
+                reply = json.load(r)
+            return json.loads(reply["message"]["content"])
+        except TimeoutError:
+            if attempt == 2:
+                raise

@@ -40,11 +40,13 @@ function connect() {
 function handle(e) {
   if (e.type === 'day' && e.phase === 'start') {
     S.day = e; S.running = true; S.entries = []; S.results = {}; S.filter = null;
+    $('#verdict').hidden = true;
     TownView.startDay(e.locals); TownView.select(null);
     renderWho(); renderFeed();
   } else if (e.type === 'day' && e.phase === 'end') {
     S.running = false; S.results = e.results;
     $('#now').hidden = true;
+    if (e.ended_at && Date.now() / 1000 - e.ended_at < 30) verdict(e);
   } else {
     S.entries.push(e);
     if (e.type === 'event') {
@@ -74,6 +76,31 @@ function hud() {
   $('#hud-day').textContent = `DAY · ${d.task}`.toUpperCase();
   $('#hud-sub').textContent = `${finished} of ${d.locals.length} finished · ${d.model}` + (S.running ? '' : ' · the day is over');
 }
+
+// The end of a day: 90% or more, with at least three locals, is a celebration; anything else is a plain count.
+const WORDS = { 'GAVE UP': 'gave up', 'ASKED': 'asked for help', 'WRONG DONE': 'thought they were done but were not', 'ERROR': 'hit an error' };
+
+function verdict(e) {
+  const results = Object.values(e.results || {}), total = results.length;
+  if (!total || results.includes('STOPPED')) return;
+  const ok = results.filter(k => k === 'DONE' || k === 'SAYS DONE').length, pct = Math.round(ok / total * 100);
+  const app = e.task.split(':')[0].trim(), name = /[.:]/.test(app) ? 'YOUR SITE' : app.toUpperCase();
+  const others = Object.entries(WORDS).map(([k, w]) => [results.filter(r => r === k).length, w]).filter(([n]) => n).map(([n, w]) => `${n} ${w}`);
+  const win = pct >= 90 && total >= 3, box = $('#verdict');
+  box.classList.toggle('win', win);
+  if (win) {
+    $('#v-head').textContent = `${name} IS GREAT`;
+    $('#v-sub').textContent = `${ok} of ${total} locals got it done in their real day · ${pct}%`;
+    $('#v-note').textContent = 'Busy hands, small screens, no patience to spare, and it still worked.';
+    TownView.celebrate();
+  } else {
+    $('#v-head').textContent = `${ok} OF ${total} GOT IT DONE`;
+    $('#v-sub').textContent = [`${pct}%`, ...others].join(' · ');
+    $('#v-note').textContent = pct >= 90 ? 'Send at least three locals to earn the fireworks.' : 'Click a local in the town to see where they got stuck.';
+  }
+  box.hidden = false;
+}
+$('#v-close').addEventListener('click', () => { $('#verdict').hidden = true; });
 
 function showNow(e) {
   const el = $('#now');
@@ -358,6 +385,7 @@ async function openDay(id) {
   if (S.running) return setView('town');
   const { meta, entries } = await getJSON(`/api/days/${id}`);
   S.day = meta; S.entries = entries; S.results = meta.results || {}; S.filter = null;
+  $('#verdict').hidden = true;
   TownView.startDay(meta.locals, true);
   TownView.select(null);
   entries.filter(e => e.type === 'event').forEach(e => TownView.event(e));
