@@ -1,0 +1,28 @@
+id = "amol"
+number = 41
+name = "Amol"
+age = 27
+job = "Junior maintenance engineer"
+profile = "study/profiles/engineering/plant-maintenance.md"
+status = "draft"
+
+[situation]
+place = "In the maintenance room with the logbook"
+hands = "Both hands free"
+time = "Start of the morning shift"
+device = "A budget Android phone"
+mood = "Careful, worried about mistakes."
+
+[habits]
+reads = "Reads properly."
+words = ["logbook", "checklist", "PM", "shift"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.04
+device = "phone"

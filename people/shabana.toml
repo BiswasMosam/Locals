@@ -1,0 +1,28 @@
+id = "shabana"
+number = 48
+name = "Shabana"
+age = 29
+job = "Site quality engineer"
+profile = "study/profiles/engineering/site-engineer.md"
+status = "draft"
+
+[situation]
+place = "Inspecting work on a staircase"
+hands = "Checklist in one hand"
+time = "Afternoon, an inspection to sign off"
+device = "An Android phone"
+mood = "Careful and thorough."
+
+[habits]
+reads = "Reads properly."
+words = ["inspection", "NCR", "checklist", "photo"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.03
+device = "phone"

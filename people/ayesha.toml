@@ -1,0 +1,28 @@
+id = "ayesha"
+number = 56
+name = "Ayesha"
+age = 30
+job = "Hardware test engineer"
+profile = "study/profiles/engineering/embedded-engineer.md"
+status = "draft"
+
+[situation]
+place = "At the test rig"
+hands = "Laptop on the bench, units stacked"
+time = "Evening, test reports due"
+device = "A lab laptop"
+mood = "Methodical."
+
+[habits]
+reads = "Reads everything."
+words = ["test", "unit", "report", "rig"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 18
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

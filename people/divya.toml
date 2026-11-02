@@ -1,0 +1,28 @@
+id = "divya"
+number = 38
+name = "Divya"
+age = 28
+job = "IT services developer, US client"
+profile = "study/profiles/engineering/software-services.md"
+status = "draft"
+
+[situation]
+place = "In the office before the evening client call"
+hands = "Keyboard and mouse"
+time = "Evening, the call starts in fifteen minutes"
+device = "A company laptop"
+mood = "Rushed."
+
+[habits]
+reads = "Skims to the part that matters."
+words = ["defect", "build", "status", "timesheet"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.03
+device = "laptop"

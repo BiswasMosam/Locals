@@ -16,7 +16,7 @@
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-8a8f9c?style=flat-square&labelColor=0c0e13"></a>
 </p>
 
-> **Day 1.** Thirty three draft locals live in the town and use web apps in a real browser, thinking with a small model on this laptop, and a dashboard shows them at work. They are built from the [study](study/README.md) of the people they stand for, and stay marked draft until real people in those jobs confirm their profiles. [Run them](#run-it), or [help get a profile right](#leave-a-review).
+> **Day 1.** Fifty seven draft locals live in the town and use web apps in a real browser, thinking with a small model on this laptop, and a dashboard shows them at work. They are built from the [study](study/README.md) of the people they stand for, and stay marked draft until real people in those jobs confirm their profiles. [Run them](#run-it), or [help get a profile right](#leave-a-review).
 
 <br>
 
@@ -128,7 +128,7 @@ So every local starts as a profile of a real job, built from interviews and publ
 | Fresh graduate, photographer, collector, recruiter | Fill.ai, PixelShift, Peghunt, portfolio | Planned |
 | [Law](study/profiles/law/README.md): trial court advocate, junior advocate, firm associate, in-house counsel | The wider town | Drafts |
 | [Media](study/profiles/media/README.md): wedding photographer, product photographer, videographer, video editor, social media manager | PixelShift and the wider town | Drafts |
-| Engineering: software, mechanical, civil, electrical, electronics (eight types) | The wider town | Next |
+| [Engineering](study/profiles/engineering/README.md): software (product and services), mechanical (plant and design), civil (site and planning), electrical, embedded | The wider town | Drafts |
 | Finance, health, education | The wider town | Planned |
 
 ## Run it
@@ -162,7 +162,7 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 - [x] A whole city, and a celebration when 90% get it done
 - [x] A simulated year: weekdays and weekends, monsoon, festivals across religions, a pandemic
 - [x] Media family: photographers, videographers, video editors, social media teams (fifteen more locals, a banquet hall)
-- [ ] Engineering family: eight types
+- [x] Engineering family: eight types, twenty four more locals
 - [ ] Locals on Android: drop an APK, starting with Pops on the emulator
 - [ ] Interviews with a real fabricator and a real food stall
 - [ ] Limits set from watching real people do the same tasks

@@ -1,0 +1,28 @@
+id = "lata"
+number = 54
+name = "Lata"
+age = 27
+job = "Building electrical engineer"
+profile = "study/profiles/engineering/electrical-maintenance.md"
+status = "draft"
+
+[situation]
+place = "In the basement of a large building"
+hands = "Tools in one hand, phone in the other"
+time = "Afternoon, a tenant complaining"
+device = "An Android phone with patchy signal underground"
+mood = "Patient but stretched."
+
+[habits]
+reads = "Reads a line, then acts."
+words = ["tenant", "DG", "panel", "complaint"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.04
+device = "phone"

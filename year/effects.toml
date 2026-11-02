@@ -1,6 +1,6 @@
 # What a kind of day does to each job. Read by town/year.py; the reasons are in study/year.md.
 #
-# when      sunday | holiday | festival:<name> | rain | heavy_rain | summer | period:<key> | pandemic:lockdown | pandemic:reopening
+# when      sunday | holiday | festival:<name> | rain | light_rain | heavy_rain | summer | period:<key> | pandemic:lockdown | pandemic:reopening
 # who       profile names from study/profiles (fabricator, food-stall, trial-advocate, junior-advocate,
 #           firm-associate, in-house-counsel), or "*" for everyone
 # says      one sentence added to the local's "Today"; {holiday} and {festival} are filled in
@@ -183,7 +183,13 @@ patience = 1
 [[effect]]
 when = "rain"
 who = ["*"]
-says = "It is raining: wet hands and drops on the screen."
+says = "It is raining outside."
+
+# Only people who are out in it get wet hands and a wet screen; a desk in an office stays dry.
+[[effect]]
+when = "rain"
+who = ["fabricator", "food-stall", "trial-advocate", "junior-advocate", "wedding-photographer", "videographer", "site-engineer"]
+says = "Wet hands and drops on the screen."
 slip = 0.04
 read = -1
 
@@ -197,9 +203,13 @@ patience = -1
 when = "heavy_rain"
 who = ["*"]
 says = "Heavy rain and a red alert: roads are flooded and trains have stopped."
-slip = 0.06
-read = -1
-patience = -2
+patience = -1
+
+[[effect]]
+when = "heavy_rain"
+who = ["fabricator", "food-stall", "trial-advocate", "junior-advocate", "wedding-photographer", "videographer", "site-engineer"]
+slip = 0.04
+patience = -1
 
 [[effect]]
 when = "heavy_rain"
@@ -340,3 +350,94 @@ says = "Weddings are cancelled or tiny, and the work has dried up."
 when = "pandemic:lockdown"
 who = ["video-editor", "social-media-manager", "product-photographer"]
 says = "Everyone is online, so there is more work, not less."
+
+# ---- Engineering ----
+
+[[effect]]
+when = "heavy_rain"
+who = ["site-engineer"]
+place = "In the site office cabin, rain drumming on the roof"
+says = "Work on the site has stopped for the rain; the pour is off."
+
+[[effect]]
+when = "light_rain"
+who = ["site-engineer"]
+says = "Rain slows the site and half the labour has not turned up."
+patience = -1
+
+[[effect]]
+when = "rain"
+who = ["plant-maintenance", "electrical-maintenance"]
+says = "Rain means leaks, wet panels and trips."
+patience = -1
+
+[[effect]]
+when = "summer"
+who = ["site-engineer"]
+says = "A hot day on site; the sun washes out the screen."
+slip = 0.02
+read = -1
+
+[[effect]]
+when = "festival:Diwali"
+who = ["plant-maintenance", "electrical-maintenance"]
+says = "Diwali shutdown week: the plant is down for planned maintenance, the busiest week of the year for the maintenance team."
+patience = -2
+
+[[effect]]
+when = "festival:Diwali"
+who = ["site-engineer"]
+says = "Much of the labour has gone home to their villages for Diwali."
+patience = -1
+
+[[effect]]
+when = "festival:Diwali"
+who = ["software-services", "software-product"]
+says = "Half the team is on leave, so it is quiet."
+patience = 1
+
+[[effect]]
+when = "holiday"
+who = ["software-services"]
+says = "It is {holiday} here, but the client abroad is working, so the call is still on."
+
+[[effect]]
+when = "holiday"
+who = ["structural-planning", "mechanical-design", "embedded-engineer"]
+place = "At home"
+says = "The office is closed for {holiday}."
+patience = 2
+
+[[effect]]
+when = "sunday"
+who = ["plant-maintenance", "electrical-maintenance"]
+says = "Sunday is when the plant does its planned shutdown jobs."
+patience = -1
+
+[[effect]]
+when = "sunday"
+who = ["site-engineer"]
+says = "Sites work on Sundays too."
+
+[[effect]]
+when = "sunday"
+who = ["software-services", "software-product", "structural-planning", "mechanical-design", "embedded-engineer"]
+place = "At home"
+says = "Sunday at home, catching up on one thing from work."
+patience = 2
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["software-product", "software-services", "structural-planning", "mechanical-design"]
+says = "Working from home: calls all day on a slow home network."
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["plant-maintenance", "electrical-maintenance"]
+place = "At the plant"
+says = "The plant runs with a skeleton crew on long shifts."
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["site-engineer"]
+says = "The site is shut and the labour has gone home."

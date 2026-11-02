@@ -53,7 +53,7 @@ class Today:
         if self.rain == "heavy":
             keys |= {"rain", "heavy_rain"}
         elif self.rain == "rain":
-            keys.add("rain")
+            keys |= {"rain", "light_rain"}
         if self.season == "summer":
             keys.add("summer")
         if self.pandemic:

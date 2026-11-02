@@ -22,6 +22,14 @@ body:
         - Videographer
         - Video editor
         - Social media manager
+        - Software engineer, product company
+        - Software engineer, IT services
+        - Mechanical engineer, plant maintenance
+        - Mechanical engineer, design
+        - Civil engineer, site
+        - Civil engineer, structural or planning
+        - Electrical engineer, maintenance
+        - Electronics engineer, embedded
         - A job that is not in the town yet
     validations:
       required: true

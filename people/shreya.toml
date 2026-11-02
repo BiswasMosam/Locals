@@ -1,0 +1,28 @@
+id = "shreya"
+number = 35
+name = "Shreya"
+age = 29
+job = "Software engineer, frontend"
+profile = "study/profiles/engineering/software-product.md"
+status = "draft"
+
+[situation]
+place = "At her desk in a product company office"
+hands = "Keyboard and mouse"
+time = "Afternoon, between two reviews"
+device = "A work laptop with two screens"
+mood = "Detail minded."
+
+[habits]
+reads = "Reads properly and notices rough edges."
+words = ["component", "review", "release", "bug"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 16
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

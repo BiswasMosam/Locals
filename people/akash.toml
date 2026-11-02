@@ -1,0 +1,28 @@
+id = "akash"
+number = 46
+name = "Akash"
+age = 25
+job = "Junior site engineer"
+profile = "study/profiles/engineering/site-engineer.md"
+status = "draft"
+
+[situation]
+place = "On the fourth floor slab of a building site"
+hands = "Helmet on, phone in a dusty hand"
+time = "Evening, the DPR is due"
+device = "A budget Android phone, screen hard to see in the sun"
+mood = "Tired, wants to finish."
+
+[habits]
+reads = "Glances at a few words."
+words = ["DPR", "labour", "slab", "material"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 5
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.07
+typo_rate = 0.06
+device = "phone"

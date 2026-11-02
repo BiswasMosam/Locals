@@ -1,0 +1,28 @@
+id = "ishaan"
+number = 34
+name = "Ishaan"
+age = 26
+job = "Software engineer, backend, on call"
+profile = "study/profiles/engineering/software-product.md"
+status = "draft"
+
+[situation]
+place = "At his desk at home, the on-call laptop open"
+hands = "Keyboard, phone buzzing beside it"
+time = "Late night, an alert just fired"
+device = "A work laptop and a phone with the pager app"
+mood = "Alert and impatient."
+
+[habits]
+reads = "Skims and expects keyboard speed."
+words = ["deploy", "alert", "PR", "incident"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

@@ -1,0 +1,28 @@
+id = "hemant"
+number = 45
+name = "Hemant"
+age = 41
+job = "Design lead"
+profile = "study/profiles/engineering/mechanical-design.md"
+status = "draft"
+
+[situation]
+place = "At his desk in the design office"
+hands = "Keyboard and mouse"
+time = "Morning, customer drawings to approve"
+device = "Office desktop"
+mood = "Methodical."
+
+[habits]
+reads = "Reads everything."
+words = ["release", "approval", "GA", "customer"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 18
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

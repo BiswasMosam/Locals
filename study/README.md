@@ -66,18 +66,18 @@ Five findings shape every rule below.
 | Video editor | A timeline, renders and rounds of revisions | [Draft](profiles/media/video-editor.md) |
 | Social media manager | The content calendar, approvals and replies, all on a phone | [Draft](profiles/media/social-media-manager.md) |
 
-**Engineering**
+**[Engineering](profiles/engineering/README.md)**
 
 | Type | The day in one line | Profile |
 |---|---|---|
-| Software engineer, product company | Deep work broken by meetings and alerts | Next |
-| Software engineer, IT services | A client's project, a client's hours, timesheets | Planned |
-| Mechanical, plant maintenance | Shop floor, shifts, breakdowns, gloves on | Planned |
-| Mechanical, design | CAD workstation, drawings and revisions | Planned |
-| Civil, site engineer | Construction site, contractors, sun on the screen | Planned |
-| Civil, structural and planning | Drawings, approvals, coordination | Planned |
-| Electrical, maintenance | Shifts, safety permits, field calls | Planned |
-| Electronics, embedded | Lab bench, firmware, test equipment | Planned |
+| Software engineer, product company | Deep work broken by meetings and alerts | [Draft](profiles/engineering/software-product.md) |
+| Software engineer, IT services | A client's project, a client's hours, timesheets | [Draft](profiles/engineering/software-services.md) |
+| Mechanical, plant maintenance | Shop floor, shifts, breakdowns, gloves on | [Draft](profiles/engineering/plant-maintenance.md) |
+| Mechanical, design | CAD workstation, drawings and revisions | [Draft](profiles/engineering/mechanical-design.md) |
+| Civil, site engineer | Construction site, contractors, sun on the screen | [Draft](profiles/engineering/site-engineer.md) |
+| Civil, structural and planning | Drawings, approvals, coordination | [Draft](profiles/engineering/structural-planning.md) |
+| Electrical, maintenance | Shifts, safety permits, field calls | [Draft](profiles/engineering/electrical-maintenance.md) |
+| Electronics, embedded | Lab bench, firmware, test equipment | [Draft](profiles/engineering/embedded-engineer.md) |
 
 **Later families**
 

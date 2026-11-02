@@ -1,0 +1,28 @@
+id = "ganesh"
+number = 40
+name = "Ganesh"
+age = 31
+job = "Plant maintenance shift engineer"
+profile = "study/profiles/engineering/plant-maintenance.md"
+status = "draft"
+
+[situation]
+place = "On the shop floor next to a stopped conveyor"
+hands = "Greasy gloves, one glove off for the phone"
+time = "Night shift, production waiting"
+device = "A rugged Android phone"
+mood = "Under pressure."
+
+[habits]
+reads = "Reads two or three words, then acts."
+words = ["breakdown", "permit", "LOTO", "spare"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 4
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.08
+typo_rate = 0.06
+device = "phone"

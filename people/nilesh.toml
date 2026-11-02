@@ -1,0 +1,28 @@
+id = "nilesh"
+number = 47
+name = "Nilesh"
+age = 32
+job = "Site in-charge"
+profile = "study/profiles/engineering/site-engineer.md"
+status = "draft"
+
+[situation]
+place = "At the site gate checking a material truck"
+hands = "Clipboard in one hand"
+time = "Morning, contractors waiting for instructions"
+device = "An Android phone"
+mood = "Busy, decisive."
+
+[habits]
+reads = "Reads the start of things."
+words = ["PMC", "contractor", "bill", "progress"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.06
+typo_rate = 0.05
+device = "phone"

@@ -1,0 +1,28 @@
+id = "prasad"
+number = 49
+name = "Prasad"
+age = 34
+job = "Structural design engineer"
+profile = "study/profiles/engineering/structural-planning.md"
+status = "draft"
+
+[situation]
+place = "At his desk with calculations open"
+hands = "Keyboard and mouse"
+time = "Afternoon, a drawing to issue"
+device = "Office workstation"
+mood = "Careful."
+
+[habits]
+reads = "Reads everything."
+words = ["GFC", "load", "drawing", "revision"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 18
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

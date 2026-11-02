@@ -12,12 +12,14 @@ const TownView = (() => {
   const PARTY = ['#ffc94d', '#8fcf7a', '#5b8def', '#e06c75', '#c678dd', '#ebe7dc', '#56b6c2'];
   const WORKPLACE = { 'fabricator': 'fab', 'food-stall': 'stall', 'trial-advocate': 'court', 'junior-advocate': 'court',
     'firm-associate': 'firm', 'in-house-counsel': 'office', 'wedding-photographer': 'hall', 'videographer': 'hall',
-    'product-photographer': 'studio', 'video-editor': 'studio', 'social-media-manager': 'itpark' };
+    'product-photographer': 'studio', 'video-editor': 'studio', 'social-media-manager': 'itpark',
+    'software-product': 'itpark', 'software-services': 'office', 'plant-maintenance': 'factory', 'mechanical-design': 'factory',
+    'site-engineer': 'site', 'structural-planning': 'office', 'electrical-maintenance': 'factory', 'embedded-engineer': 'itpark' };
   // The street from left to right. Workplaces for the families still being studied are already standing.
   const STREET = [['home', 30], ['chai', 14], ['fab', 24], ['stall', 22], ['medical', 16], ['court', 28], ['firm', 24],
-    ['office', 24], ['itpark', 28], ['studio', 20], ['hall', 30], ['hospital', 26], ['school', 24], ['factory', 28], ['site', 28], ['home2', 26]];
-  // Locals 1 to 18 live in the first block of flats, 19 to 33 in the second; one window each.
-  const homeOf = number => (number <= 18 ? 'home' : 'home2');
+    ['office', 24], ['itpark', 28], ['studio', 20], ['hall', 30], ['hospital', 26], ['school', 24], ['factory', 28], ['site', 28], ['home2', 26], ['home3', 32]];
+  // Locals 1 to 18 live in the first block of flats, 19 to 33 in the second, 34 to 57 in the third; one window each.
+  const homeOf = number => (number <= 18 ? 'home' : number <= 33 ? 'home2' : 'home3');
   const TREES_AFTER = new Set(['chai', 'medical', 'studio', 'school']);
 
   const PERSON = {
@@ -201,6 +203,15 @@ const TownView = (() => {
         for (let r = 0; r < 5; r++) R(x + 1, 49 + r * 8, w - 2, 1, C.line);
         R(door - 3, 82, 6, 8, C.slab2);
         break;
+      case 'home3':
+        R(x - 1, 28, w + 2, 2, C.slab2); R(x + 3, 24, 5, 4, C.slab2); R(x, 30, w, 60, C.slab);
+        for (let i = 0; i < 24; i++) {
+          const who = [...locals.values()].find(l => l.info.number === 34 + i);
+          const color = !who ? C.dark : who.mode === 'home' ? C.light : C.dimLight;
+          R(x + 3 + (i % 4) * 7, 34 + Math.floor(i / 4) * 7, 5, 4, color);
+        }
+        R(door - 3, 82, 6, 8, C.slab2);
+        break;
       case 'hall': {
         R(x, 58, w, 32, C.slab); R(x - 1, 56, w + 2, 2, C.slab2);
         const shift = calm() ? 0 : Math.floor(t / 500);
@@ -308,7 +319,7 @@ const TownView = (() => {
     }
     if (scene.lights === 'diwali') {
       // Akash kandils hanging from the flats.
-      for (const b of buildings.filter(b => b.key === 'home' || b.key === 'home2')) {
+      for (const b of buildings.filter(b => b.key.startsWith('home'))) {
         for (const dx of [2, b.w - 5]) {
           R(b.x + dx + 1, 28, 1, 3, C.line);
           sprite(['.X.', 'XXX', 'XYX', 'XXX', '.X.'], b.x + dx, 31, { X: '#ff9f43', Y: C.light });

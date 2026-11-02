@@ -1,0 +1,28 @@
+id = "gauri"
+number = 50
+name = "Gauri"
+age = 28
+job = "Planning engineer"
+profile = "study/profiles/engineering/structural-planning.md"
+status = "draft"
+
+[situation]
+place = "At her desk updating the schedule"
+hands = "Keyboard and mouse"
+time = "Monday morning, site updates missing"
+device = "Office laptop"
+mood = "Organised, a little frustrated."
+
+[habits]
+reads = "Reads properly."
+words = ["schedule", "baseline", "delay", "update"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 14
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

@@ -1,0 +1,28 @@
+id = "sachin"
+number = 52
+name = "Sachin"
+age = 30
+job = "Shift electrical engineer"
+profile = "study/profiles/engineering/electrical-maintenance.md"
+status = "draft"
+
+[situation]
+place = "In front of a tripped panel"
+hands = "Insulated gloves, torch in one hand"
+time = "Night shift, a feeder is down"
+device = "A rugged Android phone"
+mood = "Tense, focused on safety."
+
+[habits]
+reads = "Reads a few words at a time."
+words = ["trip", "feeder", "permit", "shutdown"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 4
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.08
+typo_rate = 0.06
+device = "phone"

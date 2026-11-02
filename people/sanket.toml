@@ -1,0 +1,28 @@
+id = "sanket"
+number = 44
+name = "Sanket"
+age = 30
+job = "Mechanical design engineer"
+profile = "study/profiles/engineering/mechanical-design.md"
+status = "draft"
+
+[situation]
+place = "On the shop floor holding a drawing printout"
+hands = "Drawing in one hand, phone in the other"
+time = "Afternoon, a fitter waiting for an answer"
+device = "An Android phone"
+mood = "Precise but rushed."
+
+[habits]
+reads = "Reads the start, checks numbers."
+words = ["tolerance", "rev", "part", "fitment"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.03
+device = "phone"
