@@ -45,16 +45,37 @@ Five findings shape every rule below.
 | Toy car collector | Peghunt | To find | Planned |
 | Recruiter | Portfolio | To find | Planned |
 
-**Ring two: the wider town.** Jobs our apps do not serve yet, so the town is more than our own customers.
+**Ring two: the wider town.** Jobs our apps do not serve yet, so the town is more than our own customers. Each family is split into types by **how differently their day runs**; practice areas and specialities become the different people inside a type.
 
-| Job | Why they are in the town | Profile |
+**[Law](profiles/law/README.md)**
+
+| Type | The day in one line | Profile |
 |---|---|---|
-| Lawyer (district court advocate) | Days ruled by hearings, adjournments and paperwork | Planned |
-| Software engineer | Lives in tools all day, least patient with bad ones | Planned |
-| Site engineer | Works on a construction site, phone in one hand, sun on the screen | Planned |
-| Chartered accountant | Deadlines, forms, month end and tax season cycles | Planned |
-| Clinic doctor | Seconds between patients | Planned |
-| School teacher | Many people, one phone, evenings full of admin | Planned |
+| Trial court advocate | Ruled by the cause list and the next date | [Draft](profiles/law/trial-advocate.md) |
+| Junior advocate | Sent from courtroom to registry, reporting every date | [Draft](profiles/law/junior-advocate.md) |
+| Law firm associate | Partners, redlines and timesheets | [Draft](profiles/law/firm-associate.md) |
+| In-house counsel | Colleagues who need it signed today | [Draft](profiles/law/in-house-counsel.md) |
+
+**Engineering**
+
+| Type | The day in one line | Profile |
+|---|---|---|
+| Software engineer, product company | Deep work broken by meetings and alerts | Next |
+| Software engineer, IT services | A client's project, a client's hours, timesheets | Planned |
+| Mechanical, plant maintenance | Shop floor, shifts, breakdowns, gloves on | Planned |
+| Mechanical, design | CAD workstation, drawings and revisions | Planned |
+| Civil, site engineer | Construction site, contractors, sun on the screen | Planned |
+| Civil, structural and planning | Drawings, approvals, coordination | Planned |
+| Electrical, maintenance | Shifts, safety permits, field calls | Planned |
+| Electronics, embedded | Lab bench, firmware, test equipment | Planned |
+
+**Later families**
+
+| Family | Types |
+|---|---|
+| Finance | Chartered accountant in practice, article assistant, accounts executive |
+| Health | Clinic doctor, resident doctor, nurse, pharmacist |
+| Education | School teacher, college professor, tuition teacher |
 
 ## How a profile becomes a local
 

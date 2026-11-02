@@ -13,6 +13,10 @@ body:
       options:
         - Fabrication shop owner
         - Food stall counter
+        - Trial court advocate
+        - Junior advocate
+        - Law firm associate
+        - In-house counsel
         - A job that is not in the town yet
     validations:
       required: true

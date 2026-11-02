@@ -80,12 +80,16 @@ So every local starts as a profile of a real job, built from interviews and publ
 | Fabrication shop owner | Pops | [Draft](study/profiles/fabricator.md) |
 | Food stall counter | Order Control | [Draft](study/profiles/food-stall.md) |
 | Fresh graduate, photographer, collector, recruiter | Fill.ai, PixelShift, Peghunt, portfolio | Planned |
-| Lawyer, software engineer, site engineer, accountant, doctor, teacher | The wider town | Planned |
+| [Law](study/profiles/law/README.md): trial court advocate, junior advocate, firm associate, in-house counsel | The wider town | Drafts |
+| Engineering: software, mechanical, civil, electrical, electronics (eight types) | The wider town | Next |
+| Finance, health, education | The wider town | Planned |
 
 ## Roadmap
 
 - [x] Name, method and profile template
 - [x] First two profiles drafted from a real business
+- [x] Law family: four types of lawyer drafted
+- [ ] Engineering family: eight types
 - [ ] Interviews with a real fabricator and a real food stall
 - [ ] First local: one task in Pops on the Android emulator with `qwen3:4b-instruct`
 - [ ] Limits set from watching real people do the same tasks
