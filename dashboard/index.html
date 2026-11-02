@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Locals</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 9' shape-rendering='crispEdges'%3E%3Crect width='7' height='9' fill='%230c0e13'/%3E%3Cpath d='M1 1h1v6h4v1H1z' fill='%23ffc94d'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="rail" aria-label="Views">
+  <div class="mark" data-icon="mark" aria-hidden="true"></div>
+  <button class="tab on" data-view="town" data-icon="town" aria-label="Town" title="Town"></button>
+  <button class="tab" data-view="setup" data-icon="setup" aria-label="Set up a day" title="Set up a day"></button>
+  <button class="tab" data-view="days" data-icon="days" aria-label="Past days" title="Past days"></button>
+</nav>
+
+<main>
+  <section class="view on" id="view-town">
+    <div class="stage">
+      <canvas id="canvas" aria-label="The town: locals walking between their homes and workplaces"></canvas>
+      <div class="hud">
+        <div class="hud-day" id="hud-day">NO DAY YET</div>
+        <div class="hud-sub" id="hud-sub">Nobody is out. Set up a day to send the locals somewhere.</div>
+        <button class="btn" id="hud-setup">SET UP A DAY</button>
+      </div>
+      <div class="now" id="now" hidden></div>
+      <div class="replay" id="replay" hidden>
+        <div class="replay-shot"><img id="replay-img" alt="The screen the local was looking at"></div>
+        <div class="replay-side">
+          <div class="replay-who" id="replay-who"></div>
+          <div class="replay-line" id="replay-line"></div>
+          <p class="replay-thought" id="replay-thought"></p>
+          <div class="replay-nav">
+            <button class="btn ghost" id="replay-prev">PREV</button>
+            <button class="btn ghost" id="replay-next">NEXT</button>
+            <button class="btn ghost" id="replay-close">CLOSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="feed">
+      <header class="feed-head">
+        <span class="h">FEED</span>
+        <label class="toggle"><input type="checkbox" id="show-steps" checked> STEPS</label>
+        <span class="live" id="live" hidden>LIVE</span>
+      </header>
+      <div class="who" id="who" hidden></div>
+      <ol class="feed-list" id="feed-list"></ol>
+      <footer class="feed-foot" id="feed-foot" hidden><button class="btn ghost wide" id="stop">STOP THE DAY</button></footer>
+    </aside>
+  </section>
+
+  <section class="view" id="view-setup">
+    <div class="setup">
+      <div class="col">
+        <h2>WHAT DO THEY TEST</h2>
+        <div class="kind" role="tablist">
+          <button class="kind-btn on" data-kind="saved" role="tab">SAVED TASK</button>
+          <button class="kind-btn" data-kind="site" role="tab">A SITE</button>
+          <button class="kind-btn" data-kind="apk" role="tab">ANDROID APP</button>
+        </div>
+        <div class="kind-pane on" data-pane="saved">
+          <select id="task-select" aria-label="Saved task"></select>
+          <p class="story" id="task-story"></p>
+          <p class="check-line" id="task-check"></p>
+        </div>
+        <div class="kind-pane" data-pane="site">
+          <label class="field"><span>ADDRESS</span>
+            <input id="site-url" type="url" placeholder="http://localhost:5173 or https://your-site.com" spellcheck="false"></label>
+          <label class="field"><span>WHAT SHOULD THEY TRY TO DO</span>
+            <textarea id="site-goal" rows="3" placeholder="Sign up, find the pricing page and choose the cheapest plan."></textarea></label>
+          <div class="field"><span>HOW DO WE KNOW IT WORKED</span>
+            <div class="pair">
+              <select id="site-check" aria-label="How we check">
+                <option value="page_text">The page shows this text</option>
+                <option value="url_contains">The address contains</option>
+                <option value="download">A file gets saved</option>
+                <option value="word">Take their word for it</option>
+              </select>
+              <input id="site-value" placeholder="Welcome aboard" aria-label="Text to look for">
+            </div>
+          </div>
+          <div class="drop" id="file-drop" tabindex="0">
+            <input type="file" id="file-input" multiple hidden>
+            <span>FILES ON THEIR PHONE</span>
+            <p id="file-list">Drop files here if the task needs something to upload.</p>
+          </div>
+        </div>
+        <div class="kind-pane" data-pane="apk">
+          <div class="drop off">
+            <span>DROP AN APK · NEXT</span>
+            <p>Locals cannot use Android apps yet. Android is the next thing being built, starting with Pops on the emulator.</p>
+          </div>
+        </div>
+
+        <h2 class="gap">WHO LIVES IN TOWN TONIGHT</h2>
+        <p class="dim">Tick the jobs, set how many of each.</p>
+        <ul class="groups" id="groups"></ul>
+      </div>
+
+      <div class="col">
+        <h2>YOUR MACHINE</h2>
+        <p class="dim" id="machine-name"></p>
+        <div id="meters"></div>
+        <div class="principle">
+          <p>More locals take more time, not more GPU memory.</p>
+          <p class="dim">They share one model and take turns.</p>
+        </div>
+        <label class="toggle big"><input type="checkbox" id="watch"> SHOW THE BROWSER WHILE THEY WORK</label>
+        <p class="error" id="setup-error" hidden></p>
+        <button class="btn big" id="start">START THE DAY</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-days">
+    <div class="days">
+      <h2>PAST DAYS</h2>
+      <p class="dim" id="days-note">Open a day to see where everyone ended up and replay any step.</p>
+      <ol class="day-list" id="day-list"></ol>
+    </div>
+  </section>
+</main>
+<script src="townview.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

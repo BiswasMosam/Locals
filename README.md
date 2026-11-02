@@ -16,19 +16,19 @@
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-8a8f9c?style=flat-square&labelColor=0c0e13"></a>
 </p>
 
-> **Day 1.** Eighteen draft locals live in the town and can already use web apps in a real browser, thinking with a small model on this laptop. They are built from the [study](study/README.md) of the people they stand for, and stay marked draft until real people in those jobs confirm their profiles. [Run them](#run-it), or [help get a profile right](#leave-a-review).
+> **Day 1.** Eighteen draft locals live in the town and use web apps in a real browser, thinking with a small model on this laptop, and a dashboard shows them at work. They are built from the [study](study/README.md) of the people they stand for, and stay marked draft until real people in those jobs confirm their profiles. [Run them](#run-it), or [help get a profile right](#leave-a-review).
 
 <br>
 
 ## The town
 
 <p align="center">
-  <img src="brand/town.svg" alt="Pixel art town at night. Locals walk along the street; two of them stand outside a fabrication shop and a Chinese food stall with speech bubbles. A feed on the right lists what they got stuck on." width="100%">
+  <img src="brand/dashboard-town.png" alt="The Locals dashboard during a real day. Pixel art town at night: Sunil stands at the Chinese stall with a thinking bubble and his phone lit, Kavita waits at the court, Neha at the law firm. The feed on the right shows his first step." width="100%">
 </p>
 
-Three quarters of the screen is the town. Every pixel person is a real run: a local walking to work, opening your app, doing a task. When one gets stuck, a bubble appears over their head. The last quarter is the feed, where each local says what went wrong and what they did instead. Click a line and you watch the moment it happened.
+This is the dashboard during a real day, not a mock up. Three quarters of the screen is the town. Each local walks out of their flat (their window dims as they leave) to their workplace and waits their turn. The one at work holds a lit phone and thinks in a bubble; a stuck local gets a blinking `!`; everyone ends the day with a mark for how it went. The bar along the bottom shows what the working local is doing right now.
 
-The image above is a concept with example entries, drawn from a real app: in [Pops](https://github.com/BiswasMosam/Pops) the advance is entered on an order's detail screen, not on the new order form, which is exactly where a hurried user might look first. Whether that is a real problem is what a run is for.
+The last quarter is the feed: every step and every thought, with STUCK, SLIP, DONE and GAVE UP called out. Click any line and you see the exact screen the local was looking at, then step through their run with PREV and NEXT. Click a local in the town to follow just them. Past days are kept and can be opened again.
 
 ## A real run
 
@@ -71,12 +71,18 @@ When a local cannot do something and does something else instead, that workaroun
 ## Fits your machine
 
 <p align="center">
-  <img src="brand/setup.svg" alt="Setup screen. A list of jobs with tick boxes and counts on the left; meters for GPU memory, memory and time on the right." width="100%">
+  <img src="brand/dashboard-setup.png" alt="The setup screen. Job types with tick boxes and counts on the left; meters for GPU memory, memory and time read from this machine on the right." width="100%">
 </p>
 
-Not everyone has a big GPU. Before a run you tick the jobs you want in town and set how many of each, and Locals shows what your machine will spend: GPU memory, memory and time.
+Not everyone has a big GPU. Before a day you tick the jobs you want in town and set how many of each, and Locals reads your machine to show what it will spend: GPU memory (from your graphics card and the model in Ollama), memory, and time (from how fast earlier days ran on this machine).
 
-All locals share one model and take turns, so **more locals cost more time, not more GPU memory**. Memory depends on which model you pick and how many locals act at the same moment. A smaller machine still runs the whole town; it just takes longer.
+All locals share one model and take turns, so **more locals cost more time, not more GPU memory**. A smaller machine still runs the whole town; it just takes longer. No NVIDIA card at all? The model runs on the processor, slower, and the meter says so.
+
+## Test your own app
+
+Pick **A SITE** in setup and paste an address: your live site, or the one on your machine while you build it (`http://localhost:5173` works, because the locals run on the same machine). Say in plain words what they should try to do, and how Locals can tell it worked: the page shows some text, the address changes, a file gets saved, or take their word for it, which is marked as unchecked rather than done. If the task needs something to upload, drop the files in and every local finds them on their phone.
+
+Android apps are next: drop an APK and the locals use it on the Android emulator.
 
 ## How it works
 
@@ -115,6 +121,7 @@ python -m venv .venv
 .venv/Scripts/pip install -r requirements.txt   # on macOS or Linux: .venv/bin/pip
 ollama pull qwen3:4b-instruct
 
+python -m town dashboard                                 # the town in your browser
 python -m town people                                    # everyone who lives in the town
 python -m town run pixelshift:small-jpg rohit sunil      # send two locals to a task
 python -m town run pixelshift:small-jpg all --watch      # everyone, with the browser visible
@@ -128,9 +135,12 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 - [x] First two profiles drafted from a real business
 - [x] Law family: four types of lawyer drafted
 - [x] Eighteen draft locals that use web apps in a real browser
+- [x] Dashboard: the town, the live feed, replay, setup with machine meters, your own sites
+- [ ] A simulated year: weekdays and weekends, monsoon, festivals across religions, a pandemic
+- [ ] Media family: photographers, videographers, video editors, social media teams
 - [ ] Engineering family: eight types
+- [ ] Locals on Android: drop an APK, starting with Pops on the emulator
 - [ ] Interviews with a real fabricator and a real food stall
-- [ ] Locals on Android: Pops on the emulator
 - [ ] Limits set from watching real people do the same tasks
 - [ ] Setup screen with the resource estimate
 - [ ] The town view

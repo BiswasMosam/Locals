@@ -7,3 +7,6 @@ runs/
 
 # Interview notes name real people; they never leave this machine
 study/interviews/
+
+# Your own sites and uploads from the dashboard
+tasks/mine/

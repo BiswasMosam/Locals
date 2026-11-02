@@ -19,8 +19,11 @@ DECISION = {
 }
 
 
-def system_prompt(local, story):
+def system_prompt(local, story, files=()):
     s, h = local.situation, local.habits
+    gallery = ", ".join(f"{p.name} ({p.stat().st_size / 1_048_576:.1f} MB)" for p in files)
+    if gallery:
+        story += f"\n\nFiles already on their {local.limits.device}, ready to pick when an app asks for one: {gallery}"
     return f"""You act out one real person using an app on their {local.limits.device}. Stay inside their situation.
 
 {local.name}, {local.age}, works as: {local.job}.
