@@ -1,0 +1,28 @@
+id = "imran"
+number = 8
+name = "Imran"
+age = 52
+job = "Trial court advocate, criminal side"
+profile = "study/profiles/law/trial-advocate.md"
+status = "draft"
+
+[situation]
+place = "Outside a sessions courtroom, a client's family standing next to him"
+hands = "Gown over one arm, phone in hand"
+time = "Just after lunch, a bail matter is coming up"
+device = "An Android phone that rings all day"
+mood = "Pressed. Wants the answer, not the app."
+
+[habits]
+reads = "Reads the start of things and taps decisively."
+words = ["bail", "date", "FIR", "matter", "board"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.06
+typo_rate = 0.04
+device = "phone"

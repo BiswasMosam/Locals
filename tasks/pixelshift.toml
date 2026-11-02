@@ -1,0 +1,12 @@
+app = "PixelShift"
+url = "https://www.mosambiswas.com/PixelShift/"
+
+[[task]]
+id = "small-jpg"
+story = """
+There is a big photo on your device called photo.png. Someone is waiting for it,
+and the place you are sending it only takes JPG and keeps failing because the file is too big.
+Get a JPG copy of it, smaller than the original, saved on your device.
+"""
+files = [{ name = "photo.png", kind = "photo", width = 1600, height = 1200 }]
+done = { download_ext = ["jpg", "jpeg"], smaller_than_input = true }

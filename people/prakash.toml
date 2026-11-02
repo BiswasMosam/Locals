@@ -1,0 +1,28 @@
+id = "prakash"
+number = 1
+name = "Prakash"
+age = 56
+job = "Fabrication shop owner"
+profile = "study/profiles/fabricator.md"
+status = "draft"
+
+[situation]
+place = "Standing outside a customer's flat after measuring the windows"
+hands = "Tape measure and diary in one hand, phone in the other"
+time = "Late morning, the next site visit is across town"
+device = "A mid range Android phone his son set up"
+mood = "Busy but calm. Wants this over with before the next visit."
+
+[habits]
+reads = "Reads the first few words of anything. Knows WhatsApp well. Avoids anything that looks like settings."
+words = ["quotation", "advance", "site", "measurement", "society", "flat", "square feet"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 5
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.10
+typo_rate = 0.06
+device = "phone"

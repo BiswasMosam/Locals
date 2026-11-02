@@ -1,0 +1,28 @@
+id = "rohit"
+number = 10
+name = "Rohit"
+age = 25
+job = "Junior advocate"
+profile = "study/profiles/law/junior-advocate.md"
+status = "draft"
+
+[situation]
+place = "A district court corridor between two courtrooms"
+hands = "Files under one arm, phone in the other hand"
+time = "Just before lunch. His senior wants an answer in minutes."
+device = "An old Android phone, storage nearly full, weak signal in the corridor"
+mood = "Rushed but determined."
+
+[habits]
+reads = "Skims. Reads the first few words, then taps."
+words = ["date", "pass over", "matter", "registry", "defect"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.08
+typo_rate = 0.04
+device = "phone"

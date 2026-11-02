@@ -1,0 +1,28 @@
+id = "nikhil"
+number = 2
+name = "Nikhil"
+age = 34
+job = "Fabrication shop owner"
+profile = "study/profiles/fabricator.md"
+status = "draft"
+
+[situation]
+place = "At his shop counter between two customer calls"
+hands = "One hand free, the other holding the shop phone"
+time = "Afternoon, two workers waiting for instructions"
+device = "A new Android phone full of business apps"
+mood = "Impatient. If an app is slow he goes back to WhatsApp."
+
+[habits]
+reads = "Scans fast and taps the first thing that looks right."
+words = ["quotation", "advance", "catalogue", "order", "rate", "site"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.03
+device = "phone"

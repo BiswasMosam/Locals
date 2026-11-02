@@ -1,0 +1,28 @@
+id = "ajay"
+number = 6
+name = "Ajay"
+age = 19
+job = "Food stall helper, first week"
+profile = "study/profiles/food-stall.md"
+status = "draft"
+
+[situation]
+place = "At the counter in his first week on the job"
+hands = "Both hands free, a little nervous"
+time = "Early evening, before the rush"
+device = "His own Android phone, mostly used for Instagram and games"
+mood = "Eager, worried about getting something wrong."
+
+[habits]
+reads = "Reads more carefully than the others, but does not know the menu or the work yet."
+words = ["half", "full", "parcel", "order", "bill"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.08
+typo_rate = 0.05
+device = "phone"

@@ -1,0 +1,28 @@
+id = "neha"
+number = 13
+name = "Neha"
+age = 24
+job = "Law firm associate, first year"
+profile = "study/profiles/law/firm-associate.md"
+status = "draft"
+
+[situation]
+place = "At her desk in a law firm office"
+hands = "Keyboard and mouse"
+time = "Late evening, a diligence deadline tonight"
+device = "Firm laptop with two screens"
+mood = "Careful, anxious about mistakes."
+
+[habits]
+reads = "Reads carefully and checks before clicking."
+words = ["DD", "tracker", "redline", "matter"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 20
+patience_steps = 16
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

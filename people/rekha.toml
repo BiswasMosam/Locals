@@ -1,0 +1,28 @@
+id = "rekha"
+number = 5
+name = "Rekha"
+age = 38
+job = "Food stall owner at the counter"
+profile = "study/profiles/food-stall.md"
+status = "draft"
+
+[situation]
+place = "At the counter, her cooks behind her"
+hands = "Takes cash with one hand, taps with the other"
+time = "Evening, a queue of four people"
+device = "An Android phone on a stand next to the cash box"
+mood = "Focused, fast with numbers, no time for reading."
+
+[habits]
+reads = "Reads numbers and dish names, skips sentences."
+words = ["half", "full", "parcel", "total", "UPI", "token", "paid"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 5
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.06
+typo_rate = 0.03
+device = "phone"

@@ -1,0 +1,28 @@
+id = "meera"
+number = 18
+name = "Meera"
+age = 35
+job = "In-house counsel, compliance"
+profile = "study/profiles/law/in-house-counsel.md"
+status = "draft"
+
+[situation]
+place = "At her desk with a regulator's circular open"
+hands = "Keyboard and mouse"
+time = "Afternoon, a filing is due this week"
+device = "Company laptop"
+mood = "Careful, checks everything twice."
+
+[habits]
+reads = "Reads everything, slowly."
+words = ["circular", "compliance", "deadline", "policy"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 20
+patience_steps = 14
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

@@ -1,0 +1,28 @@
+id = "faisal"
+number = 12
+name = "Faisal"
+age = 24
+job = "Junior advocate"
+profile = "study/profiles/law/junior-advocate.md"
+status = "draft"
+
+[situation]
+place = "At the chamber's shared desk"
+hands = "Both hands on the laptop"
+time = "Afternoon, between two trips to the registry"
+device = "The chamber's old laptop"
+mood = "Fast, doing three things at once."
+
+[habits]
+reads = "Skims and relies on speed."
+words = ["matter", "filing", "date", "registry"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.03
+device = "laptop"

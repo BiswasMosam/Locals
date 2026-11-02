@@ -1,0 +1,28 @@
+id = "sunil"
+number = 4
+name = "Sunil"
+age = 40
+job = "Food stall owner and cook"
+profile = "study/profiles/food-stall.md"
+status = "draft"
+
+[situation]
+place = "Behind his stall, between two woks"
+hands = "Oily fingers, wiped on a cloth before touching the phone"
+time = "Night rush, three orders on the stove"
+device = "An Android phone propped against the counter, screen smudged"
+mood = "Hurried. Every second away from the stove burns food."
+
+[habits]
+reads = "Glances. Reads two or three words, then taps."
+words = ["half", "full", "parcel", "schezwan", "token", "ready", "paid"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 3
+patience_steps = 6
+repeat_before_stuck = 1
+slip_rate = 0.12
+typo_rate = 0.06
+device = "phone"

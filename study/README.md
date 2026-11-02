@@ -27,7 +27,7 @@ Five findings shape every rule below.
    | `[P]` | Known from building one of our apps for a real user |
    | `[G]` | A guess. Every guess must have a matching open question. |
 
-2. **No guess reaches a local.** A `[G]` line is either confirmed by an interview or left out.
+2. **Draft locals are labelled draft.** A local built from a profile that still has `[G]` lines is marked `status = "draft"` and its numbers are guesses. Its runs test Locals itself and give early signals; they are not findings about an app until the profile is confirmed.
 3. **Real people are never named.** Interview notes live in `study/interviews/`, which git ignores. Profiles describe composites.
 4. **A profile is finished when someone in that job has read it and corrected it.**
 

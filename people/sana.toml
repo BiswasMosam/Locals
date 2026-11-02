@@ -1,0 +1,28 @@
+id = "sana"
+number = 15
+name = "Sana"
+age = 31
+job = "Law firm associate, disputes"
+profile = "study/profiles/law/firm-associate.md"
+status = "draft"
+
+[situation]
+place = "At her desk preparing a hearing bundle"
+hands = "Keyboard and mouse"
+time = "Afternoon, the hearing is tomorrow"
+device = "Firm laptop"
+mood = "Focused and precise."
+
+[habits]
+reads = "Reads thoroughly and notices details."
+words = ["bundle", "hearing", "chronology", "exhibit"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 15
+patience_steps = 14
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

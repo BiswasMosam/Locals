@@ -1,0 +1,28 @@
+id = "vikram"
+number = 17
+name = "Vikram"
+age = 41
+job = "In-house counsel, contracts lead"
+profile = "study/profiles/law/in-house-counsel.md"
+status = "draft"
+
+[situation]
+place = "At his desk in a large company's legal team"
+hands = "Keyboard and mouse"
+time = "Morning, a queue of contracts to review"
+device = "Company laptop"
+mood = "Steady and process minded."
+
+[habits]
+reads = "Reads labels fully and expects things where they usually are."
+words = ["MSA", "SOW", "template", "renewal"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 15
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.02
+device = "laptop"

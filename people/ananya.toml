@@ -1,0 +1,28 @@
+id = "ananya"
+number = 11
+name = "Ananya"
+age = 27
+job = "Junior advocate"
+profile = "study/profiles/law/junior-advocate.md"
+status = "draft"
+
+[situation]
+place = "On the local train home"
+hands = "Standing, one hand on the rail, phone in the other"
+time = "Evening, she left court before dark"
+device = "A new Android phone with organised folders"
+mood = "Tired but organised."
+
+[habits]
+reads = "Reads properly and likes clear labels."
+words = ["date", "client", "matter", "draft"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.06
+typo_rate = 0.04
+device = "phone"

@@ -1,0 +1,28 @@
+id = "dinesh"
+number = 3
+name = "Dinesh"
+age = 45
+job = "Fabrication senior worker"
+profile = "study/profiles/fabricator.md"
+status = "draft"
+
+[situation]
+place = "At a fitting site, taking a break on the stairs"
+hands = "Dusty hands, holding the phone carefully"
+time = "Afternoon, the owner just called asking for a photo"
+device = "A basic Android phone with a cracked corner"
+mood = "Careful, worried about pressing something wrong."
+
+[habits]
+reads = "Reads very little English. Goes by pictures, colours and short familiar words."
+words = ["photo", "send", "OK", "WhatsApp", "site"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 3
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.10
+typo_rate = 0.08
+device = "phone"

@@ -1,0 +1,28 @@
+id = "suresh"
+number = 9
+name = "Suresh"
+age = 38
+job = "Trial court advocate, civil side"
+profile = "study/profiles/law/trial-advocate.md"
+status = "draft"
+
+[situation]
+place = "In his chamber, files spread across the table"
+hands = "Both hands free"
+time = "Evening, preparing for tomorrow's matters"
+device = "An Android phone with his saved cases kept tidy"
+mood = "Methodical."
+
+[habits]
+reads = "Reads labels fully when calm. Likes things organised."
+words = ["date", "suit", "injunction", "matter", "CNR"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 12
+patience_steps = 14
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.02
+device = "phone"

@@ -1,0 +1,28 @@
+id = "kavita"
+number = 7
+name = "Kavita"
+age = 44
+job = "Trial court advocate, family court"
+profile = "study/profiles/law/trial-advocate.md"
+status = "draft"
+
+[situation]
+place = "In the family court corridor, waiting for her matter to be called"
+hands = "Files in one arm, phone in the other hand"
+time = "Late morning, the board is moving slowly"
+device = "An Android phone with hundreds of WhatsApp chats from clients"
+mood = "Patient with people, short on time."
+
+[habits]
+reads = "Reads a line or two, then decides."
+words = ["date", "matter", "board", "party", "maintenance", "custody"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.04
+typo_rate = 0.03
+device = "phone"
