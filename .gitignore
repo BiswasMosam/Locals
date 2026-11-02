@@ -4,3 +4,6 @@ __pycache__/
 .env
 runs/
 *.log
+
+# Interview notes name real people; they never leave this machine
+study/interviews/

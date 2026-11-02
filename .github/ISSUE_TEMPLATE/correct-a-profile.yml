@@ -1,0 +1,34 @@
+name: Correct a profile
+description: You do one of these jobs and a profile gets your day wrong.
+title: "[Profile] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. A profile is only finished when someone who does the job has corrected it. Please leave out names of real people.
+  - type: dropdown
+    id: job
+    attributes:
+      label: Which profile?
+      options:
+        - Fabrication shop owner
+        - Food stall counter
+        - A job that is not in the town yet
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What did we get wrong?
+      description: Quote the line and tell us how it really is.
+    validations:
+      required: true
+  - type: textarea
+    id: yesterday
+    attributes:
+      label: Your yesterday at work
+      description: Optional. Roughly hour by hour, when your phone was in your hand and when it could not be.
+  - type: input
+    id: years
+    attributes:
+      label: How long have you done this job?

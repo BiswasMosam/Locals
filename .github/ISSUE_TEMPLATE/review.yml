@@ -1,0 +1,32 @@
+name: Review Locals
+description: What you think, what you would test with it, what is missing.
+title: "[Review] "
+body:
+  - type: textarea
+    id: review
+    attributes:
+      label: Your review
+      description: Honest is more useful than kind.
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Which app would you test with Locals?
+      description: Web, Android, desktop, and who uses it.
+  - type: dropdown
+    id: machine
+    attributes:
+      label: Your machine
+      description: Helps us size the resource estimate for real machines.
+      options:
+        - NVIDIA GPU with 8 GB or more
+        - NVIDIA GPU with less than 8 GB
+        - Apple Silicon Mac
+        - No dedicated GPU
+        - Not sure
+  - type: textarea
+    id: jobs
+    attributes:
+      label: Which jobs should live in the town?
+      description: Optional. Who uses your app at work?
