@@ -64,6 +64,16 @@ def model():
     return info
 
 
+def android():
+    """Whether an Android emulator or phone is ready for locals to use."""
+    try:
+        from .android import adb_path
+        out = subprocess.run([adb_path(), "devices"], capture_output=True, text=True, timeout=10).stdout
+        return {"adb": True, "devices": [l.split("\t")[0] for l in out.splitlines()[1:] if l.endswith("\tdevice")]}
+    except (RuntimeError, OSError, subprocess.SubprocessError):
+        return {"adb": False, "devices": []}
+
+
 def pace():
     """Seconds per step and steps per task, measured from earlier days on this machine."""
     secs, lengths = [], []

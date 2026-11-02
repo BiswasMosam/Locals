@@ -280,8 +280,37 @@ document.querySelectorAll('.kind-btn').forEach(b => b.addEventListener('click', 
   S.kind = b.dataset.kind;
   document.querySelectorAll('.kind-btn').forEach(x => x.classList.toggle('on', x === b));
   document.querySelectorAll('.kind-pane').forEach(x => x.classList.toggle('on', x.dataset.pane === S.kind));
-  $('#start').disabled = S.kind === 'apk' || S.running;
+  $('#goal-block').hidden = S.kind === 'saved';
+  // An app has no address and saves no downloads, so only "the screen shows" and "their word" make sense.
+  for (const o of $('#site-check').options) o.hidden = S.kind === 'apk' && ['url_contains', 'download'].includes(o.value);
+  if (S.kind === 'apk' && $('#site-check').selectedOptions[0].hidden) { $('#site-check').value = 'page_text'; $('#site-check').dispatchEvent(new Event('change')); }
+  renderMeters();
 }));
+
+// The app to test: an APK dropped here is uploaded to this machine and installed on the emulator for each local.
+const apkDrop = $('#apk-drop');
+apkDrop.addEventListener('click', () => $('#apk-input').click());
+apkDrop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') $('#apk-input').click(); });
+apkDrop.addEventListener('dragover', e => { e.preventDefault(); apkDrop.classList.add('over'); });
+apkDrop.addEventListener('dragleave', () => apkDrop.classList.remove('over'));
+apkDrop.addEventListener('drop', e => { e.preventDefault(); apkDrop.classList.remove('over'); uploadApk(e.dataTransfer.files[0]); });
+$('#apk-input').addEventListener('change', e => uploadApk(e.target.files[0]));
+
+async function uploadApk(file) {
+  if (!file) return;
+  if (!file.name.toLowerCase().endsWith('.apk')) return setupError('That is not an APK file.');
+  $('#apk-name').textContent = `Uploading ${file.name}…`;
+  const r = await fetch(`/api/files?name=${encodeURIComponent(file.name)}`, { method: 'POST', body: file });
+  S.apk = r.ok ? await r.json() : null;
+  $('#apk-name').textContent = S.apk ? `${S.apk.name}, ${(S.apk.size / 1048576).toFixed(1)} MB, ready.` : 'The upload failed. Try again.';
+  renderMeters();
+}
+
+function showDevice() {
+  const a = S.info.machine.android;
+  $('#apk-device').textContent = !a.adb ? 'adb was not found. Install the Android SDK platform tools.'
+    : a.devices.length ? `Ready on ${a.devices.join(', ')}.` : 'No emulator or phone is connected. Start an emulator, or plug in a phone with USB debugging on.';
+}
 
 $('#site-check').addEventListener('change', e => {
   const v = $('#site-value'), needs = ['page_text', 'url_contains'].includes(e.target.value);
@@ -334,10 +363,13 @@ function renderMeters() {
       : 'Choose who goes out.');
   $('#meters').innerHTML = html;
 
+  showDevice();
+  const android = m.android || { adb: false, devices: [] };
   const problem = !model.reachable ? 'Ollama is not running. Start it, then come back to this page.'
-    : !model.installed ? `The model is not downloaded yet. Run: ollama pull ${model.name}` : '';
+    : !model.installed ? `The model is not downloaded yet. Run: ollama pull ${model.name}`
+    : S.kind === 'apk' && !android.devices.length ? 'Start an Android emulator or connect a phone first.' : '';
   setupError(problem);
-  $('#start').disabled = S.running || S.kind === 'apk' || !team.length || !!problem;
+  $('#start').disabled = S.running || !team.length || !!problem || (S.kind === 'apk' && !S.apk);
   $('#start').textContent = S.running ? 'A DAY IS RUNNING' : team.length ? `START THE DAY WITH ${team.length}` : 'CHOOSE SOMEONE FIRST';
 }
 
@@ -419,9 +451,10 @@ $('#pandemic').addEventListener('change', e => { S.when.pandemic = e.target.valu
 
 $('#start').addEventListener('click', async () => {
   const body = { locals: chosen().map(p => p.id), watch: $('#watch').checked, dates: days(), pandemic: S.when.pandemic };
+  const goal = { goal: $('#site-goal').value.trim(), check: $('#site-check').value, value: $('#site-value').value.trim(), files: S.files };
   if (S.kind === 'saved') body.task = $('#task-select').value;
-  else body.site = { url: $('#site-url').value.trim(), goal: $('#site-goal').value.trim(), check: $('#site-check').value,
-    value: $('#site-value').value.trim(), files: S.files };
+  else if (S.kind === 'apk') body.app = { apk: S.apk ? S.apk.path : '', ...goal };
+  else body.site = { url: $('#site-url').value.trim(), ...goal };
   const r = await fetch('/api/run', { method: 'POST', body: JSON.stringify(body) });
   const reply = await r.json();
   if (!r.ok) return setupError(reply.error || 'That did not start.');

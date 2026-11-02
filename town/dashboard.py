@@ -81,7 +81,8 @@ def town_info():
                 "default": (now if now.year in years else date(years[-1], 2, 10)).isoformat() if years else None}
     return {"groups": list(groups.values()), "tasks": tasks.catalogue(), "busy": TOWN.busy(), "day": TOWN.day,
             "calendar": calendar,
-            "machine": {"gpu": machine.gpu(), "memory": machine.memory(), "model": machine.model(), "pace": machine.pace()}}
+            "machine": {"gpu": machine.gpu(), "memory": machine.memory(), "model": machine.model(), "pace": machine.pace(),
+                        "android": machine.android()}}
 
 
 def parse_days(values):
@@ -213,8 +214,15 @@ class Handler(SimpleHTTPRequestHandler):
         if not ids:
             return self.send_json({"error": "Choose at least one local."}, 400)
         try:
-            site = body.get("site")
-            ref = tasks.add_site(site["url"], site["goal"], site["check"], site.get("value", ""), site.get("files", [])) if site else body["task"]
+            site, app = body.get("site"), body.get("app")
+            if site:
+                ref = tasks.add_site(site["url"], site["goal"], site["check"], site.get("value", ""), site.get("files", []))
+            elif app:
+                if not re.fullmatch(r"runs/_uploads/[0-9a-f]{8}/[A-Za-z0-9._-]+\.apk", app.get("apk", "")):
+                    raise ValueError("Drop the app's APK file first.")
+                ref = tasks.add_app(app["apk"], app["goal"], app["check"], app.get("value", ""), app.get("files", []))
+            else:
+                ref = body["task"]
             task = tasks.load(ref)
             days = parse_days(body.get("dates") or [date.today().isoformat()])
         except (ValueError, KeyError, SystemExit) as e:

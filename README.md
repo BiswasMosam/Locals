@@ -102,7 +102,9 @@ All locals share one model and take turns, so **more locals cost more time, not 
 
 Pick **A SITE** in setup and paste an address: your live site, or the one on your machine while you build it (`http://localhost:5173` works, because the locals run on the same machine). Say in plain words what they should try to do, and how Locals can tell it worked: the page shows some text, the address changes, a file gets saved, or take their word for it, which is marked as unchecked rather than done. If the task needs something to upload, drop the files in and every local finds them on their phone.
 
-Android apps are next: drop an APK and the locals use it on the Android emulator.
+For an Android app, pick **ANDROID APP** and drop the APK. Locals use it on an Android emulator, or a phone plugged in with USB debugging, and each one gets a fresh install. They read the screen through Android's accessibility tree, the same one screen readers use, so it works for Flutter apps without changing them. A button with no label still shows its symbol to a sighted person, so a small vision model (`qwen2.5vl:3b`) looks at it and names it: "a plus, round, bottom right".
+
+The first Android runs were on [Pops](https://github.com/BiswasMosam/Pops), unchanged. Asked to add a new customer, the fabrication owners opened the **Book** tab first, again and again: they read it as booking a visit, while in Pops it is the ledger of finished jobs. The ones who found the plus then met an empty address book with societies, buildings and flats to create before any customer can be added. Both are questions for the real shop owner, which is exactly what a run is for.
 
 ## How it works
 
@@ -110,7 +112,7 @@ Android apps are next: drop an APK and the locals use it on the Android emulator
 |---|---|
 | **The town** | A workday hands each local tasks with real pressure: a call in the middle of a form, a dropped connection, a killed app. |
 | **The locals** | One model, many people. A local is a profile from the study turned into a prompt plus a set of limits. |
-| **Eyes** | Locals see what a person sees: visible controls by their visible words, a big card line by line, an icon with no words as just an icon. On the web this comes from a real Chrome on a phone sized or laptop sized screen; Android comes next. |
+| **Eyes** | Locals see what a person sees: visible controls by their visible words, a big card line by line, the placeholder in an empty box, and the symbol on a button with no words. On the web this comes from a real Chrome on a phone sized or laptop sized screen; on Android from the accessibility tree of an emulator or phone. |
 | **Limits** | Code, not the prompt, makes a local human: a patience budget, a reading budget, a slip rate, rules for giving up. Research shows a prompt alone leaves AI users far too patient and accurate. |
 | **The golden path** | You do each task once while it is recorded. Wherever a local leaves your path, the UI misled it. |
 | **Proof** | A task counts as done only when the app's real state says so, never on the local's word. |
@@ -133,7 +135,7 @@ So every local starts as a profile of a real job, built from interviews and publ
 
 ## Run it
 
-You need Python 3.11 or newer, Google Chrome and [Ollama](https://ollama.com).
+You need Python 3.11 or newer, Google Chrome and [Ollama](https://ollama.com). For Android apps, also the Android SDK with an emulator, and `ollama pull qwen2.5vl:3b` for reading icons.
 
 ```bash
 git clone https://github.com/BiswasMosam/Locals
@@ -148,6 +150,7 @@ python -m town run pixelshift:small-jpg rohit sunil      # send two locals to a 
 python -m town run pixelshift:small-jpg all --watch      # everyone, with the browser visible
 python -m town run pixelshift:small-jpg sunil --date 2026-09-14   # Ganesh Chaturthi
 python -m town run pixelshift:small-jpg rohit --year 2026        # a year in twelve days
+python -m town run pops:new-order prakash nikhil                  # an Android app, on a running emulator
 ```
 
 Each run lands in `runs/` with the feed, every step the local took, and a screenshot of each screen. Locals live in [people/](people), one file each; tasks live in [tasks/](tasks), one file per app. Set `LOCALS_MODEL` to try another model.
@@ -163,7 +166,7 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 - [x] A simulated year: weekdays and weekends, monsoon, festivals across religions, a pandemic
 - [x] Media family: photographers, videographers, video editors, social media teams (fifteen more locals, a banquet hall)
 - [x] Engineering family: eight types, twenty four more locals
-- [ ] Locals on Android: drop an APK, starting with Pops on the emulator
+- [x] Locals on Android: drop an APK, first runs on Pops on the emulator
 - [ ] Interviews with a real fabricator and a real food stall
 - [ ] Limits set from watching real people do the same tasks
 - [ ] Setup screen with the resource estimate

@@ -157,6 +157,8 @@ select:focus, input:focus, textarea:focus { border-color: var(--light); }
 .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
 .story { color: var(--ink); margin-top: 12px; font-size: 22px; }
 .check-line { color: var(--dim); margin-top: 6px; font-size: 21px; }
+.goal { margin-top: 16px; }
+.goal[hidden] { display: none; }
 .drop { border: 2px dashed var(--line); padding: 16px 18px; }
 .drop > span { font-size: 11px; color: var(--dim); }
 .drop p { color: var(--dim); margin-top: 6px; }

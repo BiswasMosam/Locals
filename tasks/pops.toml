@@ -1,0 +1,13 @@
+app = "Pops"
+platform = "android"
+package = "com.biswasfab.pops"
+# The release build from the Pops repo next to this one; drop your own APK in the dashboard instead.
+apk = "../Pops/build/app/outputs/flutter-apk/app-release.apk"
+
+[[task]]
+id = "new-order"
+story = """
+A customer just called. Mr. Sharma, phone 98200 12345, lives in Lodha Palava, building A2, flat 1203.
+He wants a quotation for mosquito nets. Add him to the app so you do not forget to visit him.
+"""
+done = { page_text = "To Visit 1" }

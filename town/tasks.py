@@ -24,6 +24,9 @@ class Task:
     story: str
     files: list
     done: dict
+    platform: str = "web"   # web, or android for an app on an emulator or phone
+    package: str = ""       # the Android app's package name
+    apk: Path | None = None # installed before each local starts, if given
 
 
 def _path(app_id):
@@ -39,10 +42,14 @@ def load(ref):
     if not path.exists():
         raise SystemExit(f"No task file tasks/{app_id}.toml")
     data = tomllib.loads(path.read_text(encoding="utf-8"))
+    apk = (ROOT / data["apk"]).resolve() if data.get("apk") else None
+    if apk and not apk.exists():
+        raise SystemExit(f"The APK for {data['app']} is not at {apk}. Build it or fix the path in tasks/{app_id}.toml")
     for t in data["task"]:
         if t["id"] == task_id:
-            return Task(ref=ref, app=data["app"], url=data["url"], id=t["id"], story=t["story"].strip(),
-                        files=t.get("files", []), done=t.get("done", {}))
+            return Task(ref=ref, app=data["app"], url=data.get("url", ""), id=t["id"], story=t["story"].strip(),
+                        files=t.get("files", []), done=t.get("done", {}), platform=data.get("platform", "web"),
+                        package=data.get("package", ""), apk=apk)
     raise SystemExit(f"No task {task_id!r} in tasks/{app_id}.toml")
 
 
@@ -52,8 +59,9 @@ def catalogue():
         prefix = "mine/" if path.parent == MINE else ""
         data = tomllib.loads(path.read_text(encoding="utf-8"))
         for t in data["task"]:
-            out.append({"ref": f"{prefix}{path.stem}:{t['id']}", "app": data["app"], "url": data["url"],
-                        "story": t["story"].strip(), "check": describe_check(t.get("done", {})), "mine": bool(prefix)})
+            out.append({"ref": f"{prefix}{path.stem}:{t['id']}", "app": data["app"], "url": data.get("url", ""),
+                        "platform": data.get("platform", "web"), "story": t["story"].strip(),
+                        "check": describe_check(t.get("done", {})), "mine": bool(prefix)})
     return out
 
 
@@ -98,6 +106,42 @@ def add_site(url, goal, check, value, files):
     return f"mine/{app_id}:{task_id}"
 
 
+def read_apk(apk):
+    """The package name and app name inside an APK, read with aapt from the Android SDK build tools."""
+    import os
+    import subprocess
+    sdk = os.environ.get("ANDROID_HOME") or os.path.join(os.environ.get("LOCALAPPDATA", ""), "Android", "Sdk")
+    tools = sorted(Path(sdk, "build-tools").glob("*/aapt*"), reverse=True)
+    if not tools:
+        raise ValueError("aapt was not found in the Android SDK build tools, so the APK cannot be read.")
+    out = subprocess.run([str(tools[0]), "dump", "badging", str(apk)], capture_output=True, text=True, timeout=60).stdout
+    package = re.search(r"package: name='([^']+)'", out)
+    label = re.search(r"application-label:'([^']*)'", out)
+    if not package:
+        raise ValueError("That file does not look like an Android app.")
+    return package.group(1), (label.group(1) if label else package.group(1))
+
+
+def add_app(apk, goal, check, value, files):
+    """Saves a dropped APK as an Android task card in tasks/mine/ and returns its ref."""
+    if not goal.strip():
+        raise ValueError("Say what the locals should try to do.")
+    done = {"page_text": {"page_text": value}, "word": {}}.get(check)
+    if done is None or (check == "page_text" and not value.strip()):
+        raise ValueError("For an app, say which words on screen mean it worked, or take their word for it.")
+    package, label = read_apk(ROOT / apk)
+    app_id, task_id = slug(package, "app"), slug(" ".join(goal.split()[:6]), "task")
+    lines = [f"app = {json.dumps(label)}", 'platform = "android"', f"package = {json.dumps(package)}",
+             f"apk = {json.dumps(apk)}", "", "[[task]]", f"id = {json.dumps(task_id)}", f"story = {json.dumps(goal.strip())}"]
+    if files:
+        lines.append("files = [" + ", ".join(
+            "{ name = %s, kind = \"given\", path = %s }" % (json.dumps(f["name"]), json.dumps(f["path"])) for f in files) + "]")
+    lines.append("done = { " + ", ".join(f"{k} = {json.dumps(v)}" for k, v in done.items()) + " }")
+    MINE.mkdir(parents=True, exist_ok=True)
+    (MINE / f"{app_id}.toml").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return f"mine/{app_id}:{task_id}"
+
+
 def make_files(task, folder):
     """Creates the files the local has on their device before the task starts."""
     folder.mkdir(parents=True, exist_ok=True)
@@ -126,12 +170,12 @@ def check(task, web, inputs):
     rule = task.done
     if "page_text" in rule:
         try:
-            body = web.page.inner_text("body", timeout=2000)
+            body = web.text()
         except Exception:
             body = ""
-        return rule["page_text"].lower() in body.lower(), None
+        return " ".join(rule["page_text"].lower().split()) in " ".join(body.lower().split()), None
     if "url_contains" in rule:
-        return rule["url_contains"] in web.page.url, None
+        return rule["url_contains"] in web.location(), None
     if not rule:
         return False, None
     for d in web.downloads:

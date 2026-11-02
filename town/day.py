@@ -3,9 +3,11 @@ import hashlib
 import json
 import random
 import time
+from dataclasses import replace
 from datetime import datetime
 
 from . import mind, tasks, year
+from .android import Android
 from .feed import Feed
 from .limits import slip, typo
 from .people import ROOT
@@ -32,6 +34,8 @@ def size(path):
 
 def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=None):
     told = ""
+    if task.platform == "android":
+        local = replace(local, limits=replace(local.limits, device="phone"))  # an app on a phone is used on a phone
     if today is not None:
         local, told = year.shape(local, today)
         seed += today.day.toordinal() % 997  # a different date is a different day, not a replay
@@ -49,7 +53,8 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
         outcome = kind
         feed.event(kind, says)
 
-    with Web(task.url, limits.device, inputs, out / "device", watch) as web:
+    driver = Android if task.platform == "android" else Web
+    with driver(task, limits.device, inputs, out / "device", watch) as web:
         feed.event("START", f"{local.job}, on a {limits.device}" + (f" · {local.situation['place']}" if today else ""))
         if told:
             feed.event("TODAY", told)
@@ -110,6 +115,10 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
                 continue
 
             ids = {i["id"] for i in screen["items"]}
+            if act == "type" and not text.strip():
+                feed.step(n, f"type [{target}] nothing", thought, record, round(time.time() - began, 1))
+                history.append("tried to type but gave no words; nothing happened")
+                continue
             if act in ("tap", "type", "set") and target not in ids:
                 feed.step(n, f"{act} [{target}]", thought, record, round(time.time() - began, 1))
                 history.append(f"{act} on something that is not on the screen; nothing happened")

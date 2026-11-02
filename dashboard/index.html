@@ -74,6 +74,16 @@
         <div class="kind-pane" data-pane="site">
           <label class="field"><span>ADDRESS</span>
             <input id="site-url" type="url" placeholder="http://localhost:5173 or https://your-site.com" spellcheck="false"></label>
+        </div>
+        <div class="kind-pane" data-pane="apk">
+          <div class="drop" id="apk-drop" tabindex="0">
+            <input type="file" id="apk-input" accept=".apk" hidden>
+            <span>DROP AN APK</span>
+            <p id="apk-name">Drop the app's APK here, or click to choose it. It is installed fresh for every local.</p>
+          </div>
+          <p class="check-line" id="apk-device"></p>
+        </div>
+        <div class="goal" id="goal-block" hidden>
           <label class="field"><span>WHAT SHOULD THEY TRY TO DO</span>
             <textarea id="site-goal" rows="3" placeholder="Sign up, find the pricing page and choose the cheapest plan."></textarea></label>
           <div class="field"><span>HOW DO WE KNOW IT WORKED</span>
@@ -91,12 +101,6 @@
             <input type="file" id="file-input" multiple hidden>
             <span>FILES ON THEIR PHONE</span>
             <p id="file-list">Drop files here if the task needs something to upload.</p>
-          </div>
-        </div>
-        <div class="kind-pane" data-pane="apk">
-          <div class="drop off">
-            <span>DROP AN APK · NEXT</span>
-            <p>Locals cannot use Android apps yet. Android is the next thing being built, starting with Pops on the emulator.</p>
           </div>
         </div>
 

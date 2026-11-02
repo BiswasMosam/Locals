@@ -50,8 +50,8 @@ SEE = """() => {
 
 
 class Web:
-    def __init__(self, url, device, files, out_dir, watch=False):
-        self.url, self.device, self.files, self.out = url, device, [str(f) for f in files], Path(out_dir)
+    def __init__(self, task, device, files, out_dir, watch=False):
+        self.url, self.device, self.files, self.out = task.url, device, [str(f) for f in files], Path(out_dir)
         self.watch = watch
         self.downloads, self._pending, self.picked_files = [], [], 0
 
@@ -119,3 +119,9 @@ class Web:
 
     def snapshot(self, path):
         self.page.screenshot(path=str(path))
+
+    def text(self):
+        return self.page.inner_text("body", timeout=2000)
+
+    def location(self):
+        return self.page.url
