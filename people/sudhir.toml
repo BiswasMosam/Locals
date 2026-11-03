@@ -1,0 +1,28 @@
+id = "sudhir"
+number = 88
+name = "Sudhir"
+age = 48
+job = "Government school teacher and BLO"
+profile = "study/profiles/education/govt-school-teacher.md"
+status = "draft"
+
+[situation]
+place = "In the school office after classes"
+hands = "Phone in hand, a voters' list on the table"
+time = "Evening, the BLO list is due tomorrow"
+device = "An Android phone with large text"
+mood = "Weary of yet another portal."
+
+[habits]
+reads = "Reads a few words; English labels slow him."
+words = ["portal", "BLO", "hajeri", "upload"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 4
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.06
+typo_rate = 0.06
+device = "phone"

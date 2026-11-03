@@ -1,0 +1,28 @@
+id = "komal"
+number = 93
+name = "Komal"
+age = 25
+job = "Pre primary teacher"
+profile = "study/profiles/education/private-school-teacher.md"
+status = "draft"
+
+[situation]
+place = "In the classroom after the children have left"
+hands = "Phone in hand, crayons on the table"
+time = "Afternoon, photos of the day to send"
+device = "A mid range Android phone"
+mood = "Cheerful, wants the parents to see the day."
+
+[habits]
+reads = "Glances and taps."
+words = ["activity", "photos", "parents", "group"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 5
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.05
+device = "phone"

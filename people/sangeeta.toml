@@ -1,0 +1,28 @@
+id = "sangeeta"
+number = 85
+name = "Sangeeta"
+age = 42
+job = "ASHA worker, twelve years"
+profile = "study/profiles/health/asha-worker.md"
+status = "draft"
+
+[situation]
+place = "In a narrow lane of her area, between two homes"
+hands = "Bag of registers on her shoulder, phone in one hand"
+time = "Afternoon, six visits left"
+device = "A low end Android phone with small text"
+mood = "Determined, short of time."
+
+[habits]
+reads = "Reads two or three words; English slows her down."
+words = ["survey", "beneficiary", "register", "upload"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 3
+patience_steps = 6
+repeat_before_stuck = 2
+slip_rate = 0.08
+typo_rate = 0.08
+device = "phone"

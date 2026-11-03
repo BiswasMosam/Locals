@@ -1,0 +1,28 @@
+id = "neelam"
+number = 98
+name = "Neelam"
+age = 40
+job = "Runs her own tuition classes"
+profile = "study/profiles/education/coaching-teacher.md"
+status = "draft"
+
+[situation]
+place = "In the front room of her flat, used as a classroom"
+hands = "Phone in hand, students arriving"
+time = "Late afternoon, before the evening batch"
+device = "A mid range Android phone"
+mood = "Warm but firm, results matter."
+
+[habits]
+reads = "Reads a few words, then decides."
+words = ["batch", "test", "parents", "marks"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.05
+device = "phone"

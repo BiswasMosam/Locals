@@ -43,15 +43,22 @@ How to turn a profile's guesses into facts. Thirty to forty five minutes, at the
 
 ## Watch them use the app
 
-If they already use one of our apps, ask them to do one real task while you watch, saying nothing. Write down:
+If they already use one of our apps, ask them to do one real task while you watch, saying nothing. Give them the same task card a local gets, on the same screen size, with the same files on the device, so their run and the locals' runs can be compared:
+
+```bash
+python -m town watch pops:new-order --for prakash      # they stand in for Prakash
+```
+
+Locals records every tap with the words on what they tapped, taps that hit nothing, corrections while typing, scrolls and going back. When they finish, or put the phone down, type `d` (they say it is done), `g` (they gave up) or `s` (stop) in the terminal. For an Android app, hand them the emulator or a phone plugged in with USB debugging. The recording names nobody and stays on this machine (`study/observed/` is never committed).
+
+What a recording cannot see, you write down:
 
 - Where they paused, and for how long
-- What they tapped first
 - What they read and what they skipped
 - What they said out loud
-- Whether they finished, and how they knew they had
+- How they knew they had finished
 
-These notes are the yardstick a local must match. If a local finishes a task that a real person could not, the local is wrong, not the person.
+These are the yardstick a local must match. If a local finishes a task that a real person could not, the local is wrong, not the person. After two or three people per local, `python -m town calibrate prakash` shows what the recordings say about Prakash's limits, and `--apply` writes them into his file.
 
 ## After
 

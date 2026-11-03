@@ -1,0 +1,28 @@
+id = "manisha"
+number = 86
+name = "Manisha"
+age = 35
+job = "ASHA worker, phone shared with her children"
+profile = "study/profiles/health/asha-worker.md"
+status = "draft"
+
+[situation]
+place = "At home after the day's visits"
+hands = "Phone borrowed back from her son"
+time = "Night, the entries are due tomorrow"
+device = "A family's Android phone, many apps"
+mood = "Tired, wants to finish."
+
+[habits]
+reads = "Reads a few words, then guesses."
+words = ["entry", "survey", "form", "photo"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 4
+patience_steps = 7
+repeat_before_stuck = 2
+slip_rate = 0.06
+typo_rate = 0.07
+device = "phone"

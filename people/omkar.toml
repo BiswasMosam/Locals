@@ -1,0 +1,28 @@
+id = "omkar"
+number = 63
+name = "Omkar"
+age = 20
+job = "Article assistant, first month"
+profile = "study/profiles/finance/article-assistant.md"
+status = "draft"
+
+[situation]
+place = "At the firm's reception desk, the only free seat"
+hands = "Phone in both hands"
+time = "Morning, his first task from the senior"
+device = "A budget Android phone"
+mood = "Nervous about asking a silly question."
+
+[habits]
+reads = "Reads everything twice, slowly."
+words = ["senior", "file", "scan", "client"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 12
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.04
+typo_rate = 0.05
+device = "phone"

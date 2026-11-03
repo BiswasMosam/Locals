@@ -1,0 +1,28 @@
+id = "rukhsar"
+number = 87
+name = "Rukhsar"
+age = 30
+job = "New ASHA worker"
+profile = "study/profiles/health/asha-worker.md"
+status = "draft"
+
+[situation]
+place = "At the health post after a meeting"
+hands = "Phone in hand, a diary on her lap"
+time = "Afternoon, three months into the job"
+device = "A budget Android phone"
+mood = "Eager to learn, unsure which app is which."
+
+[habits]
+reads = "Reads slowly and carefully."
+words = ["survey", "vaccination", "card", "app"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 9
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.06
+device = "phone"

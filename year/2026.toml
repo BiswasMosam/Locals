@@ -103,6 +103,98 @@ name = "financial year end"
 from = "2026-03-16"
 to = "2026-03-31"
 
+# Money: tax dates by law [D]; how busy the weeks around them get [G].
+[[period]]
+key = "tax-saving"
+name = "tax saving season"
+from = "2026-01-01"
+to = "2026-03-31"
+
+[[period]]
+key = "itr-season"
+name = "income tax return season"
+from = "2026-07-01"
+to = "2026-07-31"
+
+[[period]]
+key = "tax-audit"
+name = "tax audit deadline"
+from = "2026-09-16"
+to = "2026-09-30"
+
+# Health: BMC counts malaria, dengue and leptospirosis rising through the monsoon [D].
+[[period]]
+key = "monsoon-fevers"
+name = "monsoon fever season"
+from = "2026-07-01"
+to = "2026-09-30"
+
+# Schools and colleges. Board and entrance exam dates [D]; school vacations vary by school [A]; university exams [G].
+[[period]]
+key = "board-exams"
+name = "SSC and HSC board exams"
+from = "2026-02-10"
+to = "2026-03-18"
+
+[[period]]
+key = "school-vacation"
+name = "school summer vacation"
+from = "2026-05-02"
+to = "2026-06-14"
+
+[[period]]
+key = "school-vacation"
+name = "school Diwali vacation"
+from = "2026-11-02"
+to = "2026-11-14"
+
+[[period]]
+key = "school-reopening"
+name = "new school year"
+from = "2026-06-15"
+to = "2026-06-30"
+
+[[period]]
+key = "entrance-exams"
+name = "JEE Main"
+from = "2026-01-21"
+to = "2026-01-30"
+
+[[period]]
+key = "entrance-exams"
+name = "JEE Main, second session"
+from = "2026-04-02"
+to = "2026-04-09"
+
+[[period]]
+key = "entrance-exams"
+name = "NEET week"
+from = "2026-04-27"
+to = "2026-05-03"
+
+[[period]]
+key = "semester-exams"
+name = "university semester exams"
+from = "2026-04-13"
+to = "2026-05-09"
+
+[[period]]
+key = "semester-exams"
+name = "university semester exams"
+from = "2026-11-16"
+to = "2026-12-12"
+
+# Days that come back every month. GSTR-3B is due on the 20th [D]; pension and salary queues [G].
+[[monthly]]
+key = "gst-due"
+name = "GST return week"
+days = [18, 19, 20]
+
+[[monthly]]
+key = "month-start"
+name = "start of the month"
+days = [1, 2, 3, 4, 5]
+
 # Weather. Monsoon onset and withdrawal are IMD normals for Mumbai [D]; daily chances are [G].
 [[season]]
 key = "winter"
@@ -135,6 +227,10 @@ to = "2026-12-31"
 
 # Days worth trying first, offered in setup.
 [[pick]]
+label = "JEE Main week"
+date = "2026-01-27"
+
+[[pick]]
 label = "An ordinary Tuesday"
 date = "2026-02-10"
 
@@ -145,6 +241,10 @@ date = "2026-03-12"
 [[pick]]
 label = "Court summer vacation"
 date = "2026-05-20"
+
+[[pick]]
+label = "Back to school"
+date = "2026-06-15"
 
 [[pick]]
 label = "Ganesh Chaturthi"

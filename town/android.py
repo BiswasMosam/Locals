@@ -79,7 +79,8 @@ class Android:
             time.sleep(1)
         raise RuntimeError("Could not read the screen from the device.")
 
-    def see(self):
+    def see(self, look=True):
+        """The screen as items and readable lines. look=False skips naming unlabelled icons with the vision model."""
         root = self.dump()
         nodes = list(root.iter("node"))
         bounds = lambda n: [int(v) for v in re.findall(r"\d+", n.get("bounds", "[0,0][0,0]"))]
@@ -123,7 +124,7 @@ class Android:
         walk(root, False)
         # Icons with no words: a sighted person still sees the symbol, so look at it.
         blank = [i for i in items if not i["text"] and i["role"] != "text box"]
-        if blank:
+        if blank and look:
             png = self.sh("exec-out", "screencap", "-p", binary=True)
             for i in blank:
                 looks = icons.name(png, self.crops[i["id"]])

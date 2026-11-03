@@ -80,6 +80,7 @@ def today(d, pandemic=None):
     holidays = [name for when, name in cal["holidays"] if when == d.isoformat()]
     festivals = [f for f in cal.get("festival", []) if within(d, f)]
     periods = [p for p in cal.get("period", []) if within(d, p)]
+    periods += [m for m in cal.get("monthly", []) if d.day in m["days"]]
     seasons = [s for s in cal.get("season", []) if within(d, s)]
     season = seasons[-1] if seasons else {}
     # Rain is fixed by the date, so the same day always has the same weather.
@@ -94,13 +95,14 @@ def shape(local, t):
     """The local on this day: a "Today" paragraph, maybe a different place, and limits changed by code."""
     group, keys = Path(local.profile).stem, t.keys()
     lines, place, limits = [], None, replace(local.limits)
-    fill = {"holiday": t.holiday or "the holiday", "festival": ", ".join(t.festivals),
-            "period": t.periods[0]["name"] if t.periods else ""}
+    fill = {"holiday": t.holiday or "the holiday", "festival": ", ".join(t.festivals)}
     patience = read = slip = 0
     for e in effects():
         if e["when"] in keys and ("*" in e["who"] or group in e["who"]):
             if e.get("says"):
-                lines.append(e["says"].format(**fill))
+                # Several periods can overlap, so {period} names the one this effect is about.
+                period = next((p["name"] for p in t.periods if e["when"] == f"period:{p['key']}"), "")
+                lines.append(e["says"].format(**fill, period=period))
             place = e.get("place", place)
             patience += e.get("patience", 0)
             read += e.get("read", 0)

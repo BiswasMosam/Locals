@@ -1,0 +1,28 @@
+id = "mahesh"
+number = 60
+name = "Mahesh"
+age = 29
+job = "Chartered accountant, new practice"
+profile = "study/profiles/finance/ca-practice.md"
+status = "draft"
+
+[situation]
+place = "In an auto between two client meetings"
+hands = "One hand on the phone, the other on a bag of files"
+time = "Late morning, a client waiting for a reply"
+device = "A mid range Android phone"
+mood = "Eager, a little anxious to look established."
+
+[habits]
+reads = "Reads the first line, then acts."
+words = ["ITR", "GST", "client", "upload"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.04
+device = "phone"

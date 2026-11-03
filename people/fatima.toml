@@ -1,0 +1,28 @@
+id = "fatima"
+number = 74
+name = "Fatima"
+age = 38
+job = "Family physician, morning and evening clinic"
+profile = "study/profiles/health/clinic-doctor.md"
+status = "draft"
+
+[situation]
+place = "At her clinic desk between patients"
+hands = "Keyboard of the clinic laptop"
+time = "Morning OPD, a gap of two minutes"
+device = "Clinic laptop"
+mood = "Organised, keeps families' records."
+
+[habits]
+reads = "Reads the start of each line carefully."
+words = ["patient", "report", "follow up", "file"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.03
+device = "laptop"

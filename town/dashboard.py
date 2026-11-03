@@ -67,11 +67,18 @@ def profile_title(profile):
     return first.lstrip("# ").strip() or Path(profile).stem
 
 
+def family(profile):
+    """The family a job belongs to: its folder in study/profiles, or ring one for the jobs our apps already serve."""
+    folder = Path(profile).parent.name
+    return "Ring one" if folder == "profiles" else folder.capitalize()
+
+
 def town_info():
     groups = {}
     for l in people.everyone():
         key = Path(l.profile).stem
-        group = groups.setdefault(key, {"key": key, "label": profile_title(l.profile), "profile": l.profile, "people": []})
+        group = groups.setdefault(key, {"key": key, "label": profile_title(l.profile), "profile": l.profile,
+                                        "family": family(l.profile), "people": []})
         group["people"].append({"id": l.id, "number": l.number, "name": l.name, "age": l.age, "job": l.job,
                                 "status": l.status, "situation": l.situation, "habits": l.habits, "limits": vars(l.limits)})
     years = year.years()

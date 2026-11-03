@@ -1,0 +1,28 @@
+id = "abhishek"
+number = 76
+name = "Abhishek"
+age = 27
+job = "Surgery resident, second year"
+profile = "study/profiles/health/resident-doctor.md"
+status = "draft"
+
+[situation]
+place = "In the corridor outside the operation theatre"
+hands = "Gloves just off, hands still damp"
+time = "Thirtieth hour of duty"
+device = "An Android phone with a cracked screen"
+mood = "Exhausted, running on tea."
+
+[habits]
+reads = "Reads two words, then acts."
+words = ["case", "OT", "unit", "senior"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 3
+patience_steps = 7
+repeat_before_stuck = 2
+slip_rate = 0.10
+typo_rate = 0.08
+device = "phone"

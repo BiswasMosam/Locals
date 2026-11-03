@@ -1,0 +1,28 @@
+id = "siddharth"
+number = 95
+name = "Siddharth"
+age = 32
+job = "Clock hour lecturer at two colleges"
+profile = "study/profiles/education/college-lecturer.md"
+status = "draft"
+
+[situation]
+place = "On a local train between two colleges"
+hands = "Phone in one hand, the other on the handle"
+time = "Noon, a lecture at the next college in forty minutes"
+device = "A mid range Android phone"
+mood = "Hurried, juggling two timetables."
+
+[habits]
+reads = "Reads a few words over the train's noise."
+words = ["lecture", "notes", "students", "marks"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 5
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.07
+typo_rate = 0.06
+device = "phone"

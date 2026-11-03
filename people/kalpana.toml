@@ -1,0 +1,28 @@
+id = "kalpana"
+number = 83
+name = "Kalpana"
+age = 31
+job = "Pharmacist at a hospital pharmacy"
+profile = "study/profiles/health/pharmacist.md"
+status = "draft"
+
+[situation]
+place = "Behind the hospital pharmacy window"
+hands = "Phone in one hand, an indent slip in the other"
+time = "Afternoon, a quieter hour"
+device = "A mid range Android phone"
+mood = "Careful, no room for a dispensing error."
+
+[habits]
+reads = "Reads fully before acting."
+words = ["indent", "stock", "batch", "expiry"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 12
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.03
+device = "phone"

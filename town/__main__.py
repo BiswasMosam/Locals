@@ -1,4 +1,4 @@
-"""python -m town dashboard | python -m town people | python -m town run <app:task> <local ...|all> [--watch]"""
+"""python -m town dashboard | people | run <app:task> <local ...|all> | watch <app:task> --golden|--for <local> | calibrate <local>"""
 import argparse
 import sys
 from collections import Counter
@@ -24,6 +24,16 @@ def main():
     run.add_argument("--date", action="append", default=[], help="a day in the calendar, like 2026-09-14; repeat for more")
     run.add_argument("--year", type=int, help="a year in twelve days, like 2026")
     run.add_argument("--pandemic", choices=["lockdown", "reopening"], help="run the days during a pandemic")
+    see = sub.add_parser("watch", help="record a real person doing a task: you for the golden path, or someone standing in for a local")
+    see.add_argument("task", help="app:task, for example pixelshift:small-jpg")
+    who = see.add_mutually_exclusive_group(required=True)
+    who.add_argument("--golden", action="store_true", help="you, doing it the way it is meant to be done")
+    who.add_argument("--for", dest="local", help="the local this person stands in for, for example prakash")
+    see.add_argument("--device", choices=["phone", "laptop"], help="screen size for a web app (default: the local's, or phone)")
+    see.add_argument("--minutes", type=int, default=15, help="stop recording after this long")
+    cal = sub.add_parser("calibrate", help="turn watched runs into a local's limits")
+    cal.add_argument("local", help="local id, for example prakash")
+    cal.add_argument("--apply", action="store_true", help="write the measured numbers into the local's file")
     args = ap.parse_args()
 
     if args.cmd == "dashboard":
@@ -32,7 +42,31 @@ def main():
 
     if args.cmd == "people":
         for l in people.everyone():
-            print(f"{l.number:02d}  {l.id:<9} {f'{l.name}, {l.age}':<13} {l.job:<36} {l.limits.device:<7} {l.status}")
+            print(f"{l.number:02d}  {l.id:<9} {f'{l.name}, {l.age}':<13} {l.job:<46} {l.limits.device:<7} {l.status}")
+        return
+
+    if args.cmd == "watch":
+        from .watch import watch
+        task, local = tasks.load(args.task), people.load(args.local) if args.local else None
+        path, run = watch(task, args.golden, local, args.device or (local.limits.device if local else "phone"), args.minutes)
+        steps = sum(e["kind"] in ("tap", "set", "scroll", "back") for e in run["events"])
+        print(f"\n{run['outcome']} · {steps} taps and moves · {run['secs']}s · saved {path.relative_to(ROOT)}")
+        if args.golden:
+            print("Locals who leave this path will show OFF PATH in the feed.")
+        elif local:
+            print(f"See what it says about {local.name}: python -m town calibrate {local.id}")
+        return
+
+    if args.cmd == "calibrate":
+        from . import calibrate
+        local = people.load(args.local)
+        out, text = calibrate.report(local)
+        print(text)
+        if out and args.apply:
+            changed = calibrate.apply(local, out, len(calibrate.runs_for(local.id)))
+            print(f"\nWrote {', '.join(changed)} into people/{local.id}.toml." if changed else "\nNothing measured well enough to write yet.")
+        elif out:
+            print(f"\nTo write these into people/{local.id}.toml: python -m town calibrate {local.id} --apply")
         return
 
     task = tasks.load(args.task)

@@ -53,11 +53,12 @@ class Web:
     def __init__(self, task, device, files, out_dir, watch=False):
         self.url, self.device, self.files, self.out = task.url, device, [str(f) for f in files], Path(out_dir)
         self.watch = watch
+        self.slow_mo = 250 if watch else 0  # slowed down so you can follow a local; a person's own hands need none
         self.downloads, self._pending, self.picked_files = [], [], 0
 
     def __enter__(self):
         self._pw = sync_playwright().start()
-        self._browser = self._pw.chromium.launch(channel="chrome", headless=not self.watch, slow_mo=250 if self.watch else 0)
+        self._browser = self._pw.chromium.launch(channel="chrome", headless=not self.watch, slow_mo=self.slow_mo)
         ctx = self._browser.new_context(accept_downloads=True, **(PHONE if self.device == "phone" else LAPTOP))
         self.page = ctx.new_page()
         self.page.on("filechooser", self._choose)
@@ -83,6 +84,10 @@ class Web:
             self.page.wait_for_load_state("networkidle", timeout=4000)
         except Exception:
             pass
+        self.collect()
+
+    def collect(self):
+        """Saves the downloads that have arrived on the device."""
         while self._pending:
             d = self._pending.pop(0)
             path = self.out / d.suggested_filename

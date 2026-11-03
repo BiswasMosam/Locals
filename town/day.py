@@ -11,6 +11,7 @@ from .android import Android
 from .feed import Feed
 from .limits import slip, typo
 from .people import ROOT
+from .watch import golden_path, name_of, norm
 from .web import Web
 
 
@@ -26,6 +27,12 @@ def label(screen, target):
         return f"[{target}]"
     words = item["text"] or item["hint"] or "icon"
     return f'[{target}] "{" ".join(words.split()[:4])}"'
+
+
+def is_button(screen, target):
+    """Setting a button just presses it (town/web.py), so it needs no value."""
+    item = next((i for i in screen["items"] if i["id"] == target), None)
+    return item is not None and item["role"] not in ("slider", "dropdown", "text box")
 
 
 def size(path):
@@ -47,6 +54,7 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
     limits, when_stuck = local.limits, local.habits["when_stuck"]
     history, seen, stuck_on, was_stuck, said_stuck_on = [], {}, set(), False, None
     outcome, thought = None, ""
+    path, along, left_at = golden_path(task), 0, set()  # your own recorded run, and how far along it they are
 
     def finish(kind, says):
         nonlocal outcome
@@ -115,14 +123,26 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
                 continue
 
             ids = {i["id"] for i in screen["items"]}
-            if act == "type" and not text.strip():
-                feed.step(n, f"type [{target}] nothing", thought, record, round(time.time() - began, 1))
-                history.append("tried to type but gave no words; nothing happened")
+            if act in ("type", "set") and not text.strip() and not (act == "set" and is_button(screen, target)):
+                # A finger on a slider always leaves it somewhere; an empty value is the model's slip, not theirs.
+                feed.step(n, f"{act} [{target}] nothing", thought, record, round(time.time() - began, 1))
+                history.append(f"tried to {act} it but gave no {'words' if act == 'type' else 'value'}; nothing happened")
                 continue
             if act in ("tap", "type", "set") and target not in ids:
                 feed.step(n, f"{act} [{target}]", thought, record, round(time.time() - began, 1))
                 history.append(f"{act} on something that is not on the screen; nothing happened")
                 continue
+
+            if path and act in ("tap", "type", "set"):
+                # What they meant to use, before any slip. Going back to a step of your path is a retry;
+                # a control you never used on your way through is where the screen led them off it.
+                item = next(i for i in screen["items"] if i["id"] == target)
+                on_path = [k for k, (key, _) in enumerate(path) if key == norm(name_of(item))]
+                if on_path:
+                    along = max(along, next((k + 1 for k in on_path if k >= along), along))
+                elif along < len(path) and along not in left_at:
+                    left_at.add(along)
+                    feed.event("OFF PATH", f'Your path goes to "{path[along][1]}" next; they went for {label(screen, target)}.')
 
             hit = target
             if act == "tap":

@@ -1,0 +1,28 @@
+id = "kiran"
+number = 75
+name = "Kiran"
+age = 31
+job = "Doctor with a new clinic and teleconsults"
+profile = "study/profiles/health/clinic-doctor.md"
+status = "draft"
+
+[situation]
+place = "At home between two teleconsults"
+hands = "Phone in hand, earphones in"
+time = "Late afternoon, next call in five minutes"
+device = "A recent Android phone"
+mood = "Ambitious, building a practice."
+
+[habits]
+reads = "Skims quickly, comfortable with apps."
+words = ["consult", "report", "prescription", "link"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.04
+typo_rate = 0.03
+device = "phone"

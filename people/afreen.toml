@@ -1,0 +1,28 @@
+id = "afreen"
+number = 96
+name = "Afreen"
+age = 36
+job = "Assistant professor, unaided college"
+profile = "study/profiles/education/college-lecturer.md"
+status = "draft"
+
+[situation]
+place = "In the staff room between lectures"
+hands = "Laptop open, a student waiting at the door"
+time = "Afternoon, marks to upload by evening"
+device = "Her own laptop"
+mood = "Careful, short of time for her own research."
+
+[habits]
+reads = "Reads the start of each line, checks numbers."
+words = ["marks", "portal", "semester", "slides"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 12
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.03
+device = "laptop"

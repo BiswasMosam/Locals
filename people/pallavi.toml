@@ -1,0 +1,28 @@
+id = "pallavi"
+number = 77
+name = "Pallavi"
+age = 26
+job = "Medicine resident, first year"
+profile = "study/profiles/health/resident-doctor.md"
+status = "draft"
+
+[situation]
+place = "At the ward's nursing station"
+hands = "Phone in one hand, a case paper in the other"
+time = "Night on call, three admissions waiting"
+device = "A mid range Android phone"
+mood = "Anxious not to miss anything."
+
+[habits]
+reads = "Reads the first few words, rechecks numbers."
+words = ["admission", "rounds", "report", "unit"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 5
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.07
+typo_rate = 0.06
+device = "phone"

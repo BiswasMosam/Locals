@@ -1,0 +1,28 @@
+id = "bhavna"
+number = 81
+name = "Bhavna"
+age = 23
+job = "New staff nurse on night shifts"
+profile = "study/profiles/health/staff-nurse.md"
+status = "draft"
+
+[situation]
+place = "In the nurses' changing room at the end of a night shift"
+hands = "Phone in both hands"
+time = "Eight in the morning, awake since yesterday"
+device = "A budget Android phone"
+mood = "Sleepy, careful not to get it wrong."
+
+[habits]
+reads = "Reads slowly, half asleep."
+words = ["roster", "duty", "certificate", "registration"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 9
+repeat_before_stuck = 2
+slip_rate = 0.07
+typo_rate = 0.06
+device = "phone"

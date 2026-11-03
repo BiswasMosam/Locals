@@ -1,0 +1,28 @@
+id = "tushar"
+number = 99
+name = "Tushar"
+age = 26
+job = "Evening batches and online doubt solving"
+profile = "study/profiles/education/coaching-teacher.md"
+status = "draft"
+
+[situation]
+place = "At home at his desk, a doubt queue open"
+hands = "Laptop, a graphics tablet beside it"
+time = "Night, forty doubts waiting"
+device = "His own laptop"
+mood = "Quick and practical."
+
+[habits]
+reads = "Skims, acts fast."
+words = ["doubt", "batch", "solution", "PDF"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.03
+device = "laptop"

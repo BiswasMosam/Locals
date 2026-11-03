@@ -1,0 +1,28 @@
+id = "rakesh"
+number = 68
+name = "Rakesh"
+age = 33
+job = "Branch manager, small branch"
+profile = "study/profiles/finance/bank-branch.md"
+status = "draft"
+
+[situation]
+place = "In the manager's cabin after closing"
+hands = "Keyboard, a pile of loan files"
+time = "Evening, the regional office wants a report"
+device = "Branch desktop"
+mood = "Under pressure from targets."
+
+[habits]
+reads = "Skims for the one thing he needs."
+words = ["target", "CBS", "loan", "report"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.03
+device = "laptop"

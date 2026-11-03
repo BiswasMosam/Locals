@@ -14,13 +14,17 @@ const TownView = (() => {
     'firm-associate': 'firm', 'in-house-counsel': 'office', 'wedding-photographer': 'hall', 'videographer': 'hall',
     'product-photographer': 'studio', 'video-editor': 'studio', 'social-media-manager': 'itpark',
     'software-product': 'itpark', 'software-services': 'office', 'plant-maintenance': 'factory', 'mechanical-design': 'factory',
-    'site-engineer': 'site', 'structural-planning': 'office', 'electrical-maintenance': 'factory', 'embedded-engineer': 'itpark' };
-  // The street from left to right. Workplaces for the families still being studied are already standing.
-  const STREET = [['home', 30], ['chai', 14], ['fab', 24], ['stall', 22], ['medical', 16], ['court', 28], ['firm', 24],
-    ['office', 24], ['itpark', 28], ['studio', 20], ['hall', 30], ['hospital', 26], ['school', 24], ['factory', 28], ['site', 28], ['home2', 26], ['home3', 32]];
-  // Locals 1 to 18 live in the first block of flats, 19 to 33 in the second, 34 to 57 in the third; one window each.
-  const homeOf = number => (number <= 18 ? 'home' : number <= 33 ? 'home2' : 'home3');
-  const TREES_AFTER = new Set(['chai', 'medical', 'studio', 'school']);
+    'site-engineer': 'site', 'structural-planning': 'office', 'electrical-maintenance': 'factory', 'embedded-engineer': 'itpark',
+    'ca-practice': 'ca', 'article-assistant': 'ca', 'accounts-executive': 'office', 'bank-branch': 'bank', 'insurance-agent': 'chai',
+    'clinic-doctor': 'clinic', 'resident-doctor': 'hospital', 'staff-nurse': 'hospital', 'pharmacist': 'medical', 'asha-worker': 'home2', // ASHAs work at people's doors
+    'govt-school-teacher': 'school', 'private-school-teacher': 'school', 'college-lecturer': 'college', 'coaching-teacher': 'classes' };
+  // The street from left to right: flats at both ends, every family's workplace in between.
+  const STREET = [['home', 30], ['chai', 14], ['fab', 24], ['stall', 22], ['medical', 16], ['clinic', 18], ['court', 28], ['firm', 24],
+    ['ca', 20], ['bank', 26], ['office', 24], ['itpark', 28], ['studio', 20], ['hall', 30], ['hospital', 26], ['school', 24], ['classes', 18],
+    ['college', 30], ['factory', 28], ['site', 28], ['home2', 26], ['home3', 32], ['home4', 36]];
+  // Locals 1 to 18 live in the first block of flats, 19 to 33 in the second, 34 to 57 in the third, 58 to 99 in the tower; one window each.
+  const homeOf = number => (number <= 18 ? 'home' : number <= 33 ? 'home2' : number <= 57 ? 'home3' : 'home4');
+  const TREES_AFTER = new Set(['chai', 'clinic', 'studio', 'school', 'college']);
 
   const PERSON = {
     a: ['.HHH.', '.SSS.', '.SSS.', 'BBBBB', 'BBBBB', '.BBB.', '.L.L.', 'L...L', 'F...F'],
@@ -56,7 +60,7 @@ const TownView = (() => {
     navratri: ['#e06c75', '#98c379', '#5b8def', '#c678dd', '#ffc94d'], christmas: ['#e06c75', '#98c379', '#ebe7dc'],
     ramzan: ['#98c379', '#ebe7dc', '#ffc94d'], holi: ['#e06c75', '#c678dd', '#5b8def', '#98c379', '#ffc94d'],
   };
-  const SHUT = new Set(['chai', 'fab', 'stall']); // shops that close in a lockdown; the medical store stays open
+  const SHUT = new Set(['chai', 'fab', 'stall', 'classes']); // shops that close in a lockdown; the medical store and the bank stay open
   const now = () => performance.now();
   const calm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -114,7 +118,7 @@ const TownView = (() => {
     far = towers(0.35, 8, 18, 40, 115);
     mid = towers(0.65, 12, 24, 30, 75);
     lit = {};
-    for (const key of ['firm', 'office', 'itpark', 'hospital']) lit[key] = Array.from({ length: 60 }, () => rand());
+    for (const key of ['firm', 'office', 'itpark', 'hospital', 'ca', 'bank', 'college']) lit[key] = Array.from({ length: 60 }, () => rand());
     cars = [['auto', 30, 1], ['car', 120, -1], ['bus', 200, 1], ['auto', 260, -1], ['car', 340, 1]]
       .map(([kind, cx, dir]) => ({ kind, x: cx, dir }));
   }
@@ -179,39 +183,79 @@ const TownView = (() => {
     }
   }
 
+  // A local's window: lit while they are home and awake, dim once they have gone out, dark if they are not in town today.
+  function windowLight(number) {
+    const who = [...locals.values()].find(l => l.info.number === number);
+    return !who ? C.dark : who.mode === 'home' ? C.light : C.dimLight;
+  }
+
   function drawBuilding(b, t) {
     const { x, w, door } = b;
     switch (b.key) {
       case 'home': {
         R(x - 1, 26, w + 2, 2, C.slab2); R(x + 18, 22, 6, 4, C.slab2); R(x, 28, w, 62, C.slab);
-        // Eighteen windows, one per local: lit while they are home and awake, dim once they have gone out.
-        for (let i = 0; i < 18; i++) {
-          const who = [...locals.values()].find(l => l.info.number === i + 1);
-          const color = !who ? C.dark : who.mode === 'home' ? C.light : C.dimLight;
-          R(x + 3 + (i % 3) * 9, 32 + Math.floor(i / 3) * 8, 6, 4, color);
-        }
+        for (let i = 0; i < 18; i++) R(x + 3 + (i % 3) * 9, 32 + Math.floor(i / 3) * 8, 6, 4, windowLight(i + 1));
         R(door - 3, 82, 6, 8, C.slab2);
         break;
       }
       case 'home2':
         R(x, 40, w, 50, C.slab); R(x - 1, 38, w + 2, 2, C.slab2);
-        for (let i = 0; i < 15; i++) {
-          const who = [...locals.values()].find(l => l.info.number === 19 + i);
-          const color = !who ? C.dark : who.mode === 'home' ? C.light : C.dimLight;
-          R(x + 3 + (i % 3) * 8, 44 + Math.floor(i / 3) * 8, 4, 4, color);
-        }
+        for (let i = 0; i < 15; i++) R(x + 3 + (i % 3) * 8, 44 + Math.floor(i / 3) * 8, 4, 4, windowLight(19 + i));
         for (let r = 0; r < 5; r++) R(x + 1, 49 + r * 8, w - 2, 1, C.line);
         R(door - 3, 82, 6, 8, C.slab2);
         break;
       case 'home3':
         R(x - 1, 28, w + 2, 2, C.slab2); R(x + 3, 24, 5, 4, C.slab2); R(x, 30, w, 60, C.slab);
-        for (let i = 0; i < 24; i++) {
-          const who = [...locals.values()].find(l => l.info.number === 34 + i);
-          const color = !who ? C.dark : who.mode === 'home' ? C.light : C.dimLight;
-          R(x + 3 + (i % 4) * 7, 34 + Math.floor(i / 4) * 7, 5, 4, color);
-        }
+        for (let i = 0; i < 24; i++) R(x + 3 + (i % 4) * 7, 34 + Math.floor(i / 4) * 7, 5, 4, windowLight(34 + i));
         R(door - 3, 82, 6, 8, C.slab2);
         break;
+      case 'home4':
+        // The tower: forty two windows for the finance, health and education families.
+        R(x - 1, 22, w + 2, 2, C.slab2); R(x + w - 10, 17, 6, 5, C.slab2); R(x, 24, w, 66, C.slab);
+        for (let i = 0; i < 42; i++) R(x + 4 + (i % 6) * 5, 28 + Math.floor(i / 6) * 7, 3, 4, windowLight(58 + i));
+        for (let r = 1; r < 7; r++) R(x + 1, 26 + r * 7, w - 2, 1, C.line);
+        R(door - 3, 80, 6, 10, C.slab2);
+        break;
+      case 'clinic':
+        R(x, 62, w, 28, C.slab); R(x - 1, 60, w + 2, 2, C.slab2);
+        sign(x + 1, 64, w - 2, 'CLINIC', 1.9);
+        R(x + 2, 71, 6, 8, C.ink); for (let i = 0; i < 3; i++) R(x + 3, 72 + i * 2, 4, 1, C.stone); // morning and evening timings
+        R(x + 11, 71, w - 13, 9, C.dimLight);
+        R(door - 2, 82, 4, 8, C.slab2);
+        break;
+      case 'ca':
+        R(x, 30, w, 60, C.slab); R(x - 1, 28, w + 2, 2, C.slab2);
+        grid(b, 34, 3, 6, 3, 2, 3, 'ca', 0.45); // lights on late before a due date
+        sign(x + 1, 70, w - 2, 'CA', 2.1); R(door - 3, 80, 6, 10, C.dimLight);
+        break;
+      case 'bank':
+        R(x, 50, w, 40, C.slab); R(x - 1, 48, w + 2, 2, C.slab2);
+        sign(x + 2, 53, w - 4, 'BANK'); grid(b, 61, 4, 2, 3, 2, 2, 'bank', 0.5);
+        R(x + 2, 72, w - 12, 18, C.glass);
+        for (let i = 1; i < 3; i++) R(x + 2 + i * Math.floor((w - 12) / 3), 72, 1, 18, C.line);
+        R(x + w - 9, 70, 7, 20, C.slab2); label('ATM', x + w - 5.5, 72.6, 1.3, C.light); // the ATM booth, lit all night
+        R(x + w - 7, 76, 3, 3, C.light); R(x + w - 7, 80, 3, 1, C.dimLight);
+        break;
+      case 'classes':
+        R(x, 52, w, 38, C.slab);
+        sign(x + 1, 54, w - 2, 'CLASSES', 1.8);
+        R(x + 2, 61, w - 4, 9, C.dimLight); R(x + 4, 62, w - 8, 6, '#2f4a3a'); // the evening batch, a board through the window
+        R(x + 5, 63, 4, 1, C.ink); R(x + 5, 65, 7, 1, C.ink);
+        R(x + 2, 72, w - 4, 4, C.yellow); label('JEE NEET', x + w / 2, 74.1, 1.2, C.night);
+        R(door - 3, 80, 6, 10, C.slab2);
+        break;
+      case 'college': {
+        R(door - 4, 30, 8, 20, C.slab2); R(door - 5, 28, 10, 2, C.stone); R(door - 2, 25, 4, 3, C.stone);
+        sprite(['.XXX.', 'X.X.X', 'X.XXX', 'X...X', '.XXX.'], door - 2, 34, { X: C.moon }); // the clock tower
+        R(x, 50, w, 40, C.slab); R(x - 1, 48, w + 2, 2, C.slab2);
+        sign(x + 2, 52, w - 4, 'COLLEGE');
+        for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) {
+          const on = lit.college[r * 5 + i] < 0.4 ? C.light : C.dark;
+          R(x + 3 + i * 5, 61 + r * 9, 3, 6, on); R(x + 4 + i * 5, 60 + r * 9, 1, 1, on); // arched windows
+        }
+        R(door - 3, 80, 6, 10, C.dimLight);
+        break;
+      }
       case 'hall': {
         R(x, 58, w, 32, C.slab); R(x - 1, 56, w + 2, 2, C.slab2);
         const shift = calm() ? 0 : Math.floor(t / 500);

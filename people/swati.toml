@@ -1,0 +1,28 @@
+id = "swati"
+number = 64
+name = "Swati"
+age = 28
+job = "Accounts executive at a trading company"
+profile = "study/profiles/finance/accounts-executive.md"
+status = "draft"
+
+[situation]
+place = "At the accounts desk behind the showroom"
+hands = "Keyboard, Tally open on the screen"
+time = "Middle of the month, GST data due to the CA"
+device = "Office desktop"
+mood = "Methodical, interrupted every few minutes."
+
+[habits]
+reads = "Reads labels fully, ignores paragraphs."
+words = ["voucher", "party", "reco", "GST"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.03
+device = "laptop"

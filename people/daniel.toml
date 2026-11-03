@@ -1,0 +1,28 @@
+id = "daniel"
+number = 92
+name = "Daniel"
+age = 29
+job = "Maths teacher, secondary"
+profile = "study/profiles/education/private-school-teacher.md"
+status = "draft"
+
+[situation]
+place = "In the staff room with a stack of notebooks"
+hands = "Laptop open, a red pen in hand"
+time = "Afternoon, worksheets due tomorrow"
+device = "School laptop"
+mood = "Organised, slightly impatient."
+
+[habits]
+reads = "Reads quickly, picks out the key words."
+words = ["worksheet", "unit test", "marks", "PDF"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 12
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.03
+device = "laptop"

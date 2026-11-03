@@ -244,7 +244,16 @@ function buildSetup() {
 
   const groups = $('#groups');
   groups.innerHTML = '';
+  // Each family gets a heading whose tick sends the whole family out, or keeps it home.
+  const families = new Map();
   for (const g of S.groups) {
+    if (!families.has(g.family)) {
+      const head = document.createElement('li');
+      head.className = 'family';
+      head.innerHTML = `<input type="checkbox" class="check" aria-label="Everyone in ${esc(g.family)}"><span class="label">${esc(g.family)}</span><span class="count"></span>`;
+      families.set(g.family, { head, rows: [] });
+      groups.append(head);
+    }
     if (!(g.key in S.counts)) S.counts[g.key] = 1;
     const li = document.createElement('li');
     li.className = 'group';
@@ -252,7 +261,8 @@ function buildSetup() {
       `<div><div class="label">${esc(g.label)}</div><div class="names"></div></div>` +
       `<div class="stepper"><button type="button" aria-label="One fewer">-</button><output></output><button type="button" aria-label="One more">+</button></div>`;
     const [minus, plus] = li.querySelectorAll('.stepper button');
-    const set = n => { S.counts[g.key] = Math.max(0, Math.min(g.people.length, n)); paint(); renderMeters(); };
+    const fam = families.get(g.family);
+    const set = n => { S.counts[g.key] = Math.max(0, Math.min(g.people.length, n)); paint(); paintFamily(fam); renderMeters(); };
     const paint = () => {
       const n = S.counts[g.key];
       li.classList.toggle('off', n === 0);
@@ -264,9 +274,30 @@ function buildSetup() {
     minus.addEventListener('click', () => set(S.counts[g.key] - 1));
     plus.addEventListener('click', () => set(S.counts[g.key] + 1));
     paint();
+    fam.rows.push({ g, set });
     groups.append(li);
   }
+  for (const fam of families.values()) {
+    fam.head.querySelector('.check').addEventListener('change', e => {
+      const going = e.target.checked; // read once: each row repaints this box as it changes
+      for (const { g, set } of fam.rows) {
+        if (going) set(Math.max(1, g.last || 1));
+        else { if (S.counts[g.key]) g.last = S.counts[g.key]; set(0); }
+      }
+    });
+    paintFamily(fam);
+  }
   renderMeters();
+}
+
+function paintFamily(fam) {
+  const going = fam.rows.reduce((n, { g }) => n + (S.counts[g.key] || 0), 0);
+  const on = fam.rows.filter(({ g }) => S.counts[g.key] > 0).length;
+  const box = fam.head.querySelector('.check');
+  box.checked = on > 0;
+  box.indeterminate = on > 0 && on < fam.rows.length;
+  fam.head.classList.toggle('off', on === 0);
+  fam.head.querySelector('.count').textContent = going ? `${going} going` : 'staying home';
 }
 
 function showTask() {

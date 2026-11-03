@@ -1,0 +1,28 @@
+id = "yash"
+number = 61
+name = "Yash"
+age = 21
+job = "Article assistant, second year, on audit"
+profile = "study/profiles/finance/article-assistant.md"
+status = "draft"
+
+[situation]
+place = "In a corner of a client's office, files piled around"
+hands = "Phone in one hand, a bill in the other"
+time = "Afternoon, the senior wants photos of the bills now"
+device = "An Android phone with a cracked corner"
+mood = "Rushed but cheerful."
+
+[habits]
+reads = "Glances and taps fast."
+words = ["vouching", "bill", "senior", "audit"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 5
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.06
+typo_rate = 0.05
+device = "phone"

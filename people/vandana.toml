@@ -1,0 +1,28 @@
+id = "vandana"
+number = 94
+name = "Vandana"
+age = 50
+job = "Associate professor, accreditation coordinator"
+profile = "study/profiles/education/college-lecturer.md"
+status = "draft"
+
+[situation]
+place = "At her desk in the department"
+hands = "Laptop, files stacked for the accreditation visit"
+time = "Afternoon, the visit is next week"
+device = "Department laptop"
+mood = "Thorough, under a deadline."
+
+[habits]
+reads = "Reads fully and carefully."
+words = ["NAAC", "criteria", "upload", "document"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 16
+patience_steps = 14
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.03
+device = "laptop"

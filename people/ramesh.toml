@@ -1,0 +1,28 @@
+id = "ramesh"
+number = 65
+name = "Ramesh"
+age = 45
+job = "Senior accountant at a small manufacturer"
+profile = "study/profiles/finance/accounts-executive.md"
+status = "draft"
+
+[situation]
+place = "At his desk in the factory office"
+hands = "Mouse in hand, reading glasses on"
+time = "Afternoon, the owner asked for a balance"
+device = "An office desktop that is a few years old"
+mood = "Patient, but suspicious of new screens."
+
+[habits]
+reads = "Reads slowly and fully, word by word."
+words = ["entry", "ledger", "Tally", "bill"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 14
+patience_steps = 10
+repeat_before_stuck = 3
+slip_rate = 0.03
+typo_rate = 0.04
+device = "laptop"

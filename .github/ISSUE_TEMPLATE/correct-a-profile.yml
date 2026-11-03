@@ -30,6 +30,20 @@ body:
         - Civil engineer, structural or planning
         - Electrical engineer, maintenance
         - Electronics engineer, embedded
+        - Chartered accountant in practice
+        - Article assistant
+        - Accounts executive
+        - Bank branch officer
+        - Insurance agent
+        - Clinic doctor
+        - Resident doctor
+        - Staff nurse
+        - Pharmacist
+        - ASHA worker
+        - Government school teacher
+        - Private school teacher
+        - College lecturer
+        - Coaching teacher
         - A job that is not in the town yet
     validations:
       required: true

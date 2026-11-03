@@ -1,8 +1,8 @@
 # What a kind of day does to each job. Read by town/year.py; the reasons are in study/year.md.
 #
 # when      sunday | holiday | festival:<name> | rain | light_rain | heavy_rain | summer | period:<key> | pandemic:lockdown | pandemic:reopening
-# who       profile names from study/profiles (fabricator, food-stall, trial-advocate, junior-advocate,
-#           firm-associate, in-house-counsel), or "*" for everyone
+# who       profile names from study/profiles (fabricator, food-stall, trial-advocate, ... coaching-teacher),
+#           or "*" for everyone
 # says      one sentence added to the local's "Today"; {holiday} and {festival} are filled in
 # place     replaces where the local is
 # patience, read, slip   change the local's limits by this much (code applies them, the prompt never does)
@@ -188,7 +188,8 @@ says = "It is raining outside."
 # Only people who are out in it get wet hands and a wet screen; a desk in an office stays dry.
 [[effect]]
 when = "rain"
-who = ["fabricator", "food-stall", "trial-advocate", "junior-advocate", "wedding-photographer", "videographer", "site-engineer"]
+who = ["fabricator", "food-stall", "trial-advocate", "junior-advocate", "wedding-photographer", "videographer", "site-engineer",
+       "insurance-agent", "asha-worker"]
 says = "Wet hands and drops on the screen."
 slip = 0.04
 read = -1
@@ -207,7 +208,8 @@ patience = -1
 
 [[effect]]
 when = "heavy_rain"
-who = ["fabricator", "food-stall", "trial-advocate", "junior-advocate", "wedding-photographer", "videographer", "site-engineer"]
+who = ["fabricator", "food-stall", "trial-advocate", "junior-advocate", "wedding-photographer", "videographer", "site-engineer",
+       "insurance-agent", "asha-worker"]
 slip = 0.04
 patience = -1
 
@@ -249,7 +251,7 @@ patience = -2
 when = "pandemic:lockdown"
 who = ["*"]
 place = "At home"
-says = "A lockdown is on. Everyone is at home, the network is slow and the news is worrying."
+says = "A lockdown is on. The city is at home, the network is slow and the news is worrying."
 patience = -1
 read = -1
 
@@ -441,3 +443,335 @@ says = "The plant runs with a skeleton crew on long shifts."
 when = "pandemic:lockdown"
 who = ["site-engineer"]
 says = "The site is shut and the labour has gone home."
+
+# ---- Finance ----
+
+[[effect]]
+when = "period:itr-season"
+who = ["ca-practice", "article-assistant"]
+says = "It is {period}: every client wants theirs filed today and the portal is slow."
+patience = -2
+
+[[effect]]
+when = "period:tax-audit"
+who = ["ca-practice", "article-assistant"]
+says = "The {period} is days away: audit reports to finish and upload."
+patience = -2
+
+[[effect]]
+when = "period:fy-end"
+who = ["ca-practice", "article-assistant", "accounts-executive"]
+says = "The financial year closes on 31 March: books, audits and tax payments all at once."
+patience = -2
+
+[[effect]]
+when = "period:fy-end"
+who = ["bank-branch"]
+says = "Year end closing at the bank: long queues for tax payments and accounts to tie up."
+patience = -2
+
+[[effect]]
+when = "period:fy-end"
+who = ["insurance-agent"]
+says = "The last days to buy tax saving policies, and this year's targets close."
+patience = -2
+
+[[effect]]
+when = "period:tax-saving"
+who = ["insurance-agent"]
+says = "Tax saving season: clients want a policy before March."
+patience = -1
+
+[[effect]]
+when = "period:gst-due"
+who = ["ca-practice", "accounts-executive"]
+says = "GST returns are due on the 20th and some invoices are still missing."
+patience = -1
+
+[[effect]]
+when = "period:month-start"
+who = ["bank-branch"]
+says = "Start of the month: pensioners and salary withdrawals fill the branch."
+patience = -1
+
+[[effect]]
+when = "sunday"
+who = ["ca-practice"]
+says = "Sunday, but clients send their documents on WhatsApp all day."
+
+[[effect]]
+when = "sunday"
+who = ["article-assistant"]
+place = "At home with the exam books"
+says = "Sunday: the one day to study, but the senior has sent a file."
+patience = 1
+
+[[effect]]
+when = "sunday"
+who = ["accounts-executive", "bank-branch"]
+place = "At home"
+says = "Sunday at home; one message from work came in."
+patience = 2
+read = 2
+
+[[effect]]
+when = "sunday"
+who = ["insurance-agent"]
+says = "Sunday is when families are home, the best day for visits."
+
+[[effect]]
+when = "holiday"
+who = ["bank-branch", "accounts-executive"]
+place = "At home"
+says = "The office is closed for {holiday}."
+patience = 2
+read = 2
+
+[[effect]]
+when = "holiday"
+who = ["ca-practice"]
+says = "It is {holiday}, but the portals and the due dates do not stop."
+
+[[effect]]
+when = "festival:Diwali"
+who = ["accounts-executive"]
+says = "Diwali: bonuses, dealer payments and new account books for the year."
+patience = -1
+
+[[effect]]
+when = "heavy_rain"
+who = ["bank-branch"]
+says = "Hardly any customers came in today."
+patience = 1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["bank-branch"]
+place = "At the branch, behind a plastic sheet"
+says = "The bank stays open as an essential service, with half the staff and a long queue outside."
+patience = -1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["ca-practice", "article-assistant", "accounts-executive"]
+says = "Working from home: due dates extended, but clients are anxious and calling."
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["insurance-agent"]
+says = "No visits allowed; everything by phone and WhatsApp, and people are asking about health cover."
+
+# ---- Health ----
+
+[[effect]]
+when = "period:monsoon-fevers"
+who = ["clinic-doctor"]
+says = "It is the {period}: dengue, malaria and leptospirosis, and the benches outside are full."
+patience = -2
+
+[[effect]]
+when = "period:monsoon-fevers"
+who = ["resident-doctor", "staff-nurse"]
+says = "It is the {period}: fever wards are full and patients lie on extra beds."
+patience = -2
+
+[[effect]]
+when = "period:monsoon-fevers"
+who = ["pharmacist"]
+says = "It is the {period}: everyone wants fever medicine and mosquito repellent."
+patience = -1
+
+[[effect]]
+when = "period:monsoon-fevers"
+who = ["asha-worker"]
+says = "It is the {period}: fever surveys and breeding spot checks on top of the usual visits."
+patience = -1
+
+[[effect]]
+when = "heavy_rain"
+who = ["resident-doctor", "staff-nurse"]
+says = "The next shift cannot get in through the flooded roads, so this shift carries on."
+patience = -1
+
+[[effect]]
+when = "heavy_rain"
+who = ["asha-worker"]
+place = "At home, the lanes flooded"
+says = "Visits are impossible today; the entries can still be done."
+
+[[effect]]
+when = "sunday"
+who = ["clinic-doctor"]
+says = "Sunday: the clinic opens only in the morning."
+patience = 1
+
+[[effect]]
+when = "sunday"
+who = ["resident-doctor", "staff-nurse"]
+says = "Sunday means nothing on a duty roster; fewer staff are on."
+patience = -1
+
+[[effect]]
+when = "sunday"
+who = ["pharmacist"]
+says = "Sunday: most clinics are shut, so the counter is busy."
+
+[[effect]]
+when = "sunday"
+who = ["asha-worker"]
+place = "At home"
+says = "Sunday at home, with the week's entries still pending."
+patience = 1
+
+[[effect]]
+when = "holiday"
+who = ["resident-doctor", "staff-nurse"]
+says = "It is {holiday}, but the hospital never closes."
+
+[[effect]]
+when = "holiday"
+who = ["pharmacist"]
+says = "Other shops are shut for {holiday}, so the chemist is busy."
+patience = -1
+
+[[effect]]
+when = "festival:Diwali"
+who = ["resident-doctor", "staff-nurse"]
+says = "Diwali nights bring burns and accidents into casualty."
+patience = -1
+
+[[effect]]
+when = "festival:Holi"
+who = ["resident-doctor", "staff-nurse"]
+says = "Holi: eye injuries, skin reactions and road accidents."
+patience = -1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["resident-doctor", "staff-nurse"]
+place = "At the hospital, in protective gear"
+says = "The hospital is the front line: long shifts in PPE, and fear of taking it home."
+patience = -2
+slip = 0.03
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["clinic-doctor"]
+place = "At the clinic, a mask and a face shield on"
+says = "Clinics were asked to stay open; frightened patients with every fever."
+patience = -1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["pharmacist"]
+place = "At the counter, behind a rope"
+says = "The chemist stays open; queues for masks, sanitiser and medicines."
+patience = -1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["asha-worker"]
+place = "In the lanes of her area"
+says = "Door to door pandemic surveys with little protection, and more entries every night."
+patience = -2
+
+# ---- Education ----
+
+[[effect]]
+when = "period:board-exams"
+who = ["govt-school-teacher", "private-school-teacher"]
+says = "The {period}: invigilation duty and answer papers to check."
+patience = -1
+
+[[effect]]
+when = "period:board-exams"
+who = ["coaching-teacher"]
+says = "The {period}: students want last minute doubt sessions."
+patience = -1
+
+[[effect]]
+when = "period:entrance-exams"
+who = ["coaching-teacher"]
+says = "Entrance exams ({period}): test series, answer keys and doubt calls late into the night."
+patience = -2
+
+[[effect]]
+when = "period:school-vacation"
+who = ["private-school-teacher"]
+place = "At home"
+says = "It is the {period}."
+patience = 2
+read = 2
+
+[[effect]]
+when = "period:school-vacation"
+who = ["govt-school-teacher"]
+place = "At home"
+says = "It is the {period}, but results and survey data still have to go into the portal."
+patience = 1
+
+[[effect]]
+when = "period:school-reopening"
+who = ["govt-school-teacher", "private-school-teacher"]
+says = "The {period}: admissions, new class lists and books to hand out."
+patience = -1
+
+[[effect]]
+when = "period:semester-exams"
+who = ["college-lecturer"]
+says = "The {period}: supervision, paper setting and marks to upload."
+patience = -1
+
+[[effect]]
+when = "sunday"
+who = ["govt-school-teacher", "college-lecturer"]
+place = "At home"
+says = "Sunday at home."
+patience = 2
+read = 2
+
+[[effect]]
+when = "sunday"
+who = ["private-school-teacher"]
+place = "At home"
+says = "Sunday, but the parents' group is still busy."
+patience = 1
+
+[[effect]]
+when = "sunday"
+who = ["coaching-teacher"]
+says = "Sunday: the weekly test runs all morning."
+patience = -1
+
+[[effect]]
+when = "holiday"
+who = ["govt-school-teacher", "private-school-teacher", "college-lecturer"]
+place = "At home"
+says = "School and college are closed for {holiday}."
+patience = 2
+read = 2
+
+[[effect]]
+when = "holiday"
+who = ["coaching-teacher"]
+says = "{holiday}: no school, so the classes run a full day batch."
+patience = -1
+
+[[effect]]
+when = "heavy_rain"
+who = ["govt-school-teacher", "private-school-teacher"]
+place = "At home"
+says = "Schools are shut for the red alert."
+patience = 1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["govt-school-teacher"]
+says = "Teaching online when half the class has no phone, and relief and survey duties on top."
+patience = -1
+
+[[effect]]
+when = "pandemic:lockdown"
+who = ["private-school-teacher", "college-lecturer", "coaching-teacher"]
+says = "Classes have moved online: video calls, PDFs and students who cannot join."
+patience = -1

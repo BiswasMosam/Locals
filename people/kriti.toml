@@ -1,0 +1,28 @@
+id = "kriti"
+number = 62
+name = "Kriti"
+age = 22
+job = "Article assistant in tax season"
+profile = "study/profiles/finance/article-assistant.md"
+status = "draft"
+
+[situation]
+place = "At the firm's shared desk"
+hands = "Keyboard and a calculator"
+time = "Evening, twenty returns left before the due date"
+device = "An old firm laptop"
+mood = "Tired, thinking about the exam in four months."
+
+[habits]
+reads = "Reads the start of each line, skips the rest."
+words = ["ITR", "Form 16", "AIS", "due date"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 9
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.04
+device = "laptop"

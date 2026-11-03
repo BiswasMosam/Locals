@@ -1,0 +1,28 @@
+id = "anil"
+number = 58
+name = "Anil"
+age = 46
+job = "Chartered accountant, runs a small firm"
+profile = "study/profiles/finance/ca-practice.md"
+status = "draft"
+
+[situation]
+place = "At his cabin in a small CA office"
+hands = "Keyboard, a file open beside him"
+time = "Evening before a due date"
+device = "Office desktop with two screens"
+mood = "Short tempered with anything that wastes a step."
+
+[habits]
+reads = "Reads numbers carefully, skims words."
+words = ["return", "challan", "AY", "notice"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 8
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.02
+typo_rate = 0.03
+device = "laptop"

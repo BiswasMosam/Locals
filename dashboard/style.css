@@ -109,7 +109,7 @@ canvas { display: block; width: 100%; height: 100%; }
 .tag { font-size: 13px; color: var(--dim); }
 .meta { font-size: 11px; color: var(--dim); white-space: nowrap; }
 .says { margin-top: 4px; font-size: 22px; overflow-wrap: anywhere; }
-.k-STUCK .tag, .k-SLIP .tag, .k-WRONG-DONE .tag { color: var(--light); }
+.k-STUCK .tag, .k-SLIP .tag, .k-WRONG-DONE .tag, .k-OFF-PATH .tag { color: var(--light); }
 .k-DONE .tag, .k-SAYS-DONE .tag { color: var(--good); }
 .k-GAVE-UP .tag, .k-ERROR .tag { color: var(--bad); }
 .who { padding: 18px 22px; border-bottom: 2px solid var(--line); background: var(--slab); }
@@ -169,6 +169,12 @@ h2.gap { margin-top: 40px; }
 .groups { list-style: none; margin-top: 14px; }
 .group { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 12px 14px; }
 .group:nth-child(odd) { background: var(--panel); }
+.family { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 26px 14px 10px; border-bottom: 2px solid var(--line); }
+.family:first-child { padding-top: 6px; }
+.family .label { font: 13px 'Silkscreen', monospace; letter-spacing: .14em; color: var(--light); text-transform: uppercase; }
+.family .count { font-size: 18px; color: var(--dim); }
+.family .check:indeterminate { border-color: var(--light); background: linear-gradient(var(--light), var(--light)) center / 8px 4px no-repeat; }
+.family.off .label { color: var(--dim); }
 .group .label { font-size: 25px; }
 .group .names { color: var(--dim); font-size: 20px; }
 .group.off .label { color: var(--dim); }

@@ -79,13 +79,34 @@ Five findings shape every rule below.
 | Electrical, maintenance | Shifts, safety permits, field calls | [Draft](profiles/engineering/electrical-maintenance.md) |
 | Electronics, embedded | Lab bench, firmware, test equipment | [Draft](profiles/engineering/embedded-engineer.md) |
 
-**Later families**
+**[Finance](profiles/finance/README.md)**
 
-| Family | Types |
-|---|---|
-| Finance | Chartered accountant in practice, article assistant, accounts executive |
-| Health | Clinic doctor, resident doctor, nurse, pharmacist |
-| Education | School teacher, college professor, tuition teacher |
+| Type | The day in one line | Profile |
+|---|---|---|
+| Chartered accountant in practice | Due dates on portals that slow down on the last day | [Draft](profiles/finance/ca-practice.md) |
+| Article assistant | On audit at a client's office, exams on the side | [Draft](profiles/finance/article-assistant.md) |
+| Accounts executive | Tally, the bank statement and the 20th of the month | [Draft](profiles/finance/accounts-executive.md) |
+| Bank branch officer | A queue, a short staffed branch and targets | [Draft](profiles/finance/bank-branch.md) |
+| Insurance agent | Families' doorsteps, renewals and March | [Draft](profiles/finance/insurance-agent.md) |
+
+**[Health](profiles/health/README.md)**
+
+| Type | The day in one line | Profile |
+|---|---|---|
+| Clinic doctor | About two minutes a patient, and a full bench outside | [Draft](profiles/health/clinic-doctor.md) |
+| Resident doctor | Duties that run past 36 hours | [Draft](profiles/health/resident-doctor.md) |
+| Staff nurse | Shifts, too many patients each, gloves on | [Draft](profiles/health/staff-nurse.md) |
+| Pharmacist | A counter, prescriptions and a queue | [Draft](profiles/health/pharmacist.md) |
+| ASHA worker | House visits by day, the same data into several apps by night | [Draft](profiles/health/asha-worker.md) |
+
+**[Education](profiles/education/README.md)**
+
+| Type | The day in one line | Profile |
+|---|---|---|
+| Government school teacher | Teaching, plus forty apps and portals and election duty | [Draft](profiles/education/govt-school-teacher.md) |
+| Private school teacher | The syllabus, then the parents' group until night | [Draft](profiles/education/private-school-teacher.md) |
+| College lecturer | Lectures by the clock hour, exams and accreditation files | [Draft](profiles/education/college-lecturer.md) |
+| Coaching teacher | Batches, test series and the JEE and NEET dates | [Draft](profiles/education/coaching-teacher.md) |
 
 ## How a profile becomes a local
 
@@ -94,6 +115,8 @@ profile  →  three different people  →  task cards  →  limits in numbers  �
 ```
 
 The [template](profile-template.md) defines what every profile must cover. The [interview guide](interview-guide.md) is how the guesses become facts.
+
+The last step has tools. `python -m town watch <task> --for <local>` records a real person doing the same task a local does, on the same screen with the same files: every tap and what it said, taps that hit nothing, corrections while typing, giving up. `python -m town calibrate <local>` turns those recordings into the local's numbers, and says which ones the recordings cannot show. Recordings of real people stay in `study/observed/`, which git ignores.
 
 ## Sources
 

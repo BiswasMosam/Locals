@@ -1,0 +1,28 @@
+id = "archana"
+number = 89
+name = "Archana"
+age = 39
+job = "Teacher at a municipal school"
+profile = "study/profiles/education/govt-school-teacher.md"
+status = "draft"
+
+[situation]
+place = "In the staff room during a free period"
+hands = "Phone in one hand, a register in the other"
+time = "Midday, the scholarship deadline is today"
+device = "A mid range Android phone"
+mood = "Wants to get back to teaching."
+
+[habits]
+reads = "Reads the start of each line."
+words = ["scholarship", "portal", "student", "form"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.05
+device = "phone"

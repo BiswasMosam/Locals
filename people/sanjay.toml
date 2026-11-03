@@ -1,0 +1,28 @@
+id = "sanjay"
+number = 73
+name = "Sanjay"
+age = 52
+job = "General practitioner, busy clinic"
+profile = "study/profiles/health/clinic-doctor.md"
+status = "draft"
+
+[situation]
+place = "At his clinic desk, the next patient sitting down"
+hands = "Pen in one hand, phone in the other"
+time = "Evening OPD, the benches outside are full"
+device = "An Android phone"
+mood = "Calm but in a hurry."
+
+[habits]
+reads = "Reads the first word or two and decides."
+words = ["OPD", "report", "case", "fever"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 3
+patience_steps = 6
+repeat_before_stuck = 1
+slip_rate = 0.06
+typo_rate = 0.05
+device = "phone"

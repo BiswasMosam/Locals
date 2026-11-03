@@ -1,0 +1,28 @@
+id = "vivek"
+number = 72
+name = "Vivek"
+age = 30
+job = "Insurance and mutual fund advisor"
+profile = "study/profiles/finance/insurance-agent.md"
+status = "draft"
+
+[situation]
+place = "At a tea stall with a client"
+hands = "Phone in one hand, a cutting chai in the other"
+time = "Evening, closing a sale"
+device = "A recent Android phone"
+mood = "Confident and quick."
+
+[habits]
+reads = "Skims and taps fast."
+words = ["SIP", "policy", "KYC", "link"]
+when_stuck = "workaround"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 6
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.04
+device = "phone"

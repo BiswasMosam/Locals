@@ -1,0 +1,28 @@
+id = "rohan"
+number = 78
+name = "Rohan"
+age = 28
+job = "Senior resident in casualty"
+profile = "study/profiles/health/resident-doctor.md"
+status = "draft"
+
+[situation]
+place = "Standing in a crowded casualty"
+hands = "One hand free, relatives all around"
+time = "Late night, an accident just came in"
+device = "An Android phone"
+mood = "Focused, no patience for anything else."
+
+[habits]
+reads = "Glances, acts, moves on."
+words = ["casualty", "case", "CT", "admit"]
+when_stuck = "quit"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 3
+patience_steps = 5
+repeat_before_stuck = 1
+slip_rate = 0.08
+typo_rate = 0.07
+device = "phone"

@@ -1,0 +1,28 @@
+id = "ankita"
+number = 69
+name = "Ankita"
+age = 26
+job = "Probationary officer, newly posted"
+profile = "study/profiles/finance/bank-branch.md"
+status = "draft"
+
+[situation]
+place = "At the branch, standing near the passbook printer"
+hands = "Phone in hand, a customer's form in the other"
+time = "Mid morning, a customer waiting"
+device = "A recent Android phone"
+mood = "Keen, worried about making an error."
+
+[habits]
+reads = "Reads carefully, then double checks."
+words = ["KYC", "customer", "form", "branch"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 12
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.03
+device = "phone"

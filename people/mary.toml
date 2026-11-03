@@ -1,0 +1,28 @@
+id = "mary"
+number = 79
+name = "Mary"
+age = 44
+job = "Ward sister at a government hospital"
+profile = "study/profiles/health/staff-nurse.md"
+status = "draft"
+
+[situation]
+place = "At the nursing station of a full ward"
+hands = "Mouse of the ward computer, charts beside it"
+time = "Afternoon shift, the handover in an hour"
+device = "The ward's old desktop"
+mood = "Steady, has seen it all."
+
+[habits]
+reads = "Reads labels fully, slowly."
+words = ["handover", "indent", "ward", "chart"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 9
+repeat_before_stuck = 2
+slip_rate = 0.03
+typo_rate = 0.04
+device = "laptop"

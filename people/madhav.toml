@@ -1,0 +1,28 @@
+id = "madhav"
+number = 70
+name = "Madhav"
+age = 54
+job = "Life insurance agent for 25 years"
+profile = "study/profiles/finance/insurance-agent.md"
+status = "draft"
+
+[situation]
+place = "On a client's doorstep in a housing society"
+hands = "Phone held at arm's length, reading glasses in a pocket"
+time = "Evening, the family is waiting"
+device = "An Android phone with the font at its largest"
+mood = "Patient with people, impatient with apps."
+
+[habits]
+reads = "Reads slowly, a few words at a time."
+words = ["policy", "premium", "proposal", "renewal"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 4
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.08
+typo_rate = 0.07
+device = "phone"

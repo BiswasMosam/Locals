@@ -1,0 +1,28 @@
+id = "nitin"
+number = 90
+name = "Nitin"
+age = 30
+job = "Shikshan sevak on contract"
+profile = "study/profiles/education/govt-school-teacher.md"
+status = "draft"
+
+[situation]
+place = "On a bench in the school corridor"
+hands = "Phone in both hands"
+time = "After school, the block office asked for photos"
+device = "A budget Android phone"
+mood = "Anxious to keep the job."
+
+[habits]
+reads = "Reads carefully, afraid of mistakes."
+words = ["block office", "photo", "report", "portal"]
+when_stuck = "ask"
+
+# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[limits]
+read_words = 10
+patience_steps = 10
+repeat_before_stuck = 2
+slip_rate = 0.04
+typo_rate = 0.05
+device = "phone"
