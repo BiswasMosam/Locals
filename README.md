@@ -202,8 +202,9 @@ Level one built the town. Level two is about showing that what the locals do is 
 
 - [x] **Tests for the engine.** The run loop, slips, the calendar, the derived numbers and the checks on every take, tested without a browser or a model (`python -m unittest discover -s tests -t .`)
 - [x] **Model or person?** An answer no person could give (tapping something that is not on the screen, a slider with no value) is the model's mistake: it is asked again and never costs a local their patience. Every run records how often, and `python -m town report` counts clean runs apart
-- [ ] **Do the limits matter?** The same locals with and without their limits (`python -m town ablate`), with the difference published
-- [ ] **An accuracy score against real people:** locals on the same screens as published human data, first clicks and task completion
+- [x] **Do the limits matter?** The same locals with and without their limits (`python -m town ablate`). On an easy task they hardly do; on a harder one they change four of six outcomes, but the locals with no limits did worse, because reading everything overwhelms a 4B model. Written up in the [validity study](study/validity.md)
+- [ ] **A stronger mind:** the model is still the biggest factor, so a bigger model where the machine allows, and a way of deciding that keeps what a person notices apart from what the model can hold
+- [ ] **An accuracy score against real people:** locals on screens from Android in the Wild (715,000 recorded human runs), scored on whether their first tap matches the human's
 - [ ] **Ring one in depth:** a deep desk study for the people our apps serve, and locals and tasks for the live apps (the portfolio, the Biswas Fabricators site, Fill.ai)
 - [ ] **Seeing pixels:** a look at the screenshot for what words cannot show, like contrast and what stands out
 - [ ] **The remaining guesses in the profiles replaced from published sources, family by family**
