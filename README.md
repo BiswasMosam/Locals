@@ -10,13 +10,13 @@
 </p>
 
 <p align="center">
-  <a href="#roadmap"><img alt="Status: day 1" src="https://img.shields.io/badge/status-day%201-ffc94d?style=flat-square&labelColor=0c0e13"></a>
+  <a href="#roadmap"><img alt="Status: level two" src="https://img.shields.io/badge/status-level%20two-ffc94d?style=flat-square&labelColor=0c0e13"></a>
   <a href="#why-it-runs-locally"><img alt="Runs locally" src="https://img.shields.io/badge/runs-locally-ffc94d?style=flat-square&labelColor=0c0e13"></a>
   <a href="study/README.md"><img alt="Study first" src="https://img.shields.io/badge/study-first-ffc94d?style=flat-square&labelColor=0c0e13"></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-8a8f9c?style=flat-square&labelColor=0c0e13"></a>
 </p>
 
-> **Day 1.** Ninety nine draft locals from seven families of jobs live in the town and use web apps in a real browser and Android apps on an emulator, thinking with a small model on this laptop, and a dashboard shows them at work. They are built from the [study](study/README.md) of the people they stand for, and stay marked draft until real people in those jobs confirm their profiles. [Run them](#run-it), or [help get a profile right](#leave-a-review).
+> **Level two.** Ninety nine draft locals from seven families of jobs live in the town and use web apps in a real browser and Android apps on an emulator, thinking with a small model on this laptop, and a dashboard shows them at work. They are built from the [study](study/README.md) of the people they stand for, and stay marked draft until real people in those jobs confirm their profiles. [Run them](#run-it), or [help get a profile right](#leave-a-review).
 
 <br>
 
@@ -183,6 +183,9 @@ python -m town run pixelshift:small-jpg rohit --year 2026        # a year in twe
 python -m town run pops:new-order prakash nikhil                  # an Android app, on a running emulator
 python -m town take 2026-11-03_145536                             # ask a past day's locals for their take again
 python -m town derive                                             # everyone's numbers from published data and their traits
+python -m town report                                             # how the town is doing, against real people's 78%
+python -m town ablate pixelshift:small-jpg sunil rohit            # the same locals with and without their limits
+python -m unittest discover -s tests -t .                         # the tests
 
 python -m town watch pixelshift:small-jpg --golden               # you, once: the task's golden path
 python -m town watch pops:new-order --for prakash                 # a real fabricator, standing in for Prakash
@@ -192,6 +195,20 @@ python -m town calibrate prakash --apply                          # their record
 Each run lands in `runs/` with the feed, every step the local took, and a screenshot of each screen. Locals live in [people/](people), one file each; tasks live in [tasks/](tasks), one file per app. Set `LOCALS_MODEL` to try another model.
 
 ## Roadmap
+
+### Level two: from an impressive town to findings you can trust
+
+Level one built the town. Level two is about showing that what the locals do is worth acting on.
+
+- [x] **Tests for the engine.** The run loop, slips, the calendar, the derived numbers and the checks on every take, tested without a browser or a model (`python -m unittest discover -s tests -t .`)
+- [x] **Model or person?** An answer no person could give (tapping something that is not on the screen, a slider with no value) is the model's mistake: it is asked again and never costs a local their patience. Every run records how often, and `python -m town report` counts clean runs apart
+- [ ] **Do the limits matter?** The same locals with and without their limits (`python -m town ablate`), with the difference published
+- [ ] **An accuracy score against real people:** locals on the same screens as published human data, first clicks and task completion
+- [ ] **Ring one in depth:** a deep desk study for the people our apps serve, and locals and tasks for the live apps (the portfolio, the Biswas Fabricators site, Fill.ai)
+- [ ] **Seeing pixels:** a look at the screenshot for what words cannot show, like contrast and what stands out
+- [ ] **The remaining guesses in the profiles replaced from published sources, family by family**
+
+### Level one: the town
 
 - [x] Name, method and profile template
 - [x] First two profiles drafted from a real business
@@ -209,7 +226,6 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 - [x] The golden path, and a recorder for watching real people do the same tasks, web and Android
 - [x] Their take: each job notices different things, checked against evidence and sourced facts
 - [x] Limits from published studies of typing, touch, reading, age and walking, in place of live interviews
-- [ ] The remaining guesses in the profiles replaced from published sources, family by family
 
 ## Leave a review
 

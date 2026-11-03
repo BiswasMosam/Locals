@@ -29,6 +29,28 @@ def label(screen, target):
     return f'[{target}] "{" ".join(words.split()[:4])}"'
 
 
+def unlimited(local):
+    """The same person with none of the limits: reads everything, never slips or mistypes, endless patience.
+    Running both shows what the limits change (study/limits.md)."""
+    return replace(local, limits=replace(local.limits, read_words=999, patience_steps=30, repeat_before_stuck=99,
+                                         slip_rate=0.0, typo_rate=0.0))
+
+
+def read(decision):
+    act, text = decision["action"], decision.get("text", "")
+    target = str(decision.get("target") or "").strip("[] ").upper() or None
+    return act, text, target, decision["thought"].strip()
+
+
+def misuse(act, text, target, screen):
+    """Answers no person could give, which come from the model, not the local; None if the answer is usable."""
+    if act in ("tap", "type", "set") and target not in {i["id"] for i in screen["items"]}:
+        return f'"{target or "nothing"}" is not on the screen; the target must be one of the letters listed'
+    if act in ("type", "set") and not text.strip() and not (act == "set" and is_button(screen, target)):
+        return f'the {"words to type" if act == "type" else "new value, like 30,"} must go in "text"'
+    return None
+
+
 def is_button(screen, target):
     """Setting a button just presses it (town/web.py), so it needs no value."""
     item = next((i for i in screen["items"] if i["id"] == target), None)
@@ -53,8 +75,9 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
     system = mind.system_prompt(local, task.story, inputs, told)
     limits, when_stuck = local.limits, local.habits["when_stuck"]
     history, seen, stuck_on, was_stuck, said_stuck_on = [], {}, set(), False, None
-    outcome, thought = None, ""
+    outcome, thought, steps = None, "", 0
     path, along, left_at = golden_path(task), 0, set()  # your own recorded run, and how far along it they are
+    model = {"retries": 0, "unfixed": 0}  # answers the model had to give again, and ones still unusable after that
 
     def finish(kind, says):
         nonlocal outcome
@@ -92,12 +115,20 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
             if n >= limits.patience_steps - 1:
                 notes.append("They are running out of patience.")
 
-            began = time.time()
-            decision = mind.decide(system, mind.describe(screen, local, history, notes), seed + n)
-            act, text = decision["action"], decision.get("text", "")
-            target = str(decision.get("target") or "").strip("[] ").upper() or None
-            thought = decision["thought"].strip()
-            record = {"step": n, "screen": screen, "decision": decision}
+            began, steps = time.time(), n
+            seen_now = mind.describe(screen, local, history, notes)
+            decision = mind.decide(system, seen_now, seed + n)
+            act, text, target, thought = read(decision)
+            # An answer no person could give is the model's mistake, not theirs: ask again without spending patience.
+            retries = 0
+            while (problem := misuse(act, text, target, screen)) and retries < 2:
+                retries += 1
+                decision = mind.decide(system, f"{seen_now}\n\nYour last answer could not be used: {problem}. Answer again.",
+                                       seed + n + 1000 * retries)
+                act, text, target, thought = read(decision)
+            model["retries"] += retries
+            model["unfixed"] += bool(problem)
+            record = {"step": n, "screen": screen, "decision": decision, "retries": retries}
 
             if act == "done":
                 ok, file = tasks.check(task, web, inputs)
@@ -168,9 +199,13 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
         else:
             finish("GAVE UP", f'Out of patience after {limits.patience_steps} steps. Last thought: "{thought}"')
 
+        if model["retries"]:
+            feed.event("MODEL", f"The model gave an answer no person could {model['retries']} time(s) and was asked again"
+                       + (f"; {model['unfixed']} still cost a step." if model["unfixed"] else "; none cost the local a step."))
         web.snapshot(out / "end.png")
         observed = web.observe()
         (out / "observed.json").write_text(json.dumps(observed, indent=1), encoding="utf-8")
+    (out / "run.json").write_text(json.dumps({"outcome": outcome, "steps": steps, **model}), encoding="utf-8")
     if take and outcome != "STOPPED":
         try:  # their take comes after the run and never changes what happened in it
             expertise.take(local, task, out, feed.event, observed, web.downloads, inputs, seed, told)
@@ -223,7 +258,8 @@ def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None, toda
             print(f"  {g['evidence'][:110]}")
             for r in g["remarks"]:
                 print(f"    {r['by']}, {r['field']} ({r['standing']}): {r['remark']}")
-    (folder / "day.json").write_text(json.dumps({**meta, "results": results, "panel": board}, indent=2), encoding="utf-8")
+    runs = {i: json.loads((folder / i / "run.json").read_text(encoding="utf-8")) for i in results if (folder / i / "run.json").exists()}
+    (folder / "day.json").write_text(json.dumps({**meta, "results": results, "runs": runs, "panel": board}, indent=2), encoding="utf-8")
     listen({"type": "day", "phase": "end", **meta, "results": results, "panel": board, "ended_at": time.time()})
     return results
 

@@ -35,6 +35,11 @@ def main():
     ask = sub.add_parser("take", help="ask the locals of a past day again what their jobs let them notice")
     ask.add_argument("day", help="the day's folder in runs/, for example 2026-11-03_144319")
     ask.add_argument("locals", nargs="*", help="local ids (default: everyone that day)")
+    sub.add_parser("report", help="how the town is doing across every saved day, against real people's benchmark")
+    abl = sub.add_parser("ablate", help="run locals as themselves and again with no limits, to see what the limits change")
+    abl.add_argument("task", help="app:task, for example pixelshift:small-jpg")
+    abl.add_argument("locals", nargs="+", help="local ids, or all")
+    abl.add_argument("--seed", type=int, default=7)
     der = sub.add_parser("derive", help="set reading, slips and typos from published studies and each local's traits")
     der.add_argument("--apply", action="store_true", help="write the traits and numbers into everyone's file")
     cal = sub.add_parser("calibrate", help="turn watched runs into a local's limits")
@@ -77,6 +82,32 @@ def main():
         print(f"\n{board['kept']} of {board['proposed']} remarks kept by the checks")
         meta["panel"] = board
         (folder / "day.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        return
+
+    if args.cmd == "ablate":
+        import json
+        task = tasks.load(args.task)
+        who = people.everyone() if args.locals == ["all"] else [people.load(i) for i in args.locals]
+        folder = ROOT / "runs" / "ablation" / datetime.now().strftime("%Y-%m-%d_%H%M%S")  # kept out of the town's report
+        both = {}
+        for name, crowd in (("as themselves", who), ("no limits", [day.unlimited(l) for l in who])):
+            print(f"\n==== {name.upper()} ====")
+            day.run_day(task, crowd, folder / name.replace(" ", "-"), seed=args.seed, take=False)
+            both[name] = {l.id: json.loads((folder / name.replace(" ", "-") / l.id / "run.json").read_text(encoding="utf-8")) for l in who}
+        lines = [f"\n{'':<12}{'as themselves':<24}{'no limits':<24}"]
+        for l in who:
+            a, b = both["as themselves"][l.id], both["no limits"][l.id]
+            lines.append(f"{l.id:<12}{a['outcome'] + ' in ' + str(a['steps']):<24}{b['outcome'] + ' in ' + str(b['steps']):<24}")
+        for name, runs in both.items():
+            done = [r for r in runs.values() if r["outcome"] in ("DONE", "SAYS DONE")]
+            lines.append(f"{name:<14} finished {len(done)} of {len(runs)}, {sum(r['steps'] for r in runs.values()) / len(runs):.1f} steps on average")
+        (folder / "summary.json").write_text(json.dumps(both, indent=1), encoding="utf-8")
+        print("\n".join(lines) + f"\n\nSaved in {folder.relative_to(ROOT)}")
+        return
+
+    if args.cmd == "report":
+        from .report import report
+        print(report(ROOT / "runs"))
         return
 
     if args.cmd == "derive":

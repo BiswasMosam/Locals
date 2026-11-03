@@ -3,7 +3,7 @@ import json
 import time
 
 TONES = {"STUCK": "\033[33m", "SLIP": "\033[33m", "OFF PATH": "\033[33m", "TAKE": "\033[36m", "EXPERT": "\033[36m", "WRONG DONE": "\033[33m", "GAVE UP": "\033[33m", "ASKED": "\033[33m",
-         "ERROR": "\033[31m", "DONE": "\033[32m"}
+         "ERROR": "\033[31m", "DONE": "\033[32m", "MODEL": "\033[90m"}
 DIM, BOLD, RESET = "\033[90m", "\033[1m", "\033[0m"
 
 
