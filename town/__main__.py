@@ -1,5 +1,6 @@
 """python -m town dashboard | people | run <app:task> <local ...|all> | watch <app:task> --golden|--for <local> | calibrate <local>"""
 import argparse
+import re
 import sys
 from collections import Counter
 from datetime import date, datetime
@@ -88,7 +89,8 @@ def main():
         import json
         task = tasks.load(args.task)
         who = people.everyone() if args.locals == ["all"] else [people.load(i) for i in args.locals]
-        folder = ROOT / "runs" / "ablation" / datetime.now().strftime("%Y-%m-%d_%H%M%S")  # kept out of the town's report
+        mind_name = re.sub(r"[^a-z0-9.]+", "-", f"{mind.MODEL}-{mind.STAGES}stage".lower())
+        folder = ROOT / "runs" / "ablation" / f"{datetime.now():%Y-%m-%d_%H%M%S}_{mind_name}"  # kept out of the town's report
         both = {}
         for name, crowd in (("as themselves", who), ("no limits", [day.unlimited(l) for l in who])):
             print(f"\n==== {name.upper()} ====")

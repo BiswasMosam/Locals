@@ -140,6 +140,7 @@ Recordings of real people name nobody and stay on your machine; git never sees t
 | **The locals** | One model, many people. A local is a profile from the study turned into a prompt plus a set of limits. |
 | **Eyes** | Locals see what a person sees: visible controls by their visible words, a big card line by line, the placeholder in an empty box, and the symbol on a button with no words. On the web this comes from a real Chrome on a phone sized or laptop sized screen; on Android from the accessibility tree of an emulator or phone. |
 | **Limits** | Code, not the prompt, makes a local human: a patience budget, a reading budget, a slip rate that grows on small targets, rules for giving up. Research shows a prompt alone leaves AI users far too patient and accurate, so the numbers come from studies of real people. |
+| **Two stages** | Each step, a local first says what they notice on the screen (three to eight things, by how they read), then acts on only those. Using something they never noticed is the model's mistake and is asked again; when nothing they noticed helps, they look around once before feeling stuck. |
 | **The golden path** | You do each task once while it is recorded. Wherever a local reaches for something you never used, the feed says OFF PATH: the UI led them there. |
 | **Watched people** | Someone who does the job does the same task on the same screen while it is recorded. Their misses, corrections and give up point become a local's numbers. |
 | **Proof** | A task counts as done only when the app's real state says so, never on the local's word. |
@@ -192,7 +193,7 @@ python -m town watch pops:new-order --for prakash                 # a real fabri
 python -m town calibrate prakash --apply                          # their recordings become his numbers
 ```
 
-Each run lands in `runs/` with the feed, every step the local took, and a screenshot of each screen. Locals live in [people/](people), one file each; tasks live in [tasks/](tasks), one file per app. Set `LOCALS_MODEL` to try another model.
+Each run lands in `runs/` with the feed, every step the local took, and a screenshot of each screen. Locals live in [people/](people), one file each; tasks live in [tasks/](tasks), one file per app. Set `LOCALS_MODEL` to try another model, or `LOCALS_STAGES=1` to let locals decide in one go instead of first saying what they notice.
 
 ## Roadmap
 
@@ -203,7 +204,7 @@ Level one built the town. Level two is about showing that what the locals do is 
 - [x] **Tests for the engine.** The run loop, slips, the calendar, the derived numbers and the checks on every take, tested without a browser or a model (`python -m unittest discover -s tests -t .`)
 - [x] **Model or person?** An answer no person could give (tapping something that is not on the screen, a slider with no value) is the model's mistake: it is asked again and never costs a local their patience. Every run records how often, and `python -m town report` counts clean runs apart
 - [x] **Do the limits matter?** The same locals with and without their limits (`python -m town ablate`). On an easy task they hardly do; on a harder one they change four of six outcomes, but the locals with no limits did worse, because reading everything overwhelms a 4B model. Written up in the [validity study](study/validity.md)
-- [ ] **A stronger mind:** the model is still the biggest factor, so a bigger model where the machine allows, and a way of deciding that keeps what a person notices apart from what the model can hold
+- [x] **A stronger mind.** A bigger model was worse: qwen3:8b, with its reasoning off, wandered out of the app. Deciding in two stages worked: a local first says what they notice, then acts only on that. With no limits the locals now finish (6 of 6 on both tasks), and with their limits they stumble the way people do (10 of 12, against 78% for real people). Two stages are now the default
 - [ ] **An accuracy score against real people:** locals on screens from Android in the Wild (715,000 recorded human runs), scored on whether their first tap matches the human's
 - [ ] **Ring one in depth:** a deep desk study for the people our apps serve, and locals and tasks for the live apps (the portfolio, the Biswas Fabricators site, Fill.ai)
 - [ ] **Seeing pixels:** a look at the screenshot for what words cannot show, like contrast and what stands out

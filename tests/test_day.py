@@ -64,7 +64,7 @@ class RunTests(unittest.TestCase):
         (ROOT / "runs").mkdir(exist_ok=True)
         self.out = Path(tempfile.mkdtemp(dir=ROOT / "runs", prefix="_test-"))
         self.addCleanup(shutil.rmtree, self.out, True)
-        for target, value in ((day, {"Web": FakeWeb}),):
+        for target, value in ((day, {"Web": FakeWeb}), (day.mind, {"STAGES": 1})):  # one stage unless a test says two
             for name, fake in value.items():
                 patcher = mock.patch.object(target, name, fake)
                 patcher.start()
@@ -113,6 +113,18 @@ class RunTests(unittest.TestCase):
     def test_saying_done_is_not_being_done(self):
         outcome, _, _ = self.run_with([says("done")])
         self.assertEqual(outcome, "WRONG DONE")
+
+    def test_two_stages_refuse_what_they_never_noticed(self):
+        screen = FakeWeb(TASK, "phone", [], ".").see()
+        self.assertIsNotNone(day.misuse("tap", "", "B", screen, noticed=["A"]))
+        self.assertIsNone(day.misuse("tap", "", "A", screen, noticed=["A"]))
+
+    def test_two_stages_look_around_before_a_quitter_quits(self):
+        quitter = self.local("sunil", repeat_before_stuck=5)
+        with mock.patch.object(day.mind, "STAGES", 2), mock.patch.object(day.mind, "notice", side_effect=[["A"], ["A", "B"]]):
+            outcome, run, feed = self.run_with([says("stuck"), says("tap", "B")], local=quitter)
+        self.assertEqual((outcome, run["steps"]), ("DONE", 2))
+        self.assertIn("look around", [e.get("line") for e in feed])
 
     def test_their_take_keeps_what_is_grounded_and_drops_a_verdict(self):
         reply = {"take": "It saved after one tap.", "remarks": [

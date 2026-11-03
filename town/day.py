@@ -42,10 +42,13 @@ def read(decision):
     return act, text, target, decision["thought"].strip()
 
 
-def misuse(act, text, target, screen):
-    """Answers no person could give, which come from the model, not the local; None if the answer is usable."""
+def misuse(act, text, target, screen, noticed=None):
+    """Answers no person could give, which come from the model, not the local; None if the answer is usable.
+    With two stages, using something they never noticed is one of them."""
     if act in ("tap", "type", "set") and target not in {i["id"] for i in screen["items"]}:
         return f'"{target or "nothing"}" is not on the screen; the target must be one of the letters listed'
+    if noticed and act in ("tap", "type", "set") and target not in noticed:
+        return f'they have not looked at "{target}"; choose from what they noticed, or scroll, go back or say stuck'
     if act in ("type", "set") and not text.strip() and not (act == "set" and is_button(screen, target)):
         return f'the {"words to type" if act == "type" else "new value, like 30,"} must go in "text"'
     return None
@@ -78,6 +81,7 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
     outcome, thought, steps = None, "", 0
     path, along, left_at = golden_path(task), 0, set()  # your own recorded run, and how far along it they are
     model = {"retries": 0, "unfixed": 0}  # answers the model had to give again, and ones still unusable after that
+    looked_around = set()  # screens where, with two stages, they have already looked for more
 
     def finish(kind, says):
         nonlocal outcome
@@ -117,18 +121,25 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
 
             began, steps = time.time(), n
             seen_now = mind.describe(screen, local, history, notes)
+            noticed = None
+            if mind.STAGES == 2:
+                # First what they notice, then a choice among only those: the model may not use what they never looked at.
+                ids = {i["id"] for i in screen["items"]}
+                noticed = [x for x in mind.notice(system, seen_now, local, seed + n + 500, wider=sig in looked_around) if x in ids] or None
+                if noticed:
+                    seen_now = mind.describe(screen, local, history, notes, only=set(noticed))
             decision = mind.decide(system, seen_now, seed + n)
             act, text, target, thought = read(decision)
             # An answer no person could give is the model's mistake, not theirs: ask again without spending patience.
             retries = 0
-            while (problem := misuse(act, text, target, screen)) and retries < 2:
+            while (problem := misuse(act, text, target, screen, noticed)) and retries < 2:
                 retries += 1
                 decision = mind.decide(system, f"{seen_now}\n\nYour last answer could not be used: {problem}. Answer again.",
                                        seed + n + 1000 * retries)
                 act, text, target, thought = read(decision)
             model["retries"] += retries
             model["unfixed"] += bool(problem)
-            record = {"step": n, "screen": screen, "decision": decision, "retries": retries}
+            record = {"step": n, "screen": screen, "decision": decision, "retries": retries, "noticed": noticed}
 
             if act == "done":
                 ok, file = tasks.check(task, web, inputs)
@@ -140,6 +151,14 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
                 else:
                     finish("WRONG DONE", f'Believed it was done ("{thought}") but nothing right was saved.')
                 break
+
+            if act == "stuck" and noticed and len(noticed) < len(screen["items"]) and sig not in looked_around:
+                # Stuck with most of the screen unseen is looking around, not giving up: it takes a step, and next time they see more.
+                looked_around.add(sig)
+                feed.step(n, "look around", thought, record, round(time.time() - began, 1))
+                history.append("looked around the screen for something else; had only noticed "
+                               + ", ".join(label(screen, x) for x in noticed))
+                continue
 
             if act == "stuck":
                 was_stuck = True

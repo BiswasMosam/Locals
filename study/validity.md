@@ -42,7 +42,39 @@ Four of the six locals ended differently. But the locals with no limits did wors
 
 So the next step is the model's side of a local: a stronger model where the machine allows it, and a way of deciding that separates what a person would notice from what the model can hold in mind.
 
-## 3. Against real people
+## 3. A stronger mind
+
+If the model is the biggest factor, a better model, or a better way of deciding, should change how human the locals look. Every model here ran with its thinking switched off, so they are compared on equal terms, and each fits the 8 GB of the laptop's graphics card. Two ways of deciding are compared: one stage (the local sees the screen, after skimming, and acts), and two stages (first the local says what they actually notice, at most three to eight things depending on how they read; then they act on only those, and using something they never noticed counts as the model's mistake).
+
+The same six locals (a cook, a fabricator, a wedding photographer, a plant engineer, an insurance agent and an ASHA worker) did both tasks, as themselves and with no limits, one seed each:
+
+**Five photos to WEBP, the harder task**
+
+| Mind | As themselves | With no limits |
+|---|---|---|
+| qwen3:4b-instruct, one stage | 5 of 6, 3.5 steps | 3 of 6, 8.0 steps |
+| qwen3.5:4b, one stage | 4 of 6, 4.3 steps | 5 of 6, 4.8 steps |
+| qwen3:8b, one stage | 0 of 6, 6.2 steps | 1 of 6, 23.3 steps |
+| qwen3:8b, two stages | 3 of 6, 5.8 steps | 2 of 6, 24.3 steps |
+| **qwen3:4b-instruct, two stages** | **5 of 6, 3.3 steps** | **6 of 6, 4.8 steps** |
+
+**One small JPG, the easy task**
+
+| Mind | As themselves | With no limits |
+|---|---|---|
+| qwen3:4b-instruct, one stage | 6 of 6, 3.8 steps | 6 of 6, 4.7 steps |
+| qwen3:8b, one stage | 5 of 6, 3.7 steps | 6 of 6, 10.3 steps |
+| **qwen3:4b-instruct, two stages** | **5 of 6, 4.7 steps** | **6 of 6, 4.8 steps** |
+
+**What it showed.**
+- **Bigger was worse.** qwen3:8b is built to reason before it answers; with that switched off (the only way it runs at the town's pace) it wandered. On the harder task it tapped PixelShift's home link and left the app in 4 of 6 runs as themselves and all 6 with no limits, and with no limits 12 of its answers could not be used even after asking again. It also took two to three times as long. Two stages helped it (3 of 6 instead of 0), but not enough.
+- **Two stages fixed the paradox.** With one stage, the locals with no limits did worse than the locals as themselves, because the whole screen buried a 4B model. When a local first says what they notice and then acts only on that, the model is never buried: with no limits it finished 6 of 6 on both tasks. Now the limits cost something in the direction they should on both tasks: as themselves, 5 of 6 finished each time, with the slips and the looking around that real people show.
+- **Closer to people, not perfect.** Two stages put the six locals at 10 of 12 (83%) across both tasks as themselves, against 78% for real people across many tasks [1]. Twelve runs is a first reading, and the benchmark is an average over different tasks, so this says the town is in the right range, not that it matches.
+- **The cost is time.** Two stages ask the model twice a step, so a run takes about twice as long on the same machine.
+
+So two stages on qwen3:4b-instruct are now the town's default (`LOCALS_STAGES=1` brings back the old way, `LOCALS_MODEL` tries another model), and the model and the person are less tangled: with no limits, the model now does the task; the limits are what make it harder.
+
+## 4. Against real people
 
 | Check | Real people | The town | What it says |
 |---|---|---|---|
