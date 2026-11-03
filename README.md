@@ -82,6 +82,21 @@ Locals reports **behaviour, not wishlists**. Ask an AI what features it wants an
 
 When a local cannot do something and does something else instead, that workaround is the feature request.
 
+## Their take
+
+After the run, each local says what their job let them notice. A lawyer looks at what the app claims, a photographer at what happened to the picture, a software engineer at what the browser saw, a teacher at how plainly it is written. These are three takes from one real day on PixelShift, word for word:
+
+```
+EXPERT  Layout shift is 0.18, exceeding the 0.1 threshold for good user experience.
+        [cited: Largest content appeared after 0.2 s; layout shift 0.18 · web-vitals]          34 ISHAAN, software engineer
+EXPERT  A tap target is smaller than 24×24px, indicating poor touch target size.
+        [cited: "QUALITY" at 301 x 18 CSS px · target-wcag]                                    34 ISHAAN, software engineer
+EXPERT  The app only shows English, even though Hindi and Marathi are official languages in India.
+        [measured: Every screen was in English only]                                            91 RASHMI, class teacher
+```
+
+A small model playing a lawyer will happily invent law, and the research says a persona adds no knowledge, so expertise here is **what they notice, never what they know**. Code gives each job its own instruments (the browser's console and timings, the saved file's real format, quality and metadata, every claim and consent line on screen and whether a file left the device), and every remark has to point at that evidence. A remark is dropped if it cites a rule that is not in the study or does not apply, concludes that a law is broken, guesses at what the app does out of sight, or does not talk about its evidence. In the first test the lawyer called PixelShift's "nothing leaves your device" misleading; the network log said nothing left, and the checks threw the remark out. How it was built, and what it got wrong first, is in the [expertise study](study/expertise.md).
+
 ## Why it runs locally
 
 - **Free per run.** A local can come back on simulated day 3 and day 20, the way real people do. That many steps would cost real money on a cloud API; here it costs electricity.
@@ -126,6 +141,7 @@ Recordings of real people name nobody and stay on your machine; git never sees t
 | **The golden path** | You do each task once while it is recorded. Wherever a local reaches for something you never used, the feed says OFF PATH: the UI led them there. |
 | **Watched people** | Someone who does the job does the same task on the same screen while it is recorded. Their misses, corrections and give up point become a local's numbers. |
 | **Proof** | A task counts as done only when the app's real state says so, never on the local's word. |
+| **Their take** | After the run, each local's job lends them instruments and a few sourced facts; what they say is checked against both before it reaches the feed. |
 
 ## The study
 
@@ -163,6 +179,7 @@ python -m town run pixelshift:small-jpg all --watch      # everyone, with the br
 python -m town run pixelshift:small-jpg sunil --date 2026-09-14   # Ganesh Chaturthi
 python -m town run pixelshift:small-jpg rohit --year 2026        # a year in twelve days
 python -m town run pops:new-order prakash nikhil                  # an Android app, on a running emulator
+python -m town take 2026-11-03_145536                             # ask a past day's locals for their take again
 
 python -m town watch pixelshift:small-jpg --golden               # you, once: the task's golden path
 python -m town watch pops:new-order --for prakash                 # a real fabricator, standing in for Prakash
@@ -187,6 +204,7 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 - [x] The town view
 - [x] Profiles for the wider town: finance, health and education families (forty two more locals, a bank, a clinic, a college, coaching classes)
 - [x] The golden path, and a recorder for watching real people do the same tasks, web and Android
+- [x] Their take: each job notices different things, checked against evidence and sourced facts
 - [ ] Interviews with a real fabricator and a real food stall
 - [ ] Limits set from watching real people do the same tasks (the tools are ready; the people come next)
 

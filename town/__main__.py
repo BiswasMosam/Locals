@@ -24,6 +24,7 @@ def main():
     run.add_argument("--date", action="append", default=[], help="a day in the calendar, like 2026-09-14; repeat for more")
     run.add_argument("--year", type=int, help="a year in twelve days, like 2026")
     run.add_argument("--pandemic", choices=["lockdown", "reopening"], help="run the days during a pandemic")
+    run.add_argument("--no-take", action="store_true", help="skip asking each local what their job let them notice")
     see = sub.add_parser("watch", help="record a real person doing a task: you for the golden path, or someone standing in for a local")
     see.add_argument("task", help="app:task, for example pixelshift:small-jpg")
     who = see.add_mutually_exclusive_group(required=True)
@@ -31,6 +32,9 @@ def main():
     who.add_argument("--for", dest="local", help="the local this person stands in for, for example prakash")
     see.add_argument("--device", choices=["phone", "laptop"], help="screen size for a web app (default: the local's, or phone)")
     see.add_argument("--minutes", type=int, default=15, help="stop recording after this long")
+    ask = sub.add_parser("take", help="ask the locals of a past day again what their jobs let them notice")
+    ask.add_argument("day", help="the day's folder in runs/, for example 2026-11-03_144319")
+    ask.add_argument("locals", nargs="*", help="local ids (default: everyone that day)")
     cal = sub.add_parser("calibrate", help="turn watched runs into a local's limits")
     cal.add_argument("local", help="local id, for example prakash")
     cal.add_argument("--apply", action="store_true", help="write the measured numbers into the local's file")
@@ -57,6 +61,22 @@ def main():
             print(f"See what it says about {local.name}: python -m town calibrate {local.id}")
         return
 
+    if args.cmd == "take":
+        import json
+        from . import expertise
+        folder = ROOT / "runs" / args.day
+        if not (folder / "day.json").exists():
+            raise SystemExit(f"No day called {args.day} in runs/")
+        meta = json.loads((folder / "day.json").read_text(encoding="utf-8"))
+        task = tasks.load(meta["ref"])
+        for local_id in args.locals or meta["locals"]:
+            expertise.retake(folder, people.load(local_id), task)
+        board = expertise.panel(folder, args.locals or meta["locals"])
+        print(f"\n{board['kept']} of {board['proposed']} remarks kept by the checks")
+        meta["panel"] = board
+        (folder / "day.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        return
+
     if args.cmd == "calibrate":
         from . import calibrate
         local = people.load(args.local)
@@ -74,14 +94,14 @@ def main():
     print(f"DAY · {task.app} · {len(who)} local{'s' if len(who) != 1 else ''} · {mind.MODEL}")
     if args.date or args.year:
         days = year.sample(args.year) if args.year else sorted(date.fromisoformat(d) for d in args.date)
-        summary = day.run_year(task, who, days, ROOT / "runs", args.watch, args.seed, pandemic=args.pandemic)
+        summary = day.run_year(task, who, days, ROOT / "runs", args.watch, args.seed, pandemic=args.pandemic, take=not args.no_take)
         results = Counter(k for d in summary for k in d["results"].values())
         for d in summary:
             print(f"  {d['label']:<60} {', '.join(d['results'].values())}")
         print(f"\n{', '.join(f'{v} {k.lower()}' for k, v in results.items())} · replay in runs/")
         return
     folder = ROOT / "runs" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
-    results = Counter(day.run_day(task, who, folder, args.watch, args.seed).values())
+    results = Counter(day.run_day(task, who, folder, args.watch, args.seed, take=not args.no_take).values())
     print(f"\n{', '.join(f'{v} {k.lower()}' for k, v in results.items())} · replay in {folder.relative_to(ROOT)}")
 
 

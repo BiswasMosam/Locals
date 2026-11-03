@@ -6,7 +6,7 @@ import time
 from dataclasses import replace
 from datetime import datetime
 
-from . import mind, tasks, year
+from . import expertise, mind, tasks, year
 from .android import Android
 from .feed import Feed
 from .limits import slip, typo
@@ -39,7 +39,7 @@ def size(path):
     return f"{path.stat().st_size / 1_048_576:.1f} MB"
 
 
-def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=None):
+def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=None, take=True):
     told = ""
     if task.platform == "android":
         local = replace(local, limits=replace(local.limits, device="phone"))  # an app on a phone is used on a phone
@@ -126,7 +126,8 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
             if act in ("type", "set") and not text.strip() and not (act == "set" and is_button(screen, target)):
                 # A finger on a slider always leaves it somewhere; an empty value is the model's slip, not theirs.
                 feed.step(n, f"{act} [{target}] nothing", thought, record, round(time.time() - began, 1))
-                history.append(f"tried to {act} it but gave no {'words' if act == 'type' else 'value'}; nothing happened")
+                history.append(f"tried to {act} {label(screen, target)} but put nothing in \"text\", so nothing changed; "
+                               f"the {'words' if act == 'type' else 'new value, like 30,'} must go in \"text\"")
                 continue
             if act in ("tap", "type", "set") and target not in ids:
                 feed.step(n, f"{act} [{target}]", thought, record, round(time.time() - began, 1))
@@ -168,6 +169,13 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
             finish("GAVE UP", f'Out of patience after {limits.patience_steps} steps. Last thought: "{thought}"')
 
         web.snapshot(out / "end.png")
+        observed = web.observe()
+        (out / "observed.json").write_text(json.dumps(observed, indent=1), encoding="utf-8")
+    if take and outcome != "STOPPED":
+        try:  # their take comes after the run and never changes what happened in it
+            expertise.take(local, task, out, feed.event, observed, web.downloads, inputs, seed, told)
+        except Exception as e:
+            print(f"  no take: {type(e).__name__}: {e}"[:200], flush=True)
     feed.close()
     return outcome
 
@@ -183,7 +191,7 @@ def done_line(file, n, feed, was_stuck):
     return f"{saved}{n} steps · {feed.clock()}" + (" · after being stuck" if was_stuck else "")
 
 
-def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None, today=None, index=None):
+def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None, today=None, index=None, take=True):
     """Sends each local to the task in turn; they share one model, so they take turns."""
     listen = listen or (lambda entry: None)
     ids = [l.id for l in who]
@@ -197,7 +205,7 @@ def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None, toda
         if stop is not None and stop.is_set():
             break
         try:
-            results[local.id] = run(local, task, folder / local.id, watch, seed, listen, stop, today)
+            results[local.id] = run(local, task, folder / local.id, watch, seed, listen, stop, today, take)
         except Exception as e:
             results[local.id] = "ERROR"
             print(f"  ERROR      {type(e).__name__}: {e}", flush=True)
@@ -208,12 +216,19 @@ def run_day(task, who, folder, watch=False, seed=7, listen=None, stop=None, toda
                 f.write(json.dumps(entry) + "\n")
             listen(entry)
     folder.mkdir(parents=True, exist_ok=True)
-    (folder / "day.json").write_text(json.dumps({**meta, "results": results}, indent=2), encoding="utf-8")
-    listen({"type": "day", "phase": "end", **meta, "results": results, "ended_at": time.time()})
+    board = expertise.panel(folder, list(results)) if take else None
+    if board and board["points"]:
+        print(f"\nWHAT THEIR JOBS LET THEM SEE · {board['kept']} of {board['proposed']} remarks kept by the checks")
+        for g in board["points"][:8]:
+            print(f"  {g['evidence'][:110]}")
+            for r in g["remarks"]:
+                print(f"    {r['by']}, {r['field']} ({r['standing']}): {r['remark']}")
+    (folder / "day.json").write_text(json.dumps({**meta, "results": results, "panel": board}, indent=2), encoding="utf-8")
+    listen({"type": "day", "phase": "end", **meta, "results": results, "panel": board, "ended_at": time.time()})
     return results
 
 
-def run_year(task, who, days, runs, watch=False, seed=7, listen=None, stop=None, pandemic=None):
+def run_year(task, who, days, runs, watch=False, seed=7, listen=None, stop=None, pandemic=None, take=True):
     """The same locals and task on several dates in one year, one day after another."""
     listen = listen or (lambda entry: None)
     listen({"type": "year", "phase": "start", "task": f"{task.app}: {task.id}", "dates": [d.isoformat() for d in days],
@@ -227,7 +242,7 @@ def run_year(task, who, days, runs, watch=False, seed=7, listen=None, stop=None,
             time.sleep(1)
             folder = runs / datetime.now().strftime("%Y-%m-%d_%H%M%S")
         t = year.today(d, pandemic)
-        results = run_day(task, who, folder, watch, seed, listen, stop, today=t, index=[i, len(days)])
+        results = run_day(task, who, folder, watch, seed, listen, stop, today=t, index=[i, len(days)], take=take)
         summary.append({"date": d.isoformat(), "label": t.label(), "day": folder.name, "results": results})
     listen({"type": "year", "phase": "end", "task": f"{task.app}: {task.id}", "days": summary, "ended_at": time.time()})
     return summary

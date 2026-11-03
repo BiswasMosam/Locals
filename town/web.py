@@ -1,5 +1,6 @@
 """Eyes and hands for web apps: a real Chrome, driven by Playwright."""
 from pathlib import Path
+from urllib.parse import urlparse
 
 from playwright.sync_api import sync_playwright
 
@@ -35,7 +36,7 @@ SEE = """() => {
     items.push({ id, role, text: text.slice(0, 300), lines: lines.slice(0, 10).map(s => s.slice(0, 200)), hint: hint.slice(0, 160), disabled: !!el.disabled || el.getAttribute('aria-disabled') === 'true',
       active: el.classList.contains('active') || el.getAttribute('aria-pressed') === 'true' || el.getAttribute('aria-selected') === 'true',
       checked: el.checked === true, value: (role === 'slider' || role === 'text box') ? String(el.value || '') : '',
-      x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) });
+      x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2), w: Math.round(r.width), h: Math.round(r.height) });
   }
   const blocks = [];
   for (const el of document.querySelectorAll('h1,h2,h3,h4,p,li,dt,dd,label,figcaption,[role=alert],[role=status],output')) {
@@ -49,12 +50,23 @@ SEE = """() => {
 }"""
 
 
+# Expert eyes: what a software engineer would see in the browser's tools, collected while the local works.
+VITALS = """(() => { const v = window.__localsVitals = { lcp: null, cls: 0 };
+  try { new PerformanceObserver(l => { for (const e of l.getEntries()) v.lcp = e.startTime; }).observe({ type: 'largest-contentful-paint', buffered: true }); } catch (_) {}
+  try { new PerformanceObserver(l => { for (const e of l.getEntries()) if (!e.hadRecentInput) v.cls += e.value; }).observe({ type: 'layout-shift', buffered: true }); } catch (_) {}
+})();"""
+VITALS_READ = """() => { const v = window.__localsVitals || {}, n = performance.getEntriesByType('navigation')[0];
+  const bytes = [...performance.getEntriesByType('resource'), n].filter(Boolean).reduce((s, e) => s + (e.transferSize || 0), 0);
+  return { lcp: v.lcp, cls: v.cls, bytes, url: location.href }; }"""
+
+
 class Web:
     def __init__(self, task, device, files, out_dir, watch=False):
         self.url, self.device, self.files, self.out = task.url, device, [str(f) for f in files], Path(out_dir)
         self.watch = watch
         self.slow_mo = 250 if watch else 0  # slowed down so you can follow a local; a person's own hands need none
         self.downloads, self._pending, self.picked_files = [], [], 0
+        self.seen = {"console": [], "errors": [], "failed": [], "uploads": []}
 
     def __enter__(self):
         self._pw = sync_playwright().start()
@@ -63,8 +75,33 @@ class Web:
         self.page = ctx.new_page()
         self.page.on("filechooser", self._choose)
         self.page.on("download", lambda d: self._pending.append(d))
+        self.page.add_init_script(VITALS)
+        self.page.on("console", lambda m: m.type == "error" and self.seen["console"].append(m.text[:200]))
+        self.page.on("pageerror", lambda e: self.seen["errors"].append(str(e)[:200]))
+        self.page.on("requestfailed", lambda r: self.seen["failed"].append({"url": r.url[:200], "why": str(r.failure or "")[:80]}))
+        self.page.on("response", lambda r: r.status >= 400 and self.seen["failed"].append({"url": r.url[:200], "why": f"HTTP {r.status}"}))
+        self.page.on("request", self._request)
         self.page.goto(self.url, wait_until="networkidle")
         return self
+
+    def _request(self, r):
+        """Remembers any request that carries a file or a large body off the device."""
+        if r.method not in ("POST", "PUT", "PATCH"):
+            return
+        try:
+            size = len(r.post_data_buffer or b"")
+        except Exception:
+            size = 0
+        if size > 20_000:
+            self.seen["uploads"].append({"host": urlparse(r.url).netloc, "bytes": size})
+
+    def observe(self):
+        """Everything the expert eyes collected, read before the browser closes."""
+        try:
+            vitals = self.page.evaluate(VITALS_READ)
+        except Exception:
+            vitals = {}
+        return {"platform": "web", **self.seen, **vitals}
 
     def __exit__(self, *exc):
         self._browser.close()

@@ -56,7 +56,8 @@ main { position: relative; min-width: 0; height: 100vh; }
 .btn:disabled { background: var(--slab2); color: var(--dim); cursor: not-allowed; filter: none; }
 
 .toggle { font-size: 12px; color: var(--dim); display: inline-flex; gap: 8px; align-items: center; cursor: pointer; user-select: none; }
-.toggle.big { font-size: 13px; margin-top: 26px; }
+.toggle.big { font-size: 13px; margin-top: 26px; display: flex; }
+.toggle.big + .toggle.big { margin-top: 14px; }
 .toggle input, .check { appearance: none; width: 16px; height: 16px; border: 2px solid var(--dim); cursor: pointer; flex: none; }
 .toggle input:checked, .check:checked {
   border-color: var(--light);
@@ -110,6 +111,7 @@ canvas { display: block; width: 100%; height: 100%; }
 .meta { font-size: 11px; color: var(--dim); white-space: nowrap; }
 .says { margin-top: 4px; font-size: 22px; overflow-wrap: anywhere; }
 .k-STUCK .tag, .k-SLIP .tag, .k-WRONG-DONE .tag, .k-OFF-PATH .tag { color: var(--light); }
+.k-TAKE .tag, .k-EXPERT .tag { color: #56b6c2; }
 .k-DONE .tag, .k-SAYS-DONE .tag { color: var(--good); }
 .k-GAVE-UP .tag, .k-ERROR .tag { color: var(--bad); }
 .who { padding: 18px 22px; border-bottom: 2px solid var(--line); background: var(--slab); }

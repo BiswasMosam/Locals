@@ -93,12 +93,17 @@ def describe(screen, local, history, notes):
 
 
 def decide(system, user, seed):
+    return chat(system, user, DECISION, seed)
+
+
+def chat(system, user, schema, seed, num_ctx=4096):
+    """One reply from the model, shaped by a JSON schema."""
     body = {
         "model": MODEL,
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
         "stream": False,
-        "format": DECISION,
-        "options": {"temperature": 0.5, "seed": seed, "num_ctx": 4096},
+        "format": schema,
+        "options": {"temperature": 0.5, "seed": seed, "num_ctx": num_ctx},
         "keep_alive": "10m",
     }
     req = urllib.request.Request(f"{OLLAMA}/api/chat", data=json.dumps(body).encode(),

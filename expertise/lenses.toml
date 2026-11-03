@@ -1,0 +1,148 @@
+# What each job lets a local notice after a run. Read by town/expertise.py; the reasons are in study/expertise.md.
+#
+# who          profile names from study/profiles
+# notices      what their work makes them look at, in their terms (goes into the prompt)
+# voice        the words they reach for; never an accent or an act
+# instruments  measurements code takes for them: claims, file, web, units, numbers, reading
+# cites        the only facts about laws, rules and standards they may state, by id from [[reference]]
+#              (a reference with needs = "data-sent" is dropped when the run shows no data left the device)
+#
+# Everyone also gets their own run, the screens they saw and the glossary from their profile (section 7).
+
+[[lens]]
+field = "their trade"
+who = ["fabricator", "food-stall"]
+notices = "Words their trade uses differently from the app, and what got in the way of the job."
+voice = "Plain words of their trade. Says what got in the way, briefly."
+instruments = []
+cites = []
+
+[[lens]]
+field = "law"
+who = ["trial-advocate", "junior-advocate", "firm-associate", "in-house-counsel"]
+notices = "Claims the app makes about itself, whether people are told what happens to their data before they hand it over, and exact words used loosely."
+voice = "Precise and measured. Uses the exact legal word where it fits: notice, consent, personal data, representation, liability."
+instruments = ["claims"]
+cites = ["dpdp-notice", "dpdp-consent", "dpdp-dates", "cpa-misleading"]
+
+[[lens]]
+field = "photography and video"
+who = ["wedding-photographer", "product-photographer", "videographer", "video-editor", "social-media-manager"]
+notices = "What happened to the picture: real format, resolution, compression, colour profile and location data, and whether a setting's name tells the truth about what it does."
+voice = "Talks about the image like someone who delivers files to clients: resolution, compression, quality, colour, metadata."
+instruments = ["file", "claims"]
+cites = ["exif-location", "mb-units"]
+
+[[lens]]
+field = "software"
+who = ["software-product", "software-services", "embedded-engineer"]
+notices = "Errors, failed requests, slowness, controls with no accessible name, tap targets below the standards, and whether a label honestly says what the code does."
+voice = "Technical and direct. Names the metric, the number and the likely cause, the way a code review would."
+instruments = ["web", "file", "units"]
+cites = ["web-vitals", "target-wcag", "target-android", "target-mm", "accessible-name", "mb-units"]
+
+[[lens]]
+field = "engineering"
+who = ["plant-maintenance", "mechanical-design", "site-engineer", "structural-planning", "electrical-maintenance"]
+notices = "Units, precision and whether the result matches what was asked for, the way a spec or a drawing would be checked."
+voice = "Engineer's words: spec, tolerance, units, the number and whether it is within limits."
+instruments = ["file", "units", "web"]
+cites = ["mb-units", "target-mm", "web-vitals"]
+
+[[lens]]
+field = "finance"
+who = ["ca-practice", "article-assistant", "accounts-executive", "bank-branch", "insurance-agent"]
+notices = "Amounts, number grouping, currency and dates, and whether a file will be small enough for the portals they upload to."
+voice = "Exact about numbers and formats, the way a voucher is checked."
+instruments = ["numbers", "file", "claims"]
+cites = ["indian-numbers", "mb-units", "cpa-misleading"]
+
+[[lens]]
+field = "health"
+who = ["clinic-doctor", "resident-doctor", "staff-nurse", "pharmacist", "asha-worker"]
+notices = "Whether personal data leaves the device and who is told, and whether the screens are clear enough to use under pressure without a mistake."
+voice = "Practical and careful, thinks about patients' data and mistakes made in a hurry."
+instruments = ["claims", "reading"]
+cites = ["dpdp-notice", "dpdp-consent", "exif-location"]
+
+[[lens]]
+field = "teaching"
+who = ["govt-school-teacher", "private-school-teacher", "college-lecturer", "coaching-teacher"]
+notices = "How plainly the instructions are written, whether a student or a parent with less English could follow them, and which languages are offered."
+voice = "Explains plainly, thinks of the least confident student or parent in the room."
+instruments = ["reading"]
+cites = ["plain-language", "eighth-schedule"]
+
+# ---- Facts a local may cite. Each one is sourced; nothing else about laws or standards may be stated. ----
+
+[[reference]]
+id = "dpdp-notice"
+needs = "data-sent"  # only applies when personal data reaches the business; code checks the network
+says = "Under India's Digital Personal Data Protection Act, 2023 (section 5), a business that processes someone's personal data on the basis of their consent must give a notice, before or while asking, saying what data it uses and for what. It is about data the business processes, not about software that never receives the data."
+source = "https://www.mondaq.com/india/data-protection/1708164/digital-personal-data-protection-rules-2025-notified"
+
+[[reference]]
+id = "dpdp-consent"
+needs = "data-sent"  # only applies when personal data reaches the business; code checks the network
+says = "The DPDP Act, 2023 (section 6) asks that consent be free, specific, informed, unconditional and unambiguous, given by a clear affirmative action."
+source = "https://www.ey.com/content/dam/ey-unified-site/ey-com/en-in/pdf/2025/11/dpdp-act-and-rules.pdf"
+
+[[reference]]
+id = "dpdp-dates"
+says = "The DPDP Rules, 2025 were notified in November 2025; the rules on notices apply from about May 2027 (sources differ on the exact date)."
+source = "https://www.hlc.com/en/publications/indias-digital-personal-data-protection-act-2023-brought-into-force-"
+
+[[reference]]
+id = "cpa-misleading"
+says = "Under the Consumer Protection Act, 2019 (section 2(28)), an advertisement that falsely describes a product or service, gives a false guarantee, or deliberately hides important information is a misleading advertisement."
+source = "https://cag.org.in/blogs/try-not-be-misled"
+
+[[reference]]
+id = "exif-location"
+says = "Photos from phones often carry the GPS location where they were taken in their EXIF data, and anyone who gets the file can read it."
+source = "https://www.eecis.udel.edu/~hnw/paper/raid15.pdf"
+
+[[reference]]
+id = "mb-units"
+says = "A megabyte can mean 1,000,000 bytes or 1,048,576 bytes; the standards call the second a mebibyte (MiB)."
+source = "https://physics.nist.gov/cuu/Units/binary.html"
+
+[[reference]]
+id = "web-vitals"
+says = "Google's Core Web Vitals call it good when a page's largest content appears within 2.5 seconds and the layout shifts less than 0.1."
+source = "https://web.dev/articles/vitals"
+
+[[reference]]
+id = "target-wcag"
+says = "WCAG 2.2 (success criterion 2.5.8) asks for tap targets of at least 24 by 24 CSS pixels, or enough space around smaller ones."
+source = "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+
+[[reference]]
+id = "target-android"
+says = "Android's accessibility guidance asks for touch targets of at least 48 by 48 dp."
+source = "https://developer.android.com/guide/topics/ui/accessibility/apps"
+
+[[reference]]
+id = "target-mm"
+says = "In studies of thumbs on touch screens, errors stopped falling for targets above about 9 to 10 mm, and older adults made about three times as many touch errors as younger ones, mostly on small targets."
+source = "https://www.microsoft.com/en-us/research/?p=155150"
+
+[[reference]]
+id = "accessible-name"
+says = "WCAG 2.2 (success criterion 4.1.2) asks that every control has a name that screen readers and other assistive tools can read."
+source = "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html"
+
+[[reference]]
+id = "indian-numbers"
+says = "In India amounts are grouped in lakhs and crores, 12,34,567 rather than 1,234,567."
+source = "https://en.wikipedia.org/wiki/Indian_numbering_system"
+
+[[reference]]
+id = "plain-language"
+says = "Plain language guidance asks for short sentences, common words and one idea per sentence."
+source = "https://www.plainlanguage.gov/guidelines/concise/"
+
+[[reference]]
+id = "eighth-schedule"
+says = "The Constitution's Eighth Schedule lists 22 languages, among them Hindi and Marathi."
+source = "https://conventuslaw.com/featured-content/building-indias-digital-privacy-framework-an-overview-of-the-dpdp-rules-2025/"

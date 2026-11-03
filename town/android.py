@@ -64,8 +64,13 @@ class Android:
             self.sh("shell", "am", "broadcast", "-a", "android.intent.action.MEDIA_SCANNER_SCAN_FILE", "-d", f"file://{PICTURES}/{f.name}")
         self.sh("shell", "input", "keyevent", "KEYCODE_HOME")
         self.sh("shell", "monkey", "-p", self.task.package, "-c", "android.intent.category.LAUNCHER", "1")
+        density = re.findall(r"\d+", self.sh("shell", "wm", "density"))
+        self.density = int(density[-1]) if density else 420  # to give control sizes in dp, the unit Android's guidance uses
         time.sleep(4)
         return self
+
+    def observe(self):
+        return {"platform": "android"}
 
     def __exit__(self, *exc):
         self.sh("shell", "am", "force-stop", self.task.package)
@@ -109,7 +114,8 @@ class Android:
                         "hint": (n.get("hint") or "") if role == "text box" else "" if lines else f"{shape}{where(cx, cy, w, h)}".replace("round ", "round, "),
                         "disabled": n.get("enabled") == "false", "active": n.get("selected") == "true",
                         "checked": n.get("checked") == "true", "value": n.get("text", "") if role == "text box" else "",
-                        "x": cx, "y": cy}
+                        "x": cx, "y": cy, "w": round((x1 - x0) * 160 / self.density), "h": round((y1 - y0) * 160 / self.density),
+                        "unit": "dp"}
                 items.append(item)
                 self.boxes[item["id"]] = (cx, cy, role)
                 self.crops[item["id"]] = (x0, y0, x1, y1)

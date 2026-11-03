@@ -481,7 +481,7 @@ $('#when-date').addEventListener('change', e => { if (e.target.value) setWhen('o
 $('#pandemic').addEventListener('change', e => { S.when.pandemic = e.target.value; previewWhen(); });
 
 $('#start').addEventListener('click', async () => {
-  const body = { locals: chosen().map(p => p.id), watch: $('#watch').checked, dates: days(), pandemic: S.when.pandemic };
+  const body = { locals: chosen().map(p => p.id), watch: $('#watch').checked, take: $('#take').checked, dates: days(), pandemic: S.when.pandemic };
   const goal = { goal: $('#site-goal').value.trim(), check: $('#site-check').value, value: $('#site-value').value.trim(), files: S.files };
   if (S.kind === 'saved') body.task = $('#task-select').value;
   else if (S.kind === 'apk') body.app = { apk: S.apk ? S.apk.path : '', ...goal };

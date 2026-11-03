@@ -48,12 +48,12 @@ class Town:
     def busy(self):
         return self.thread is not None and self.thread.is_alive()
 
-    def start(self, task, who, watch, days, pandemic):
+    def start(self, task, who, watch, days, pandemic, take=True):
         with self.lock:
             self.log = []
         self.stop.clear()
         self.day = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-        self.thread = threading.Thread(target=day.run_year, args=(task, who, days, RUNS, watch, 7, self.emit, self.stop, pandemic),
+        self.thread = threading.Thread(target=day.run_year, args=(task, who, days, RUNS, watch, 7, self.emit, self.stop, pandemic, take),
                                        daemon=True)
         self.thread.start()
 
@@ -235,7 +235,7 @@ class Handler(SimpleHTTPRequestHandler):
         except (ValueError, KeyError, SystemExit) as e:
             return self.send_json({"error": str(e)}, 400)
         pandemic = body.get("pandemic") if body.get("pandemic") in year.PANDEMIC else None
-        TOWN.start(task, [people.load(i) for i in ids], bool(body.get("watch")), days, pandemic)
+        TOWN.start(task, [people.load(i) for i in ids], bool(body.get("watch")), days, pandemic, body.get("take", True) is not False)
         self.send_json({"ok": True, "ref": ref})
 
 
