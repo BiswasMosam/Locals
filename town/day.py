@@ -147,7 +147,7 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
 
             hit = target
             if act == "tap":
-                hit = slip(rng, limits.slip_rate, target, screen["items"])
+                hit = slip(rng, limits.slip_rate, target, screen["items"], touch=limits.device == "phone")
                 if hit != target:
                     feed.event("SLIP", f"Meant to tap {label(screen, target)}, hit {label(screen, hit)}.")
             if act == "type":

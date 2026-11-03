@@ -107,6 +107,8 @@ def apply(local, out, n_runs):
         text = re.sub(rf"(?m)^{key} = .*$", f"{key} = {out[key][0]}", text)
     note = (f"# {', '.join(measured)} measured from {n_runs} watched run{'s' * (n_runs != 1)} on {date.today().isoformat()}; "
             f"the rest are draft guesses from the profile.")
-    text = re.sub(r"(?m)^# (Draft numbers guessed|.* measured from \d+ watched run).*$", note, text)
+    text, n = re.subn(r"(?m)^# (Draft numbers guessed|.* measured from \d+ watched run).*$", note, text)
+    if not n:  # numbers derived from published data keep their note; the watched ones get their own line
+        text = text.replace("[limits]\n", note + "\n[limits]\n", 1)
     path.write_text(text, encoding="utf-8")
     return measured

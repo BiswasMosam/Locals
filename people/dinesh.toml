@@ -18,11 +18,18 @@ reads = "Reads very little English. Goes by pictures, colours and short familiar
 words = ["photo", "send", "OK", "WhatsApp", "site"]
 when_stuck = "ask"
 
-# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[traits]
+education = "secondary"
+conditions = []
+glance = 1.0
+english = "slow"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
 [limits]
-read_words = 3
+read_words = 2
 patience_steps = 10
 repeat_before_stuck = 2
-slip_rate = 0.10
-typo_rate = 0.08
+slip_rate = 0.05
+typo_rate = 0.03
 device = "phone"

@@ -18,11 +18,18 @@ reads = "Reads a few words, then guesses."
 words = ["entry", "survey", "form", "photo"]
 when_stuck = "ask"
 
-# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[traits]
+education = "primary"
+conditions = ["tired"]
+glance = 2.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
 [limits]
-read_words = 4
+read_words = 5
 patience_steps = 7
 repeat_before_stuck = 2
-slip_rate = 0.06
-typo_rate = 0.07
+slip_rate = 0.04
+typo_rate = 0.03
 device = "phone"

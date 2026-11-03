@@ -23,7 +23,7 @@ A lawyer who uses an app notices a word that means something exact in law used l
 4. **Field facts must be cited, and must apply.** A remark that relies on a law, standard or rule names one of the facts in its lens. It may say what the rule asks and what the evidence shows, never that the app breaks the law: a run cannot show that. A fact that only applies in some cases says so, and code drops it when the run shows it does not apply. Anything uncited is shown as their view, not as fact.
 5. **No wishlists.** A remark is about something that was there (or plainly missing, like a privacy notice on a screen that takes files). Features nobody needed in this run are not remarks.
 6. **"Nothing in my field here" is an answer.** An advocate converting a photo may have nothing legal to say. Most remarks should come from people whose field the app touches.
-7. **Their words, no act.** Remarks use their field's vocabulary (a CA says "challan", an engineer says "LCP"), never an accent or a caricature.
+7. **Their words, no act.** Remarks use their field's vocabulary (a CA says "challan", an engineer says "LCP"), never an accent, a caricature or a comparison to their work; code drops similes.
 8. **A panel, not a chorus.** When several locals point at the same evidence, it is one remark with a count of who raised it, so three lawyers saying one thing is not three findings.
 
 ## The lenses
@@ -49,7 +49,7 @@ the run  →  evidence: screens seen, run moments, glossary hits, measurements  
          →  TAKE and EXPERT in the feed  →  the day's panel
 ```
 
-The checks, in order: the evidence exists; cited facts are in the study; a cited rule applies to what the run showed; no conclusion that a law is broken; no guessing at what the app does out of sight; the remark talks about its evidence; no two remarks about the same evidence. Each dropped remark is saved with its reason in the run's `take.json`, so the grounding rate can be read for any day. `python -m town take <day>` asks a past day's locals again, to test a change to the study without running the day.
+The checks, in order: the evidence exists; cited facts are in the study; a cited rule applies to what the run showed; the evidence is of a kind their field covers; no comparison to their job; no conclusion that a law is broken; no guessing at what the app does out of sight; the remark talks about its evidence; no two remarks about the same evidence. Each dropped remark is saved with its reason in the run's `take.json`, so the grounding rate can be read for any day. `python -m town take <day>` asks a past day's locals again, to test a change to the study without running the day.
 
 ## What the first test showed
 
@@ -68,6 +68,7 @@ A photographer, a software engineer, a lawyer, a CA, a doctor and a teacher conv
 - **Applicability comes before obligation.** The DPDP notice duty is about personal data a business receives. A reference can say when it applies (`needs = "data-sent"`), and code drops a citation that the network log shows does not apply.
 - **A checker that only says no wastes good remarks.** One revision round, told why a remark was dropped, recovered the engineer's two measured findings.
 - **Most locals had nothing to add**, which is what Følstad's work-domain experts predict: few remarks, each worth more.
+- **"Words of their trade" invited a costume.** Told to speak in his trade's words, Sunil the food stall cook said he "cut the photo down like I'd slice meat" and called a large file "a thick, heavy dish", the caricature the persona research warns about [CoMPosT, in the [study](README.md)]. Now the prompt forbids comparisons to their work, code drops any remark built on a simile and cuts simile sentences from a take, and a lens can limit which evidence its people may point at: the fabricator and the food stall speak only about their own trade's words and their own run. Asked again, Sunil said: "I did it. The file is smaller."
 
 ## How we will know it works
 

@@ -18,11 +18,18 @@ reads = "Reads slowly and fully, word by word."
 words = ["entry", "ledger", "Tally", "bill"]
 when_stuck = "ask"
 
-# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[traits]
+education = "graduate"
+conditions = []
+glance = 5.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
 [limits]
-read_words = 14
+read_words = 21
 patience_steps = 10
 repeat_before_stuck = 3
-slip_rate = 0.03
-typo_rate = 0.04
+slip_rate = 0.01
+typo_rate = 0.02
 device = "laptop"

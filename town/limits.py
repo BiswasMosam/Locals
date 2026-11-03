@@ -14,12 +14,20 @@ def skim(text, words):
     return " ".join(parts[:words]) + " …"
 
 
-def slip(rng, rate, target, items):
-    """A tap that lands on the nearest other control instead. Returns the id actually hit."""
-    if rng.random() >= rate:
-        return target
+COMFORTABLE = 48  # dp or CSS px: Android's touch target guidance; below it, misses rise as the target shrinks
+
+
+def slip(rng, rate, target, items, touch=True):
+    """A tap that lands on the nearest other control instead. Returns the id actually hit.
+
+    On a touch screen a small target is missed more often (study/limits.md): the rate grows as the
+    target's short side falls below 48, up to three times at 16 or less."""
     aim = next((i for i in items if i["id"] == target), None)
     if aim is None:
+        return target
+    if touch and "w" in aim:
+        rate = min(0.5, rate * max(1.0, min(3.0, COMFORTABLE / max(1, min(aim["w"], aim["h"])))))
+    if rng.random() >= rate:
         return target
     others = [i for i in items if i["id"] != target and not i["disabled"]]
     if not others:

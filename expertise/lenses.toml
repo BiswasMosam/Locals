@@ -4,6 +4,7 @@
 # notices      what their work makes them look at, in their terms (goes into the prompt)
 # voice        the words they reach for; never an accent or an act
 # instruments  measurements code takes for them: claims, file, web, units, numbers, reading
+# evidence     which kinds of evidence their remarks may point at (S seen, R their run, W their words, M measured); default all
 # cites        the only facts about laws, rules and standards they may state, by id from [[reference]]
 #              (a reference with needs = "data-sent" is dropped when the run shows no data left the device)
 #
@@ -13,8 +14,9 @@
 field = "their trade"
 who = ["fabricator", "food-stall"]
 notices = "Words their trade uses differently from the app, and what got in the way of the job."
-voice = "Plain words of their trade. Says what got in the way, briefly."
+voice = "Short, plain words. Says what got in the way."
 instruments = []
+evidence = "WR"  # their trade's words and their own run; an image converter's claims are not their field
 cites = []
 
 [[lens]]

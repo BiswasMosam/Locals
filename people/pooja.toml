@@ -18,11 +18,18 @@ reads = "Reads what she needs, skips the rest."
 words = ["ad", "format", "export", "cut"]
 when_stuck = "workaround"
 
-# Draft numbers guessed from the profile. Interviews and watching real people replace them.
+[traits]
+education = "secondary"
+conditions = ["rushed"]
+glance = 2.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
 [limits]
-read_words = 10
+read_words = 7
 patience_steps = 10
 repeat_before_stuck = 2
-slip_rate = 0.02
+slip_rate = 0.01
 typo_rate = 0.02
 device = "laptop"

@@ -123,7 +123,9 @@ The first Android runs were on [Pops](https://github.com/BiswasMosam/Pops), unch
 
 ## Real people are the yardstick
 
-A local is only right if a real person would have done the same, so Locals can watch real people too. It opens the app on the same screen with the same files on the device and records every tap with the words on what was tapped, taps that hit nothing, corrections while typing, scrolls, going back and giving up. On the web this runs inside the page; on Android it reads the touches from the device, so it works the same on the emulator or a plugged in phone.
+A local is only right if a real person would have done the same. Their numbers come from published studies of real people: 37,000 people typing on their phones leave 2.3% of letters wrong, older hands miss touch targets about 3.5 times as often as younger ones, walking adds 23%, and a small target is missed more than a big one. Each local has traits read from their profile (schooling, wet or gloved hands, a moving train, how they read), and `python -m town derive` turns them into their numbers, every factor sourced or marked as a guess in the [limits study](study/limits.md).
+
+You can also watch a real person yourself. It opens the app on the same screen with the same files on the device and records every tap with the words on what was tapped, taps that hit nothing, corrections while typing, scrolls, going back and giving up. On the web this runs inside the page; on Android it reads the touches from the device, so it works the same on the emulator or a plugged in phone.
 
 - **Your golden path.** Do the task once yourself with `--golden`. From then on, a local who reaches for a control you never used gets an **OFF PATH** line in the feed, with what your path had next.
 - **Someone who does the job.** Hand the phone to a fabricator, a teacher or a nurse with `--for` and the local they stand in for. `calibrate` turns their recordings into that local's patience, repeats, misses and typos, says which numbers the recordings cannot show (how much someone reads is not visible in taps), and `--apply` writes them into the local's file.
@@ -137,7 +139,7 @@ Recordings of real people name nobody and stay on your machine; git never sees t
 | **The town** | A workday hands each local tasks with real pressure: a call in the middle of a form, a dropped connection, a killed app. |
 | **The locals** | One model, many people. A local is a profile from the study turned into a prompt plus a set of limits. |
 | **Eyes** | Locals see what a person sees: visible controls by their visible words, a big card line by line, the placeholder in an empty box, and the symbol on a button with no words. On the web this comes from a real Chrome on a phone sized or laptop sized screen; on Android from the accessibility tree of an emulator or phone. |
-| **Limits** | Code, not the prompt, makes a local human: a patience budget, a reading budget, a slip rate, rules for giving up. Research shows a prompt alone leaves AI users far too patient and accurate. |
+| **Limits** | Code, not the prompt, makes a local human: a patience budget, a reading budget, a slip rate that grows on small targets, rules for giving up. Research shows a prompt alone leaves AI users far too patient and accurate, so the numbers come from studies of real people. |
 | **The golden path** | You do each task once while it is recorded. Wherever a local reaches for something you never used, the feed says OFF PATH: the UI led them there. |
 | **Watched people** | Someone who does the job does the same task on the same screen while it is recorded. Their misses, corrections and give up point become a local's numbers. |
 | **Proof** | A task counts as done only when the app's real state says so, never on the local's word. |
@@ -180,6 +182,7 @@ python -m town run pixelshift:small-jpg sunil --date 2026-09-14   # Ganesh Chatu
 python -m town run pixelshift:small-jpg rohit --year 2026        # a year in twelve days
 python -m town run pops:new-order prakash nikhil                  # an Android app, on a running emulator
 python -m town take 2026-11-03_145536                             # ask a past day's locals for their take again
+python -m town derive                                             # everyone's numbers from published data and their traits
 
 python -m town watch pixelshift:small-jpg --golden               # you, once: the task's golden path
 python -m town watch pops:new-order --for prakash                 # a real fabricator, standing in for Prakash
@@ -205,8 +208,8 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 - [x] Profiles for the wider town: finance, health and education families (forty two more locals, a bank, a clinic, a college, coaching classes)
 - [x] The golden path, and a recorder for watching real people do the same tasks, web and Android
 - [x] Their take: each job notices different things, checked against evidence and sourced facts
-- [ ] Interviews with a real fabricator and a real food stall
-- [ ] Limits set from watching real people do the same tasks (the tools are ready; the people come next)
+- [x] Limits from published studies of typing, touch, reading, age and walking, in place of live interviews
+- [ ] The remaining guesses in the profiles replaced from published sources, family by family
 
 ## Leave a review
 

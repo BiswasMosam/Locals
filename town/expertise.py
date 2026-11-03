@@ -277,7 +277,7 @@ The task was: {' '.join(task.story.split())}
 How it ended: {ENDINGS.get(ending, 'it was cut short')}. Your take must match this.
 
 Your work as {lens['field']} makes you notice: {lens['notices']}
-How you talk: {lens['voice']} Plain voice, no accent, no acting.
+How you talk: {lens['voice']} Plain voice, no accent, no acting, and no comparisons to your work: talk about the app as it is.
 
 Rules:
 - "take" is one or two short sentences, under 35 words, in your own voice about how it went for you.
@@ -298,6 +298,8 @@ CONCLUSION = re.compile(r"\b(violat\w*|illegal|unlawful|non.?complian\w*|not com
                         r"|failure to|failing to|legal requirement"
                         r"|does not (satisfy|comply|meet)|not in (line|accordance) with)\b", re.I)
 GUESS = re.compile(r"\b(may|might|could|probably|likely|possibly|perhaps|presumably)\b", re.I)
+# A job is what they notice, not a costume: "like I'd slice meat" is the caricature the persona research warns about.
+SIMILE = re.compile(r"\b(like (a|an|i'?d|i would|we|how|when|the)|just like|as if|as though)\b", re.I)
 FILLER = {"with", "that", "this", "from", "have", "were", "they", "their", "there", "which", "about", "into", "only", "also",
           "than", "then", "does", "step", "screen", "name", "hidden", "visible", "words", "link", "button", "text", "shows",
           "shown", "app's", "when", "what", "will", "would", "should", "more", "most", "very", "your", "user", "users"}
@@ -314,7 +316,7 @@ def core(e):
     return quoted.group(1) if quoted else e["text"]
 
 
-def check(reply, ev, refs, data_sent=None):
+def check(reply, ev, refs, data_sent=None, kinds="SRWM"):
     """Keeps a remark only if its evidence exists, it talks about that evidence, its citations are facts from the
     study that apply here, and it neither concludes that a law is broken nor guesses at what the app does out of sight.
     data_sent is what the network showed: True, False, or None when it could not be watched (Android).
@@ -330,6 +332,8 @@ def check(reply, ev, refs, data_sent=None):
         why = ("has no evidence" if not text or not about or any(a not in ids for a in about)
                else "cites a fact that is not in the study" if any(c not in known for c in cites)
                else "cites a rule the measurements show does not apply" if data_sent is False and any(refs_by[c].get("needs") == "data-sent" for c in cites)
+               else "points at evidence outside their field" if any(a[0] not in kinds for a in about)
+               else "turns their job into a comparison" if SIMILE.search(text)
                else "concludes a law is broken" if CONCLUSION.search(text)
                else "guesses what the app does" if GUESS.search(text)
                else "does not talk about its evidence" if not tokens(text) & set().union(*(tokens(core(ids[a])) for a in about))
@@ -345,8 +349,8 @@ def check(reply, ev, refs, data_sent=None):
 
 
 def short(take):
-    """A take is a sentence or two, not a report."""
-    sentences = re.split(r"(?<=[.!?])\s+", " ".join(take.split()))
+    """A take is a sentence or two in plain words, not a report and not a performance."""
+    sentences = [s for s in re.split(r"(?<=[.!?])\s+", " ".join(take.split())) if s and not SIMILE.search(s)]
     return " ".join(sentences[:2])[:280]
 
 
@@ -361,14 +365,15 @@ def take(local, task, out, say, observed, downloads, inputs, seed, today=""):
     system, user = prompt(local, task, lens, ev, refs, today, ending)
     reply = mind.chat(system, user, TAKE, seed, num_ctx=6144)
     data_sent = bool(observed.get("uploads")) if observed.get("platform") == "web" and task.files else None
-    remarks, dropped = check(reply, ev, refs, data_sent)
+    kinds = lens.get("evidence", "SRWM")
+    remarks, dropped = check(reply, ev, refs, data_sent, kinds)
     proposed = len(reply.get("remarks", []))
     if dropped:
         # One chance to fix what the checks dropped, told why; a checker that only says no wastes a fixable remark.
         told = "\n".join(f'- "{d["remark"]}" was dropped because it {d["why"]}.' for d in dropped)
         again = mind.chat(system, f"{user}\n\nThe checks dropped some of your remarks:\n{told}\n"
                           "Give your remarks again, keeping to the rules, or leave out the ones you cannot fix.", TAKE, seed + 1, num_ctx=6144)
-        more, dropped_again = check(again, ev, refs, data_sent)
+        more, dropped_again = check(again, ev, refs, data_sent, kinds)
         have = {frozenset(r["about"]) for r in remarks}
         remarks += [r for r in more if frozenset(r["about"]) not in have][:3 - len(remarks)]
         dropped += [{**d, "second try": True} for d in dropped_again]

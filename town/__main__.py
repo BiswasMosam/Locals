@@ -35,6 +35,8 @@ def main():
     ask = sub.add_parser("take", help="ask the locals of a past day again what their jobs let them notice")
     ask.add_argument("day", help="the day's folder in runs/, for example 2026-11-03_144319")
     ask.add_argument("locals", nargs="*", help="local ids (default: everyone that day)")
+    der = sub.add_parser("derive", help="set reading, slips and typos from published studies and each local's traits")
+    der.add_argument("--apply", action="store_true", help="write the traits and numbers into everyone's file")
     cal = sub.add_parser("calibrate", help="turn watched runs into a local's limits")
     cal.add_argument("local", help="local id, for example prakash")
     cal.add_argument("--apply", action="store_true", help="write the measured numbers into the local's file")
@@ -75,6 +77,20 @@ def main():
         print(f"\n{board['kept']} of {board['proposed']} remarks kept by the checks")
         meta["panel"] = board
         (folder / "day.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        return
+
+    if args.cmd == "derive":
+        from . import derive
+        print(f"{'':<14}{'education':<10} {'conditions':<30} read  slip  typo   (was)")
+        for l in people.everyone():
+            t = derive.traits(l)
+            v = derive.derive(l, t)
+            was = f"{l.limits.read_words} {l.limits.slip_rate:.2f} {l.limits.typo_rate:.2f}"
+            print(f"{l.number:02d} {l.id:<10} {t['education']:<10} {', '.join(t['conditions']) or '-':<30} "
+                  f"{v['read_words']:>4}  {v['slip_rate']:.2f}  {v['typo_rate']:.2f}   ({was})")
+            if args.apply:
+                derive.write(l, t, v)
+        print("\nWritten into people/." if args.apply else "\nTo write these into people/: python -m town derive --apply")
         return
 
     if args.cmd == "calibrate":

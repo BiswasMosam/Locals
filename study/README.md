@@ -29,7 +29,7 @@ Five findings shape every rule below.
 
 2. **Draft locals are labelled draft.** A local built from a profile that still has `[G]` lines is marked `status = "draft"` and its numbers are guesses. Its runs test Locals itself and give early signals; they are not findings about an app until the profile is confirmed.
 3. **Real people are never named.** Interview notes live in `study/interviews/`, which git ignores. Profiles describe composites.
-4. **A profile is finished when someone in that job has read it and corrected it.**
+4. **Desk study, not interviews.** Live interviews are not planned. Guesses are replaced from published studies, government surveys and first hand accounts, and a local's limits come from studies of how real people type, tap and read ([limits](limits.md)). A profile counts as confirmed only when someone in that job reads it and corrects it through the [form](../.github/ISSUE_TEMPLATE/correct-a-profile.yml).
 
 ## Who lives in the town
 
@@ -111,10 +111,10 @@ Five findings shape every rule below.
 ## How a profile becomes a local
 
 ```
-profile  →  three different people  →  task cards  →  limits in numbers  →  a local  →  checked against a real person
+profile  →  three different people  →  task cards  →  traits  →  limits from published data  →  a local  →  checked against the benchmarks
 ```
 
-The [template](profile-template.md) defines what every profile must cover. The [interview guide](interview-guide.md) is how the guesses become facts.
+The [template](profile-template.md) defines what every profile must cover. The [limits study](limits.md) turns each local's traits (schooling, conditions like wet hands or a moving train, how they read) into numbers from published research. The [expertise study](expertise.md) is what each job lets a local notice afterwards. The [interview guide](interview-guide.md) stays for anyone who does get to sit with someone in the job.
 
 The last step has tools. `python -m town watch <task> --for <local>` records a real person doing the same task a local does, on the same screen with the same files: every tap and what it said, taps that hit nothing, corrections while typing, giving up. `python -m town calibrate <local>` turns those recordings into the local's numbers, and says which ones the recordings cannot show. Recordings of real people stay in `study/observed/`, which git ignores.
 
