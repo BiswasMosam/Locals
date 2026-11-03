@@ -1,0 +1,304 @@
+# How a room marks a talk. Each criterion has levels from best to worst; a grader picks one and must point at
+# the evidence. needs: what a grader must have to judge it ("talk" by default, "voice" needs a recording).
+# markers: points the room itself adds or takes away, from what code saw happen in it (study/rooms.md).
+# verdict: what the score means in this room, as [lowest share of the marks, words]; house rules, not research.
+
+[[rubric]]
+id = "oral-communication"
+name = "Oral communication"
+source = "Adapted from the AAC&U Oral Communication VALUE rubric (aacu.org/value), in our words"
+out_of = 20
+markers = { "hooked till the end" = 1, "the room fell asleep" = -1, "over time" = -1 }
+
+[[rubric.criterion]]
+id = "organization"
+name = "Organization"
+levels = [
+  "A clear opening and close, a body in a sensible order and transitions between parts, used with skill so the whole talk holds together",
+  "A clear opening and close, a body in a sensible order and transitions, all the way through",
+  "The opening, close, order and transitions show only now and then",
+  "No opening, close, order or transitions can be made out",
+]
+
+[[rubric.criterion]]
+id = "language"
+name = "Language"
+levels = [
+  "Imaginative, memorable and compelling words that suit this audience",
+  "Thoughtful words that generally help the talk and suit this audience",
+  "Plain, commonplace words that only partly help the talk",
+  "Unclear words that barely help, or words that do not suit this audience",
+]
+
+[[rubric.criterion]]
+id = "delivery"
+name = "Delivery"
+needs = "voice"
+levels = [
+  "Posture, gesture, eye contact and voice make the talk compelling; the speaker seems polished and confident",
+  "They make the talk interesting; the speaker seems comfortable",
+  "They make the talk understandable; the speaker seems tentative",
+  "They get in the way of understanding; the speaker seems uncomfortable",
+]
+
+[[rubric.criterion]]
+id = "support"
+name = "Supporting material"
+levels = [
+  "A variety of explanations, examples, statistics, analogies or quotations that strongly support the points or show the speaker knows the subject",
+  "Supporting material that generally supports the points",
+  "Supporting material that only partly supports the points",
+  "Too little supporting material; it barely supports the points",
+]
+
+[[rubric.criterion]]
+id = "message"
+name = "Central message"
+levels = [
+  "Compelling: stated precisely, repeated where it helps, memorable and strongly supported",
+  "Clear and consistent with the supporting material",
+  "Understandable, but not repeated and not memorable",
+  "Can be worked out, but is never stated",
+]
+
+[[rubric]]
+id = "project-review"
+name = "Project review"
+source = "A house rubric: the work in four parts, and the talk from the AAC&U oral communication rubric; replace it with your university's"
+out_of = 50
+markers = { "hooked till the end" = 2, "the room fell asleep" = -2, "over time" = -2 }
+
+[[rubric.criterion]]
+id = "problem"
+name = "The problem"
+levels = [
+  "Says exactly what problem it solves, for whom, and why it matters, with evidence",
+  "Says what problem it solves and for whom",
+  "The problem is there, but vague or not tied to anyone who has it",
+  "No clear problem",
+]
+
+[[rubric.criterion]]
+id = "method"
+name = "What was built and how"
+levels = [
+  "Explains what was built, how it works and why those choices over others",
+  "Explains what was built and how it works",
+  "Names the parts and tools without explaining how they fit",
+  "Unclear what was built",
+]
+
+[[rubric.criterion]]
+id = "results"
+name = "Results"
+levels = [
+  "Shows what was tested, how, and what it showed, with numbers and a comparison",
+  "Shows results with some numbers",
+  "Says it works, with little to show it",
+  "No results",
+]
+
+[[rubric.criterion]]
+id = "limits"
+name = "Limits and what is next"
+levels = [
+  "Says plainly what does not work yet, why, and what would come next",
+  "Mentions limits and next steps",
+  "Only next steps, or limits in passing",
+  "No limits or next steps",
+]
+
+[[rubric.criterion]]
+id = "talk"
+name = "The talk"
+levels = [
+  "Organized, clear to this panel and memorable",
+  "Organized and clear to this panel",
+  "Hard to follow in places",
+  "Hard to follow throughout",
+]
+
+[[rubric]]
+id = "interview"
+name = "Interview scorecard"
+source = "Rated the way structured interview research recommends: each part on its own anchored scale, by each panelist, then combined (Campion, Palmer and Campion 1997)"
+out_of = 5
+average = true
+markers = {}
+verdict = [[0.8, "move forward"], [0.6, "maybe, another round"], [0.0, "not this time"]]
+
+[[rubric.criterion]]
+id = "role"
+name = "Speaks to the role"
+levels = [
+  "Every part ties back to what this role needs, and says how",
+  "Most of it is tied to the role",
+  "Some of it is about the role, some is general",
+  "Mostly general; the panel has to make the connection",
+  "Not about this role",
+]
+
+[[rubric.criterion]]
+id = "impact"
+name = "What they did and what came of it"
+levels = [
+  "Clear situations, their own actions, and results with numbers or outcomes",
+  "Their own actions and results, mostly with outcomes",
+  "What happened is clear, their own part less so, few results",
+  "Says what the team or project did, rarely what they did",
+  "No examples of their own work",
+]
+
+[[rubric.criterion]]
+id = "depth"
+name = "How and why"
+levels = [
+  "Explains how things work and why choices were made, at the depth this role needs",
+  "Explains how and why, mostly at the right depth",
+  "Some how and why, some only what",
+  "Mostly what, little how or why",
+  "Names things without explaining them",
+]
+
+[[rubric.criterion]]
+id = "clarity"
+name = "Clear to this panel"
+levels = [
+  "Everyone on the panel could follow it, the specialists and the rest",
+  "Most of the panel could follow most of it",
+  "The specialists could follow; the others lost parts",
+  "Hard to follow for most of the panel",
+  "Could not be followed",
+]
+
+[[rubric.criterion]]
+id = "structure"
+name = "Gets to the point"
+levels = [
+  "Gets to the point at once, keeps an order and fits the time",
+  "Gets to the point soon and mostly keeps an order",
+  "Takes a while to get to the point",
+  "Wanders before getting to a point",
+  "Never gets to a point",
+]
+
+[[rubric]]
+id = "proposal"
+name = "A proposal to leadership"
+source = "A house rubric: what leadership needs to decide (the ask, why, evidence, risks, next step); replace it with your company's"
+out_of = 100
+markers = { "hooked till the end" = 5, "the room fell asleep" = -5, "over time" = -5 }
+verdict = [[0.75, "approved"], [0.5, "come back with more"], [0.0, "no"]]
+
+[[rubric.criterion]]
+id = "ask"
+name = "The ask"
+levels = [
+  "Says early and exactly what is asked for: money, people, time, and from whom",
+  "Says what is asked for, but late or loosely",
+  "The ask has to be worked out",
+  "No ask",
+]
+
+[[rubric.criterion]]
+id = "why"
+name = "Why it matters to the business"
+levels = [
+  "Ties it to money, customers or risk, with the size of each",
+  "Ties it to money, customers or risk",
+  "Says it matters without saying to what",
+  "Not tied to the business",
+]
+
+[[rubric.criterion]]
+id = "evidence"
+name = "Evidence"
+levels = [
+  "Numbers, a pilot or a comparison that back the case",
+  "Some numbers or examples",
+  "Mostly opinion",
+  "Nothing backs it",
+]
+
+[[rubric.criterion]]
+id = "risks"
+name = "Risks and options"
+levels = [
+  "Names the risks and the other options, and why this one",
+  "Names the main risks",
+  "Mentions risk in passing",
+  "No risks or options",
+]
+
+[[rubric.criterion]]
+id = "next"
+name = "Next step"
+levels = [
+  "Who does what by when, and what it costs",
+  "A next step and a rough time",
+  "A vague next step",
+  "No next step",
+]
+
+[[rubric]]
+id = "pitch"
+name = "An investor pitch"
+source = "Weights from 885 venture capitalists asked what matters in a deal: the team named by 95%, the business model 83%, the product 74%, the market 68% (Gompers, Gornall, Kaplan and Strebulaev 2020); the ask is a house addition"
+out_of = 100
+markers = { "hooked till the end" = 5, "the room fell asleep" = -5, "over time" = -5 }
+verdict = [[0.7, "a second meeting"], [0.5, "keep in touch"], [0.0, "a pass"]]
+
+[[rubric.criterion]]
+id = "team"
+name = "The team"
+weight = 95
+levels = [
+  "Shows why this team will win: what they have done before and what they know that others do not",
+  "Says who the team is and what they bring",
+  "Names the team without saying why them",
+  "No team",
+]
+
+[[rubric.criterion]]
+id = "model"
+name = "Business model"
+weight = 83
+levels = [
+  "Who pays, how much, how often, and what it costs to win and serve them, with numbers",
+  "Who pays and how much",
+  "How it makes money is vague",
+  "No business model",
+]
+
+[[rubric.criterion]]
+id = "product"
+name = "The product"
+weight = 74
+levels = [
+  "Shows the product working and why customers want it, with proof such as users or sales",
+  "Shows what the product does and for whom",
+  "Describes the product in general terms",
+  "Unclear what the product is",
+]
+
+[[rubric.criterion]]
+id = "market"
+name = "The market"
+weight = 68
+levels = [
+  "How big the market is, how they worked it out, and who else is in it",
+  "How big the market is",
+  "The market is described without numbers",
+  "No market",
+]
+
+[[rubric.criterion]]
+id = "ask"
+name = "The ask"
+weight = 40
+levels = [
+  "How much they are raising, for what, and what it gets them to",
+  "How much they are raising",
+  "An ask without a number",
+  "No ask",
+]

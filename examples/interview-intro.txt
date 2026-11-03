@@ -1,0 +1,17 @@
+[part 1]
+Good morning. I'm a final year computer engineering student, and I'm applying for the junior backend engineer role. In the next few minutes I'll tell you about one project, what I did in it, and why I think it fits this role.
+
+[part 2]
+The project is an order app for a small fabrication shop, my father's. Before it, orders were written in a notebook, and about one order a week got lost or written twice. I built the app with Flutter on the phone and a small Python service behind it.
+
+[part 3]
+My part was the backend and the sync. The hard problem was that the shop owner often takes orders on building sites with no signal. So every order is saved on the phone first, with an ID the phone makes itself, and sent when the signal comes back. On the server, the same ID can only be saved once, so an order is never created twice even if it is sent again.
+
+[part 4]
+To test it, I turned the phone's network off and on two hundred times in a script while creating orders. Before the fix, eleven orders were duplicated. After it, none were. In the first three months of real use, the shop lost no orders, against about twelve in the three months before.
+
+[part 5]
+What I would do differently: I wrote my own retry logic, and I would now use a proper job queue. And I never set up monitoring, so I only found problems when my father called me.
+
+[part 6]
+So that is why I'm here. I like backend work where the hard part is making things reliable for people who do not care how it works. I'd be glad to go deeper into any part of it.

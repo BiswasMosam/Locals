@@ -1,0 +1,35 @@
+id = "vikas"
+number = 104
+name = "Vikas"
+age = 47
+job = "Angel investor who sold his own startup"
+profile = "study/profiles/business/investor.md"
+status = "draft"
+
+[situation]
+place = "At home, going through pitch decks"
+hands = "Laptop on the dining table"
+time = "Late evening, twenty decks to get through"
+device = "A laptop"
+mood = "Curious, and quick to pass."
+
+[habits]
+reads = "Skims a deck in a couple of minutes, slows down on the team and the numbers."
+words = ["traction", "cap table", "valuation", "runway", "founder market fit"]
+when_stuck = "quit"
+
+[traits]
+education = "graduate"
+conditions = []
+glance = 2.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
+[limits]
+read_words = 8
+patience_steps = 6
+repeat_before_stuck = 2
+slip_rate = 0.01
+typo_rate = 0.02
+device = "laptop"

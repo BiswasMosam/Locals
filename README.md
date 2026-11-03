@@ -16,7 +16,7 @@
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-8a8f9c?style=flat-square&labelColor=0c0e13"></a>
 </p>
 
-> **Level two.** Ninety nine draft locals from seven families of jobs live in the town and use web apps in a real browser and Android apps on an emulator, thinking with a small model on this laptop, and a dashboard shows them at work. They are built from the [study](study/README.md) of the people they stand for, and stay marked draft until real people in those jobs confirm their profiles. [Run them](#run-it), or [help get a profile right](#leave-a-review).
+> **Level two.** A hundred and fourteen draft locals from nine families of jobs live in the town and use web apps in a real browser and Android apps on an emulator, thinking with a small model on this laptop, and a dashboard shows them at work. They also sit in rooms and listen to your talks: a class, a project review, an interview panel, a boardroom, a pitch. They are built from the [study](study/README.md) of the people they stand for, and stay marked draft until real people in those jobs confirm their profiles. [Run them](#run-it), or [help get a profile right](#leave-a-review).
 
 <br>
 
@@ -97,6 +97,76 @@ EXPERT  The app only shows English, even though Hindi and Marathi are official l
 
 A small model playing a lawyer will happily invent law, and the research says a persona adds no knowledge, so expertise here is **what they notice, never what they know**. Code gives each job its own instruments (the browser's console and timings, the saved file's real format, quality and metadata, every claim and consent line on screen and whether a file left the device), and every remark has to point at that evidence. A remark is dropped if it cites a rule that is not in the study or does not apply, concludes that a law is broken, guesses at what the app does out of sight, or does not talk about its evidence. In the first test the lawyer called PixelShift's "nothing leaves your device" misleading; the network log said nothing left, and the checks threw the remark out. How it was built, and what it got wrong first, is in the [expertise study](study/expertise.md).
 
+## Give a talk
+
+Locals also listen. Give a talk as files (a deck as PDF or PowerPoint, a script, a recording, or a deck with either) and pick a room: a college class, a project review, a job interview panel, a leadership meeting, an investor pitch, or a crowd from the town. Part by part, you see what goes through each listener's head, who is hooked, who drifts and why, who gets the phone out and who falls asleep. At the end, each says what they think your point was, and the graders in the room give you marks.
+
+The same subject, making an order app work offline, told twice to the same crowd from the town: a cook, a fabricator, a junior advocate, a teacher, a pharmacist, an insurance agent, a commerce student and a software engineer. First as engineers tell it to engineers:
+
+```
+ATTENTION  one bar a part, z asleep
+    4 SUNIL      ▅▄▄▃▂▂zz  ends 17  asleep at P7: too technical: Service Worker, precache, Workbox, app shell
+    1 PRAKASH    ▆▅▅▄▃▃▃▃  ends 28  phone out at P5: too technical: Dexie, IndexedDB, schema, UUIDv7
+   10 ROHIT      ▅▄▃▂▂▂zz  ends 5   asleep at P7: not what they came for
+   83 KALPANA    ▆▅▄▃▃▃▃▂  ends 23  phone out at P4: too technical: CacheFirst, TTL, max entries, API GET
+  114 FAIZAN     ▆▅▃▂▂▂zz  ends 7   asleep at P7: too technical: CacheFirst, TTL, max entries, API GET
+   34 ISHAAN     ▆▆▇▇▇▇▇▇  ends 79  never drifted
+
+THE ROOM
+  - LOST THE ROOM          6 of 8 had drifted by P3: too technical (Service Worker, caching layer, IndexedDB, persistence)
+  - THE ROOM FELL ASLEEP   4 of 8 in the audience were asleep by P7
+```
+
+Then told for the people who use the app, with a story about a lost order, a question to the room and a live demonstration:
+
+```
+P1    0:00  When the network drops, the order should not    story
+                 HOOKED  the story                          (seven of eight)
+P4    4:32  Watch                                           demonstration
+
+ATTENTION  one bar a part, z asleep
+    4 SUNIL      ▇▇▇▇▇▇▆▆  ends 68  never drifted
+    1 PRAKASH    ▇█▇▇█▇▇▇  ends 86  never drifted
+   10 ROHIT      ▇▇▆▆▇▆▆▅  ends 55  never drifted
+   34 ISHAAN     ▇███████  ends 97  never drifted
+
+THE ROOM
+    REMEMBERED THE POINT   8 of 8 could say your point afterwards
+```
+
+The engineer stayed with both. In the first, six of the eight had drifted by the third slide and four were asleep by the seventh; in the second, nobody drifted at all, and all eight could say the point afterwards. The older listeners held on longer than the young ones in the technical talk: minds wander less with age, and that finding is one of the room's rules.
+
+**How it stays honest.** Asked whether a talk is engaging, a small model says yes; asked which terms a cook would not know, it ticks nearly all of them for everyone, a backend engineer's "timeout" included. So the model is only asked what a person in that seat would think, and to sort the talk's terms into the field they belong to. Code decides who knows which terms (a term is known when it is everyday, in one of the listener's own fields, or one of their own work words), and moves attention by rules whose direction comes from published research: minds wander more the longer a lecture runs and less with age, jargon lowers engagement even when it is defined, demonstrations and questions to the class are followed by fewer lapses, comprehension holds until about 250 words a minute. Hooked, drifting, phone out and asleep are thresholds on that number. How many points each rule moves is still a first guess, marked as one in the [rooms study](study/rooms.md).
+
+**The marks.** Graders mark only what reached them, on a rubric for the room: oral communication adapted from the AAC&U rubric for a class, an anchored scorecard for an interview panel, and for a pitch, weights from what 885 venture capitalists said matters (the team named by 95% of them). Every mark must point at a part they took in, a measured fact (pace, pauses, fillers, words on the busiest slide, the smallest text) or a moment in the room, or it is dropped. Posture and eye contact cannot be seen in a file, so delivery is marked from a recording's voice or not at all. Then the room adds its own: a point for keeping everyone hooked till the end, one off if the room fell asleep, one off for running over time.
+
+The same two talks in a college class, marked by Dr. Vandana, an associate professor:
+
+```
+MARKS  Oral communication · out of 20 · Adapted from the AAC&U Oral Communication VALUE rubric, in our words
+
+   94 VANDANA    10.2 of 20                                 the talk for engineers
+      Organization                       3 of 4  The speaker opens clearly with a statement of the topic and structure  [P1 to P6]
+      Language                           2 of 4  The speaker uses technical terms like 'Service Worker', 'IndexedDB', 'idempotent commands'…  [P1 to P6]
+      Delivery                           not marked: posture, gestures and eye contact cannot be seen in a file, and the voice needs a recording
+      Supporting material                2 of 4  The speaker provides specific technical details, but these are presented as facts without explanation  [P3 to P6]
+      Central message                    2 of 4  The central message is stated only briefly and not repeated or emphasized  [P1 to P6]
+      -1   the room fell asleep
+
+   94 VANDANA    20 of 20                                   the talk for people
+```
+
+In a job interview panel, a fresher's introduction for a junior backend role (as a script, and again as a recording) got "move forward" from all three panelists, and each asked a follow up about the work itself:
+
+```
+WHAT THEY WOULD ASK
+  106 SIMRAN     How did you decide which orders to save and which to skip when the phone sent the same order multiple times?
+  108 KABIR      How did you decide which part of the system to prioritize for reliability, like the sync logic or the retry mechanism?
+   34 ISHAAN     How did you decide when to retry a failed sync, and what criteria did you use to avoid infinite loops?
+```
+
+Read the marks as where a talk stands between a weak version and a strong one, not as the number a real professor would write: a model is a kind grader, and full marks are rare in real classrooms. Rooms, rubrics and who sits where live in [rooms/](rooms), so a class, a panel or a board can be set up the way yours really is.
+
 ## Why it runs locally
 
 - **Free per run.** A local can come back on simulated day 3 and day 20, the way real people do. That many steps would cost real money on a cloud API; here it costs electricity.
@@ -145,6 +215,7 @@ Recordings of real people name nobody and stay on your machine; git never sees t
 | **Watched people** | Someone who does the job does the same task on the same screen while it is recorded. Their misses, corrections and give up point become a local's numbers. |
 | **Proof** | A task counts as done only when the app's real state says so, never on the local's word. |
 | **Their take** | After the run, each local's job lends them instruments and a few sourced facts; what they say is checked against both before it reaches the feed. |
+| **Rooms** | A talk is read from its files and cut into parts. The model says what goes through each listener's head and sorts the talk's terms by field; code decides who knows which terms, moves each listener's attention by the rules in the rooms study, and calls hooked, drifting, phone out and asleep. Graders mark only what reached them, and every mark must point at it. |
 
 ## The study
 
@@ -163,6 +234,8 @@ So every local starts as a profile of a real job, built from interviews and publ
 | [Finance](study/profiles/finance/README.md): CA in practice, article assistant, accounts executive, bank branch officer, insurance agent | The wider town | Drafts |
 | [Health](study/profiles/health/README.md): clinic doctor, resident doctor, staff nurse, pharmacist, ASHA worker | The wider town | Drafts |
 | [Education](study/profiles/education/README.md): government and private school teachers, college lecturer, coaching teacher | The wider town | Drafts |
+| [Business](study/profiles/business/README.md): founder CEO, company CEO, investor, HR recruiter, hiring manager | The rooms and the wider town | Drafts |
+| [Students](study/profiles/students/README.md): engineering student, commerce student | The rooms and the wider town | Drafts |
 
 ## Run it
 
@@ -188,6 +261,11 @@ python -m town report                                             # how the town
 python -m town ablate pixelshift:small-jpg sunil rohit            # the same locals with and without their limits
 python -m unittest discover -s tests -t .                         # the tests
 
+python -m town rooms                                              # the rooms a talk can be given in, and who sits there
+python -m town room crowd talk.pptx --minutes 10                  # who stays with you, who drifts, who falls asleep
+python -m town grade class talk.pdf script.txt                    # a deck and what you say over it, marked by the professor
+python -m town grade interview intro.m4a --about "Junior backend engineer"   # a recording: real pace, pauses and fillers
+
 python -m town watch pixelshift:small-jpg --golden               # you, once: the task's golden path
 python -m town watch pops:new-order --for prakash                 # a real fabricator, standing in for Prakash
 python -m town calibrate prakash --apply                          # their recordings become his numbers
@@ -205,6 +283,9 @@ Level one built the town. Level two is about showing that what the locals do is 
 - [x] **Model or person?** An answer no person could give (tapping something that is not on the screen, a slider with no value) is the model's mistake: it is asked again and never costs a local their patience. Every run records how often, and `python -m town report` counts clean runs apart
 - [x] **Do the limits matter?** The same locals with and without their limits (`python -m town ablate`). On an easy task they hardly do; on a harder one they change four of six outcomes, but the locals with no limits did worse, because reading everything overwhelms a 4B model. Written up in the [validity study](study/validity.md)
 - [x] **A stronger mind.** A bigger model was worse: qwen3:8b, with its reasoning off, wandered out of the app. Deciding in two stages worked: a local first says what they notice, then acts only on that. With no limits the locals now finish (6 of 6 on both tasks), and with their limits they stumble the way people do (10 of 12, against 78% for real people). Two stages are now the default
+- [x] **Rooms: give a talk.** A deck (PDF or PowerPoint), a script or a recording, given to a class, a project review, an interview panel, a boardroom, a pitch or a crowd from the town. Code tracks each listener's attention by rules from the lecture and jargon research, and calls who got hooked, who drifted, who got the phone out and who fell asleep, and why. Business and student families join the town (fifteen more locals, a new block of flats). Written up in the [rooms study](study/rooms.md)
+- [x] **The marks.** Graders mark the talk on the room's rubric (oral communication adapted from AAC&U, an interview scorecard, a pitch weighted by what 885 investors said matters), each mark pointing at what they took in, with bonuses and penalties from the room: hooked till the end, the room fell asleep, over time
+- [ ] **Rooms against real audiences:** the sizes of the attention rules are first guesses; calibrate them against people reporting their attention through a talk, the way the clicker studies did
 - [ ] **An accuracy score against real people:** locals on screens from Android in the Wild (715,000 recorded human runs), scored on whether their first tap matches the human's
 - [ ] **Ring one in depth:** a deep desk study for the people our apps serve, and locals and tasks for the live apps (the portfolio, the Biswas Fabricators site, Fill.ai)
 - [ ] **Seeing pixels:** a look at the screenshot for what words cannot show, like contrast and what stands out

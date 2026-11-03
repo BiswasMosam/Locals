@@ -1,4 +1,5 @@
-"""python -m town dashboard | people | run <app:task> <local ...|all> | watch <app:task> --golden|--for <local> | calibrate <local>"""
+"""python -m town dashboard | people | run <app:task> <local ...|all> | watch <app:task> --golden|--for <local> | calibrate <local>
+| rooms | room <room> <files> | grade <room> <files>"""
 import argparse
 import re
 import sys
@@ -10,7 +11,8 @@ from .people import ROOT
 
 
 def main():
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(prog="python -m town", description="Locals: a small town of AI users that lives on your machine.")
     sub = ap.add_subparsers(dest="cmd", required=True)
     board = sub.add_parser("dashboard", help="open the town in your browser")
@@ -43,6 +45,16 @@ def main():
     abl.add_argument("--seed", type=int, default=7)
     der = sub.add_parser("derive", help="set reading, slips and typos from published studies and each local's traits")
     der.add_argument("--apply", action="store_true", help="write the traits and numbers into everyone's file")
+    sub.add_parser("rooms", help="the rooms a talk can be given in, and who sits in each")
+    for name, text in (("room", "give a talk to a room of locals: who stays with you, who drifts, who falls asleep"),
+                       ("grade", "give a talk to a room, then let its graders mark it")):
+        talk = sub.add_parser(name, help=text)
+        talk.add_argument("room", help="class, review, interview, boardroom, pitch or crowd")
+        talk.add_argument("files", nargs="+", help="a deck (.pdf or .pptx), a speech (.txt, .md or a recording like .m4a), or one of each")
+        talk.add_argument("--minutes", type=float, help="how long the talk runs, when there is no recording to time it")
+        talk.add_argument("--point", help="the one thing you want them to take away (default: read from the talk)")
+        talk.add_argument("--about", help="what the talk is for, like the role you are interviewing for")
+        talk.add_argument("--seed", type=int, default=7)
     cal = sub.add_parser("calibrate", help="turn watched runs into a local's limits")
     cal.add_argument("local", help="local id, for example prakash")
     cal.add_argument("--apply", action="store_true", help="write the measured numbers into the local's file")
@@ -124,6 +136,27 @@ def main():
             if args.apply:
                 derive.write(l, t, v)
         print("\nWritten into people/." if args.apply else "\nTo write these into people/: python -m town derive --apply")
+        return
+
+    if args.cmd == "rooms":
+        from .room import rooms
+        for r in rooms().values():
+            seats = ", ".join(f"{s['local']}{' (grades)' if s['role'] == 'grader' else ''}" for s in r["seats"])
+            print(f"{r['id']:<10} {r['name']:<24} {r.get('minutes', '?'):>3} min  {r.get('rubric') or 'no marks':<19} {seats}")
+        return
+
+    if args.cmd in ("room", "grade"):
+        import json
+        from . import room as rooms, talk as talks
+        place = rooms.load(args.room)
+        talk = talks.load(args.files, args.minutes)
+        out = rooms.folder(place["id"])
+        result, listeners = rooms.listen(place, talk, args.about or "", args.point or "", args.seed, out)
+        if args.cmd == "grade":
+            from .grade import grade
+            result["grade"] = grade(place, result, listeners, talk.recorded, args.about or "", args.seed)
+            (out / "room.json").write_text(json.dumps(result, indent=1, ensure_ascii=False), encoding="utf-8")
+        print(f"\nSaved in {out.relative_to(ROOT)}")
         return
 
     if args.cmd == "calibrate":

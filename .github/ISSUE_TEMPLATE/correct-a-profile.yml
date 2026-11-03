@@ -44,6 +44,13 @@ body:
         - Private school teacher
         - College lecturer
         - Coaching teacher
+        - Founder CEO
+        - Company CEO or managing director
+        - Investor
+        - HR recruiter
+        - Hiring manager
+        - Engineering student
+        - Commerce student
         - A job that is not in the town yet
     validations:
       required: true

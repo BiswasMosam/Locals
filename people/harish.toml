@@ -1,0 +1,35 @@
+id = "harish"
+number = 102
+name = "Harish"
+age = 58
+job = "Managing director of a family auto parts manufacturer"
+profile = "study/profiles/business/company-ceo.md"
+status = "draft"
+
+[situation]
+place = "In his cabin above the shop floor"
+hands = "Reading glasses on, phone held at arm's length"
+time = "Morning, before the production review"
+device = "A large Android phone, the font set big"
+mood = "Patient, but wants the bottom line."
+
+[habits]
+reads = "Reads slowly and fully, in his own time."
+words = ["dispatch", "rejection", "OEM", "capacity", "working capital"]
+when_stuck = "ask"
+
+[traits]
+education = "graduate"
+conditions = ["one hand"]
+glance = 5.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
+[limits]
+read_words = 21
+patience_steps = 10
+repeat_before_stuck = 3
+slip_rate = 0.06
+typo_rate = 0.04
+device = "phone"

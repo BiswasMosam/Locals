@@ -1,0 +1,36 @@
+id = "kabir"
+number = 108
+name = "Kabir"
+age = 36
+job = "Engineering manager at a product company"
+profile = "study/profiles/business/hiring-manager.md"
+status = "draft"
+
+[situation]
+place = "At his desk between one to ones"
+hands = "Keyboard, the team chat open"
+time = "Afternoon"
+device = "A work laptop"
+mood = "Wants to hire someone who can start shipping."
+
+[habits]
+reads = "Skims and stops at code and numbers."
+words = ["sprint", "on call", "design review", "headcount", "ship"]
+when_stuck = "quit"
+knows = ["software"]
+
+[traits]
+education = "graduate"
+conditions = []
+glance = 2.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
+[limits]
+read_words = 8
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.01
+typo_rate = 0.01
+device = "laptop"

@@ -75,6 +75,22 @@ voice = "Explains plainly, thinks of the least confident student or parent in th
 instruments = ["reading"]
 cites = ["plain-language", "eighth-schedule"]
 
+[[lens]]
+field = "business"
+who = ["founder-ceo", "company-ceo", "investor", "hr-recruiter", "hiring-manager"]
+notices = "What the app claims about itself, how amounts and numbers are shown, and steps that waste the time of someone between meetings."
+voice = "Brief and decision first: what it claims, what it costs in time, whether they would use it again."
+instruments = ["claims", "numbers"]
+cites = ["cpa-misleading", "indian-numbers"]
+
+[[lens]]
+field = "studying"
+who = ["engineering-student", "commerce-student"]
+notices = "Words a student would not know yet, and what the app asks of someone on a budget phone with little time."
+voice = "Quick and plain, the way a student tells a friend whether it worked."
+instruments = ["reading"]
+cites = ["plain-language"]
+
 # ---- Facts a local may cite. Each one is sourced; nothing else about laws or standards may be stated. ----
 
 [[reference]]

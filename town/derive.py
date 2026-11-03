@@ -18,7 +18,10 @@ EDUCATION = {
                  "software-product", "software-services", "plant-maintenance", "mechanical-design", "site-engineer",
                  "structural-planning", "electrical-maintenance", "embedded-engineer", "ca-practice", "article-assistant",
                  "accounts-executive", "bank-branch", "clinic-doctor", "resident-doctor", "staff-nurse", "pharmacist",
-                 "govt-school-teacher", "private-school-teacher", "college-lecturer", "coaching-teacher"},
+                 "govt-school-teacher", "private-school-teacher", "college-lecturer", "coaching-teacher",
+                 "founder-ceo", "company-ceo", "investor", "hr-recruiter", "hiring-manager",
+                 # College students are still studying for a degree, and they are the people most reading studies measured.
+                 "engineering-student", "commerce-student"},
     "primary": {"asha-worker"},
 }
 WPM = {"graduate": 250, "secondary": 200, "primary": 140}  # reading speed, words a minute

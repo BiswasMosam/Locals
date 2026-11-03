@@ -108,13 +108,30 @@ Five findings shape every rule below.
 | College lecturer | Lectures by the clock hour, exams and accreditation files | [Draft](profiles/education/college-lecturer.md) |
 | Coaching teacher | Batches, test series and the JEE and NEET dates | [Draft](profiles/education/coaching-teacher.md) |
 
+**[Business](profiles/business/README.md)**, the people across the table in the [rooms](rooms.md)
+
+| Type | The day in one line | Profile |
+|---|---|---|
+| Founder CEO | Customers, the team, the next round, the board update tonight | [Draft](profiles/business/founder-ceo.md) |
+| Company CEO or managing director | Back to back meetings, 72% of the working week | [Draft](profiles/business/company-ceo.md) |
+| Investor | Two or three minutes a deck, the team first | [Draft](profiles/business/investor.md) |
+| HR recruiter | Drives, screening, the panel's decision to write up | [Draft](profiles/business/hr-recruiter.md) |
+| Hiring manager | Their team's work, plus the interviews for its empty seat | [Draft](profiles/business/hiring-manager.md) |
+
+**[Students](profiles/students/README.md)**, the audience in most classrooms
+
+| Type | The day in one line | Profile |
+|---|---|---|
+| Engineering student | Lectures, labs, journals, the project group, placements | [Draft](profiles/students/engineering-student.md) |
+| Commerce student | Lectures, internals, often a part time job | [Draft](profiles/students/commerce-student.md) |
+
 ## How a profile becomes a local
 
 ```
 profile  →  three different people  →  task cards  →  traits  →  limits from published data  →  a local  →  checked against the benchmarks
 ```
 
-The [template](profile-template.md) defines what every profile must cover. The [limits study](limits.md) turns each local's traits (schooling, conditions like wet hands or a moving train, how they read) into numbers from published research. The [expertise study](expertise.md) is what each job lets a local notice afterwards. The [validity study](validity.md) asks whether any of it is right: the model's mistakes kept apart from the people's, what the limits change, and the benchmarks real people set. The [interview guide](interview-guide.md) stays for anyone who does get to sit with someone in the job.
+The [template](profile-template.md) defines what every profile must cover. The [limits study](limits.md) turns each local's traits (schooling, conditions like wet hands or a moving train, how they read) into numbers from published research. The [expertise study](expertise.md) is what each job lets a local notice afterwards. The [rooms study](rooms.md) is how a local listens to a talk: what makes attention drift and come back, and how a grader's marks are checked. The [validity study](validity.md) asks whether any of it is right: the model's mistakes kept apart from the people's, what the limits change, and the benchmarks real people set. The [interview guide](interview-guide.md) stays for anyone who does get to sit with someone in the job.
 
 The last step has tools. `python -m town watch <task> --for <local>` records a real person doing the same task a local does, on the same screen with the same files: every tap and what it said, taps that hit nothing, corrections while typing, giving up. `python -m town calibrate <local>` turns those recordings into the local's numbers, and says which ones the recordings cannot show. Recordings of real people stay in `study/observed/`, which git ignores.
 

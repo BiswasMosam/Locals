@@ -17,13 +17,16 @@ const TownView = (() => {
     'site-engineer': 'site', 'structural-planning': 'office', 'electrical-maintenance': 'factory', 'embedded-engineer': 'itpark',
     'ca-practice': 'ca', 'article-assistant': 'ca', 'accounts-executive': 'office', 'bank-branch': 'bank', 'insurance-agent': 'chai',
     'clinic-doctor': 'clinic', 'resident-doctor': 'hospital', 'staff-nurse': 'hospital', 'pharmacist': 'medical', 'asha-worker': 'home2', // ASHAs work at people's doors
-    'govt-school-teacher': 'school', 'private-school-teacher': 'school', 'college-lecturer': 'college', 'coaching-teacher': 'classes' };
+    'govt-school-teacher': 'school', 'private-school-teacher': 'school', 'college-lecturer': 'college', 'coaching-teacher': 'classes',
+    'founder-ceo': 'itpark', 'company-ceo': 'office', 'investor': 'office', 'hr-recruiter': 'office', 'hiring-manager': 'itpark',
+    'engineering-student': 'college', 'commerce-student': 'college' };
   // The street from left to right: flats at both ends, every family's workplace in between.
   const STREET = [['home', 30], ['chai', 14], ['fab', 24], ['stall', 22], ['medical', 16], ['clinic', 18], ['court', 28], ['firm', 24],
     ['ca', 20], ['bank', 26], ['office', 24], ['itpark', 28], ['studio', 20], ['hall', 30], ['hospital', 26], ['school', 24], ['classes', 18],
-    ['college', 30], ['factory', 28], ['site', 28], ['home2', 26], ['home3', 32], ['home4', 36]];
-  // Locals 1 to 18 live in the first block of flats, 19 to 33 in the second, 34 to 57 in the third, 58 to 99 in the tower; one window each.
-  const homeOf = number => (number <= 18 ? 'home' : number <= 33 ? 'home2' : number <= 57 ? 'home3' : 'home4');
+    ['college', 30], ['factory', 28], ['site', 28], ['home2', 26], ['home3', 32], ['home4', 36], ['home5', 30]];
+  // Locals 1 to 18 live in the first block of flats, 19 to 33 in the second, 34 to 57 in the third, 58 to 99 in the tower,
+  // 100 to 117 in the newest block at the end of the street; one window each.
+  const homeOf = number => (number <= 18 ? 'home' : number <= 33 ? 'home2' : number <= 57 ? 'home3' : number <= 99 ? 'home4' : 'home5');
   const TREES_AFTER = new Set(['chai', 'clinic', 'studio', 'school', 'college']);
 
   const PERSON = {
@@ -215,6 +218,13 @@ const TownView = (() => {
         for (let i = 0; i < 42; i++) R(x + 4 + (i % 6) * 5, 28 + Math.floor(i / 6) * 7, 3, 4, windowLight(58 + i));
         for (let r = 1; r < 7; r++) R(x + 1, 26 + r * 7, w - 2, 1, C.line);
         R(door - 3, 80, 6, 10, C.slab2);
+        break;
+      case 'home5':
+        // The newest block: eighteen windows for the business and student families, balconies on every floor.
+        R(x, 34, w, 56, C.slab); R(x - 1, 32, w + 2, 2, C.slab2);
+        for (let i = 0; i < 18; i++) R(x + 3 + (i % 3) * 9, 38 + Math.floor(i / 3) * 7, 6, 4, windowLight(100 + i));
+        for (let r = 0; r < 6; r++) R(x, 43 + r * 7, w, 1, C.line);
+        R(door - 3, 82, 6, 8, C.slab2);
         break;
       case 'clinic':
         R(x, 62, w, 28, C.slab); R(x - 1, 60, w + 2, 2, C.slab2);

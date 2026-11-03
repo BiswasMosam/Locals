@@ -1,0 +1,97 @@
+# The rooms a talk can be given in: who sits there, why, and what marks them.
+# role: "grader" gives a grade (a professor, a panelist, an investor); "audience" only listens.
+# point_by: minutes into the talk by which this room expects the point, the ask or the bottom line (study/rooms.md).
+
+[[room]]
+id = "class"
+name = "A college class"
+about = "Your presentation in class, marked by the professor"
+where = "A classroom in an engineering college, third floor, the fans on"
+when = "Afternoon, just after lunch, the fourth presentation of the day"
+minutes = 10
+rubric = "oral-communication"
+seats = [
+  { local = "vandana", role = "grader", why = "Marks this presentation out of 20 for internal assessment" },
+  { local = "aryan", role = "audience", why = "Attendance is compulsory; his own presentation is next" },
+  { local = "sakshi", role = "audience", why = "Has to write one question about every presentation" },
+  { local = "mohit", role = "audience", why = "Attendance is compulsory" },
+  { local = "ritika", role = "audience", why = "Sitting in on her friend's class while her own lecture is cancelled" },
+]
+
+[[room]]
+id = "review"
+name = "A project review"
+about = "Your final year project in front of a panel of professors"
+where = "The department's seminar room, the panel at a table in front"
+when = "Morning, the third group of the day"
+minutes = 15
+rubric = "project-review"
+seats = [
+  { local = "afreen", role = "grader", why = "Is the group's guide and wants them to do well, and to be fair" },
+  { local = "vandana", role = "grader", why = "Chairs the panel and keeps the reviews on time" },
+  { local = "siddharth", role = "grader", why = "Is on the panel as an examiner from outside the group" },
+]
+
+[[room]]
+id = "interview"
+name = "A job interview panel"
+about = "A presentation round in a job interview: you, your work, why this role"
+where = "A meeting room at the company, the panel on one side of the table"
+when = "Late morning, the second candidate of the day"
+minutes = 10
+rubric = "interview"
+seats = [
+  { local = "simran", role = "grader", why = "Runs the hiring for this role and has to write up the panel's decision" },
+  { local = "kabir", role = "grader", why = "Is the hiring manager: the person hired will work in his team" },
+  { local = "ishaan", role = "grader", why = "Is on the panel to judge the technical depth", mood = "Focused, a little impatient with vague answers." },
+]
+
+[[room]]
+id = "boardroom"
+name = "A leadership meeting"
+about = "A proposal to the CEO and the leadership team, asking for money or people"
+where = "The boardroom, a screen at one end of the table"
+when = "Monday, the weekly leadership meeting, your item is third on the agenda"
+minutes = 10
+point_by = 2
+rubric = "proposal"
+seats = [
+  { local = "lakshmi", role = "grader", why = "Decides whether this gets money and people" },
+  { local = "ramesh", role = "grader", why = "Has to find the money and wants to know when it pays back", mood = "Careful with numbers." },
+  { local = "vikram", role = "grader", why = "Looks for what this exposes the company to in contracts and law", mood = "Calm, reads the fine print." },
+  { local = "varun", role = "grader", why = "His team would have to build or run this", mood = "Interested, and wary of more work." },
+]
+
+[[room]]
+id = "pitch"
+name = "An investor pitch"
+about = "A pitch at a demo day: investors in the front row, other founders behind"
+where = "A hall at an incubator, a stage and a screen, rows of chairs"
+when = "Evening, the sixth pitch of ten"
+minutes = 5
+point_by = 1
+rubric = "pitch"
+seats = [
+  { local = "vikas", role = "grader", why = "Writes cheques for early startups and is looking for one to back" },
+  { local = "tara", role = "grader", why = "Has to bring two startups from tonight to her fund's partners" },
+  { local = "raghav", role = "audience", why = "Pitches next and is sizing up the competition" },
+  { local = "nandini", role = "audience", why = "Came to meet the investors, not really for the pitches" },
+]
+
+[[room]]
+id = "crowd"
+name = "A crowd from the town"
+about = "A public talk: people from every walk of the town, nobody had to come"
+where = "A community hall, plastic chairs, a projector on a table"
+when = "Sunday evening"
+minutes = 15
+seats = [
+  { local = "sunil", role = "audience", why = "Came because the talk is free and the hall is near his stall" },
+  { local = "prakash", role = "audience", why = "A customer told him about it" },
+  { local = "rohit", role = "audience", why = "Came with a friend" },
+  { local = "rashmi", role = "audience", why = "Likes to learn new things to tell her class" },
+  { local = "kalpana", role = "audience", why = "Off work today and curious" },
+  { local = "madhav", role = "audience", why = "Goes to every gathering; you never know who needs insurance" },
+  { local = "faizan", role = "audience", why = "His college asked students to attend" },
+  { local = "ishaan", role = "audience", why = "Came for the topic", mood = "Curious, quick to notice hand waving." },
+]

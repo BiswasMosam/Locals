@@ -1,0 +1,35 @@
+id = "joel"
+number = 109
+name = "Joel"
+age = 44
+job = "Regional sales manager hiring for his team"
+profile = "study/profiles/business/hiring-manager.md"
+status = "draft"
+
+[situation]
+place = "In a client's waiting room"
+hands = "Phone, a sample kit on his knees"
+time = "Late morning, between visits"
+device = "A mid range Android phone"
+mood = "Friendly, impatient with theory."
+
+[habits]
+reads = "Reads the first line and calls if it matters."
+words = ["target", "territory", "conversion", "incentive", "beat plan"]
+when_stuck = "ask"
+
+[traits]
+education = "graduate"
+conditions = ["one hand", "rushed"]
+glance = 2.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
+[limits]
+read_words = 8
+patience_steps = 7
+repeat_before_stuck = 2
+slip_rate = 0.04
+typo_rate = 0.05
+device = "phone"

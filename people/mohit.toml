@@ -1,0 +1,35 @@
+id = "mohit"
+number = 112
+name = "Mohit"
+age = 22
+job = "Final year mechanical engineering student"
+profile = "study/profiles/students/engineering-student.md"
+status = "draft"
+
+[situation]
+place = "At home, the laptop on the bed"
+hands = "Laptop, the phone buzzing with the group chat"
+time = "Late night, the report is due at nine"
+device = "An old laptop"
+mood = "Sleepy, last minute."
+
+[habits]
+reads = "Reads the first line of everything; long English sentences slow him down."
+words = ["CAD", "report", "deadline", "attendance", "project guide"]
+when_stuck = "ask"
+
+[traits]
+education = "graduate"
+conditions = ["rushed", "tired"]
+glance = 2.0
+english = "slow"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
+[limits]
+read_words = 5
+patience_steps = 7
+repeat_before_stuck = 2
+slip_rate = 0.01
+typo_rate = 0.02
+device = "laptop"

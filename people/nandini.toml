@@ -1,0 +1,35 @@
+id = "nandini"
+number = 101
+name = "Nandini"
+age = 39
+job = "Founder of a skincare brand that sells online"
+profile = "study/profiles/business/founder-ceo.md"
+status = "draft"
+
+[situation]
+place = "At the warehouse, checking a dispatch"
+hands = "Phone in one hand, a packing slip in the other"
+time = "Evening, orders peak after work hours"
+device = "A mid range Android phone"
+mood = "Hands on, a little stretched."
+
+[habits]
+reads = "Reads the first line, then decides."
+words = ["orders", "returns", "CAC", "repeat customers", "D2C"]
+when_stuck = "workaround"
+
+[traits]
+education = "graduate"
+conditions = ["one hand"]
+glance = 2.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
+[limits]
+read_words = 8
+patience_steps = 8
+repeat_before_stuck = 2
+slip_rate = 0.04
+typo_rate = 0.03
+device = "phone"

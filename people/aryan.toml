@@ -1,0 +1,36 @@
+id = "aryan"
+number = 110
+name = "Aryan"
+age = 21
+job = "Final year computer engineering student"
+profile = "study/profiles/students/engineering-student.md"
+status = "draft"
+
+[situation]
+place = "In the college canteen between lectures"
+hands = "Phone in one hand, a vada pav in the other"
+time = "Afternoon, a placement test tomorrow"
+device = "A budget Android phone with a cracked screen guard"
+mood = "Distracted, a little anxious about placements."
+
+[habits]
+reads = "Skims fast and scrolls past anything long."
+words = ["placement", "DSA", "internship", "submission", "viva"]
+when_stuck = "quit"
+knows = ["software"]
+
+[traits]
+education = "graduate"
+conditions = ["one hand"]
+glance = 2.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
+[limits]
+read_words = 8
+patience_steps = 6
+repeat_before_stuck = 2
+slip_rate = 0.04
+typo_rate = 0.03
+device = "phone"

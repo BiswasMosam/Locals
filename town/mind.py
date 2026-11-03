@@ -125,25 +125,32 @@ def decide(system, user, seed):
     return chat(system, user, DECISION, seed)
 
 
-def chat(system, user, schema, seed, num_ctx=4096):
-    """One reply from the model, shaped by a JSON schema."""
-    body = {
-        "model": MODEL,
-        "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-        "stream": False,
-        "format": schema,
-        "think": THINK,
-        "options": {"temperature": 0.5, "seed": seed, "num_ctx": num_ctx},
-        "keep_alive": "10m",
-    }
-    req = urllib.request.Request(f"{OLLAMA}/api/chat", data=json.dumps(body).encode(),
-                                 headers={"Content-Type": "application/json"})
-    # One retry: Ollama can stall while another app on this machine makes it swap models.
+def chat(system, user, schema, seed, num_ctx=4096, temperature=0.5, num_predict=1500, default=None):
+    """One reply from the model, shaped by a JSON schema. Reading and judging use temperature 0; acting out a person does not.
+    default: what to return when even the retry cannot be read, instead of failing the whole run."""
+    # One retry: Ollama can stall while another app on this machine makes it swap models, and a small model shaped
+    # by a schema can run on without end, writing nothing but blank space when it wants a word the schema forbids. The
+    # cap on length cuts a runaway short; the retry gets a new seed and some warmth, because at temperature 0 the same
+    # question runs away the same way again.
     for attempt in (1, 2):
+        warmth = temperature if attempt == 1 else max(0.6, temperature)
+        body = {
+            "model": MODEL,
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+            "stream": False,
+            "format": schema,
+            "think": THINK,
+            "options": {"temperature": warmth, "seed": seed + (attempt - 1) * 7919, "num_ctx": num_ctx, "num_predict": num_predict},
+            "keep_alive": "10m",
+        }
+        req = urllib.request.Request(f"{OLLAMA}/api/chat", data=json.dumps(body).encode(),
+                                     headers={"Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req, timeout=240) as r:
                 reply = json.load(r)
             return json.loads(reply["message"]["content"])
-        except TimeoutError:
+        except (TimeoutError, json.JSONDecodeError):
             if attempt == 2:
+                if default is not None:
+                    return default
                 raise

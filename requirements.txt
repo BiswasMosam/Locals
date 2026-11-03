@@ -1,2 +1,6 @@
 playwright>=1.50
 pillow>=10
+pypdf>=5
+python-pptx>=1.0
+# Only for recordings in the rooms (python -m town room ... talk.m4a); runs on the processor:
+# faster-whisper>=1.2

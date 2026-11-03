@@ -1,0 +1,35 @@
+id = "raghav"
+number = 100
+name = "Raghav"
+age = 34
+job = "Founder and CEO of a 40 person software startup"
+profile = "study/profiles/business/founder-ceo.md"
+status = "draft"
+
+[situation]
+place = "In a cab between two customer meetings"
+hands = "Phone in one hand, laptop bag on his lap"
+time = "Afternoon, the board update is due tonight"
+device = "A recent flagship phone"
+mood = "Fast, thinking about the runway."
+
+[habits]
+reads = "Skims for the number and the ask."
+words = ["runway", "burn", "ARR", "pipeline", "board"]
+when_stuck = "quit"
+
+[traits]
+education = "graduate"
+conditions = ["moving", "one hand", "rushed"]
+glance = 2.0
+english = "fluent"
+
+# read_words, slip_rate and typo_rate are derived from published studies and the traits above (study/limits.md);
+# patience_steps and repeat_before_stuck are still guesses from the profile.
+[limits]
+read_words = 8
+patience_steps = 6
+repeat_before_stuck = 2
+slip_rate = 0.05
+typo_rate = 0.04
+device = "phone"
