@@ -17,7 +17,7 @@ Edits footage into reels, YouTube videos, wedding films or ads, as a freelancer 
 Festival campaigns and wedding season both pile work onto editors weeks before the date `[D]` `[A]`.
 
 ## 4. Tools today
-An editing suite, cloud links for review, WhatsApp, quick web tools for formats and sizes `[G]`.
+An editing suite, cloud links for review, WhatsApp `[A]`, and quick web tools for formats and sizes `[G]`: every platform wants its own, a reel at 9:16 and 1080 by 1920 pixels `[D]`.
 
 ## 5. Phone and ability
 Power user on a computer, impatient with slow or confusing tools `[G]`.

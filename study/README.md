@@ -27,6 +27,8 @@ Five findings shape every rule below.
    | `[P]` | Known from building one of our apps for a real user |
    | `[G]` | A guess. Every guess must have a matching open question. |
 
+   `python -m town guesses` counts the tags, family by family, so the share of a profile that is still a guess is always in view.
+
 2. **Draft locals are labelled draft.** A local built from a profile that still has `[G]` lines is marked `status = "draft"` and its numbers are guesses. Its runs test Locals itself and give early signals; they are not findings about an app until the profile is confirmed.
 3. **Real people are never named.** Interview notes live in `study/interviews/`, which git ignores. Profiles describe composites.
 4. **Desk study, not interviews.** Live interviews are not planned. Guesses are replaced from published studies, government surveys and first hand accounts, and a local's limits come from studies of how real people type, tap and read ([limits](limits.md)). A profile counts as confirmed only when someone in that job reads it and corrects it through the [form](../.github/ISSUE_TEMPLATE/correct-a-profile.yml).
@@ -39,11 +41,11 @@ Five findings shape every rule below.
 |---|---|---|---|
 | Fabrication shop owner | Pops | Yes | [Draft](profiles/fabricator.md) |
 | Food stall counter | Order Control | Yes | [Draft](profiles/food-stall.md) |
-| Homeowner hiring a fabricator | Biswas Fabricators site | Through the shop | Planned |
-| Fresh graduate applying for jobs | Fill.ai | Yes | Planned |
-| Photographer | PixelShift | Yes | Planned |
-| Toy car collector | Peghunt | To find | Planned |
-| Recruiter | Portfolio | To find | Planned |
+| Household hiring a fabricator | Biswas Fabricators site | Through the shop | [Draft](profiles/homeowner.md), played by the town's own people |
+| Fresh graduate applying for jobs | Fill.ai | Yes | [Draft](profiles/fresh-graduate.md), played by the final year students |
+| Photographer | PixelShift | Yes | [Drafts](profiles/media/README.md) in the media family |
+| Toy car collector | Peghunt | To find | [Draft](profiles/collector.md), no locals yet |
+| Recruiter reading a portfolio | Portfolio | To find | [Draft](profiles/recruiter.md), played by the business family |
 
 **Ring two: the wider town.** Jobs our apps do not serve yet, so the town is more than our own customers. Each family is split into types by **how differently their day runs**; practice areas and specialities become the different people inside a type.
 

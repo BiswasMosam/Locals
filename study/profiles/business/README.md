@@ -29,3 +29,7 @@ The people who decide: founders and chief executives, the investors who back the
 6. Frieder, Van Iddekinge and Raymark, *How quickly do interviewers reach decisions?*, Journal of Occupational and Organizational Psychology, 2016; [BPS Research Digest](https://bps.org.uk/research-digest/do-interviewers-really-make-hiring-decision-first-four-minutes).
 7. Campion, Palmer and Campion, *A review of structure in the selection interview*, Personnel Psychology 50, 1997.
 8. Lok Sabha answer, December 2025, via [Storyboard18](https://www.storyboard18.com/how-it-works/india-crosses-1-97-lakh-dpiit-recognised-startups-over-21-lakh-jobs-created-piyush-goyal-informs-lok-sabha-85230.htm).
+
+9. Companies Act 2013, section 173, meetings of the board: [India Code](https://www.indiacode.nic.in/show-data?actid=AC_CEN_22_29_00008_201318_1517807327856&sectionId=48602&sectionno=173&orderno=191).
+10. Ladders, *Eye-Tracking Study*, 2018, as reported by [HR Dive](https://www.hrdive.com/news/eye-tracking-study-shows-recruiters-look-at-resumes-for-7-seconds/541582/); its method is not published in detail.
+11. Mint and Shine, *Talent Insights Report*, 2025, as reported by [Mint](https://www.magzter.com/nb/stories/newspaper/Mint-Mumbai/RECRUITERS-STRUGGLE-AS-MANY-WALK-AWAY-AT-THE-LAST-STAGE).

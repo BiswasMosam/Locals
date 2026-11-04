@@ -13,7 +13,7 @@ Sells and services life insurance policies, many part time, by visiting families
 | Evening | Homes, the tea stall | Visits when families are home `[G]` | Standing, sometimes in the rain `[G]` | Sending photos and payment links `[G]` | Dogs, guards, lifts `[G]` |
 
 ## 3. The year
-January to March is tax saving season, the busiest stretch `[G]`; March closes targets `[G]`; renewals all year `[G]`.
+January to March has been tax saving season, since a premium only counts for the deduction under section 80C in the financial year it is paid, which ends on 31 March `[D]`; but since 2023 the new tax regime, which allows no 80C deduction, is the default, so the March rush now depends on which regime each client picks `[D]`. March closes targets `[G]`; renewals all year `[G]`.
 
 ## 4. Tools today
 ANANDA and the company apps, WhatsApp for everything, a printed rate chart, a phone camera for documents `[D]` `[A]` `[G]`.

@@ -13,7 +13,7 @@ Teaches at a municipal or zilla parishad school, often more than one class at on
 | Evening | Home | Portal entries, survey or BLO work `[A]` | Own phone, own data `[G]` | Hours of entries `[A]` | Deadlines `[A]` |
 
 ## 3. The year
-School starts in mid June; board exams in February and March bring invigilation `[D]`; vacations still carry data work `[A]` `[G]`; election and census years add duties `[A]`.
+School starts in mid June; board exams in February and March bring invigilation `[D]`; vacations still carry data work `[A]` `[G]`; election and census years add duties: the Right to Education Act bars using teachers for non educational work except the ten yearly census, disaster relief and elections to local bodies, the state legislature and Parliament (section 27) `[D]`, and courts have held election work may start before the poll is notified `[D]`.
 
 ## 4. Tools today
 Paper registers, the state's education apps and portals, WhatsApp groups from the block office, a personal phone `[A]`.

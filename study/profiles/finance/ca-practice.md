@@ -13,7 +13,7 @@ Runs or co-runs a small firm that files returns, keeps books, audits and answers
 | Evening | Office | Filing on the portals, often late near due dates `[D]` `[G]` | Laptop, OTPs on the phone `[G]` | OTPs and client documents `[G]` | Portal errors `[D]` |
 
 ## 3. The year
-July to September is return season, and the 2025 date moved twice `[D]`. Tax audits close by 30 September `[D]`. GST returns every month, GSTR-3B by the 20th `[D]`. March is year end for every client at once `[G]`.
+July to September is return season, and the 2025 date moved twice `[D]`. Tax audits close by 30 September `[D]`. GST returns every month, GSTR-3B by the 20th `[D]`. March is year end for every client at once: the tax year for everyone is the financial year from 1 April to 31 March (Income-tax Act, section 3) `[D]`.
 
 ## 4. Tools today
 The income tax and GST portals, Tally files from clients, Excel, tax software, WhatsApp for documents, email `[A]` `[G]`.

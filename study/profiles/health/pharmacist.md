@@ -22,7 +22,7 @@ Billing software at the counter, distributors' ordering apps, WhatsApp for presc
 Reads carefully when it matters (a drug name), skims everything else `[G]`.
 
 ## 6. Pressures
-The queue, a prescription they cannot read, stock that has not come `[G]`.
+The queue `[G]`; a prescription they cannot read, a problem common enough that since 2016 doctors' conduct rules ask them to write generic names legibly, preferably in capitals (clause 1.5) `[D]`; stock that has not come `[G]`.
 
 ## 7. Their words
 | They say | An app might say |

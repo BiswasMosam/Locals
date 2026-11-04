@@ -3,7 +3,7 @@
 **Status:** draft from thin published sources. Family context in [Media](README.md).
 
 ## 1. Snapshot
-Shoots products for online sellers and brands in a small studio: a white sweep, two lights, a tethered laptop `[G]`. Work comes in batches with strict rules from marketplaces: white background, square sizes, file size limits `[G]`. A good day is a batch delivered in the right size and format. A bad day is a seller saying the marketplace rejected the images `[G]`.
+Shoots products for online sellers and brands in a small studio: a white sweep, two lights, a tethered laptop `[G]`. Work comes in batches with strict rules from marketplaces for the main image: a pure white background (RGB 255, 255, 255), the product filling about 85% of the frame, at least 1,000 pixels on the longest side so shoppers can zoom, and no text or watermark, as seller guides set out Amazon's rules `[D]`. A good day is a batch delivered in the right size and format. A bad day is a seller saying the marketplace rejected the images `[G]`.
 
 ## 2. The day
 | Time | Where | Doing | Hands and eyes | Phone use | Interruptions |
@@ -27,7 +27,7 @@ Festival sales (Diwali most of all) bring catalogue rushes weeks before `[D]` (s
 Very fluent on a laptop; uses web tools when they are faster than opening big software `[G]`.
 
 ## 6. Pressures
-Marketplace rejections; volume; sellers who want it today `[G]`.
+Marketplace rejections, since a main image off those rules can be suppressed `[D]`; volume; sellers who want it today `[G]`.
 
 ## 7. Their words
 | They say | An app might say |

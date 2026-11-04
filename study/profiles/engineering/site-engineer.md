@@ -13,7 +13,7 @@ Runs the work on a construction site: allocates labour and contractors, checks m
 | Evening | Site office cabin | Evening report, bills `[A]` | Tired `[G]` | WhatsApp group `[A]` | Calls from the PMC `[A]` |
 
 ## 3. The year
-Monsoon slows or stops work; labour goes home to villages around festivals; summer heat `[G]`.
+Monsoon slows or stops work; labour goes home to villages around festivals `[G]`. Summer heat now changes the hours: Maharashtra's April 2026 rules for outdoor workers in heat alert districts move work to 6 to 11 AM and 4 to 8 PM, with a break from noon to 4 PM on orange and red alert days `[D]`, though reports say they are advice more than enforced law `[A]`.
 
 ## 4. Tools today
 WhatsApp groups, site diary, Excel, photos `[A]`; photos and notes get lost in personal chats `[A]`.

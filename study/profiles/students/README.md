@@ -21,3 +21,4 @@ College students: the audience in most of the town's classrooms and the people g
 3. Risko, Anderson, Sarwal, Engelhardt and Kingstone, *Everyday Attention: Variation in Mind Wandering and Memory in a Lecture*, Applied Cognitive Psychology 26, 2012.
 4. Farley, Risko and Kingstone, *Everyday attention and lecture retention: the effects of time, fidgeting, and mind wandering*, Frontiers in Psychology, 2013; [full text](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2013.00619/full).
 5. Maillet and others, *Age-related differences in mind-wandering in daily life*, Psychology and Aging 33, 2018; [PDF](https://beatylab.la.psu.edu/files/2020/08/2018_Maillet_PsycholAging.pdf).
+6. University of Mumbai, Ordinance 6086 on learners' attendance, as colleges publish it: [Somaiya](https://polytechnic.somaiya.edu.in/sksasc/updates/EXAM_result), [Mithibai College](https://mithibai.ac.in/wp-content/uploads/2023/06/5225_Download_Attendance-rules.pdf).

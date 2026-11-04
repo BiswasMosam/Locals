@@ -1,6 +1,6 @@
 # Investor
 
-**Status:** draft. Family context in [Business](README.md).
+**Status:** draft. Family context in [Business](README.md); numbers in brackets, like [1], are its [sources](README.md#sources).
 
 ## 1. Snapshot
 Puts money into early companies: an angel who once built a company, or an associate at a fund who finds deals for the partners. Reads decks fast, about two to four minutes each on average `[D]`, and weighs the team above everything else `[D]`.
@@ -22,7 +22,7 @@ Decks by email or a deck link that tells the founder how long it was read, a dea
 Skims a deck, slows down on the team and the numbers `[D]` `[G]`.
 
 ## 6. Pressures
-Finding the few worth backing among many; being wrong in public `[G]`.
+Finding the few worth backing among many: the median venture firm in a survey of 885 considered about 100 companies for every one it invested in (151 for firms in IT) `[D]` [5]; being wrong in public `[G]`.
 
 ## 7. Their words
 | They say | An app might say |

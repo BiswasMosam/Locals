@@ -1,6 +1,6 @@
 # Founder CEO
 
-**Status:** draft. Family context in [Business](README.md).
+**Status:** draft. Family context in [Business](README.md); numbers in brackets, like [1], are its [sources](README.md#sources).
 
 ## 1. Snapshot
 Started the company and still runs it: sells, hires, raises money and answers to a board or to early investors. One of nearly two lakh startups recognised by DPIIT `[D]`. The company is small enough that the founder still does a bit of everything `[G]`.
@@ -13,13 +13,13 @@ Started the company and still runs it: sells, hires, raises money and answers to
 | Evening | The office or home | The board update, the numbers `[G]` | Laptop `[G]` | Investor calls `[G]` | The team's questions `[G]` |
 
 ## 3. The year
-Fundraising rounds come and go; between them, the runway decides the mood `[G]`.
+Fundraising rounds come and go; between them, the runway decides the mood `[G]`. Investors are hard to reach cold: of 885 venture capitalists surveyed, about 10% of deals came in from founders directly, against over 30% through their own professional networks and 20% referred by other investors `[D]` [5].
 
 ## 4. Tools today
 A CRM, a spreadsheet of the numbers, the team's chat, a deck for every occasion `[G]`.
 
 ## 5. Phone and ability
-Reads fast and skims for the number and the ask `[G]`.
+Reads fast and skims for the number and the ask `[G]`; knows investors give a deck about three and a half minutes `[D]` [2].
 
 ## 6. Pressures
 Runway, growth, hiring, and being the person everyone waits on `[G]`.

@@ -13,7 +13,7 @@ Works at a public sector bank branch: the counter, account opening and KYC, loan
 | After closing | Cabin | Reports, targets, verification `[A]` `[G]` | Branch PC `[G]` | Calls from the regional office `[G]` | Pending work past hours `[A]` |
 
 ## 3. The year
-Month start brings pension and salary queues `[G]`; March is year end closing `[D]` `[G]`; strikes and bank holidays pile up work `[A]` `[G]`.
+Month start brings pension and salary queues: central government pensions are credited on the last working day of each month (April's for March) `[D]`, and the queue follows `[G]`. March is year end closing `[D]`. Banks shut on the second and fourth Saturdays `[D]`; strikes and bank holidays pile up work `[A]` `[G]`.
 
 ## 4. Tools today
 Core banking software, branch PCs, printers, the bank's internal portals, a personal phone kept away at the counter `[G]`.

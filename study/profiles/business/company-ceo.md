@@ -1,9 +1,9 @@
 # Company CEO or managing director
 
-**Status:** draft. Family context in [Business](README.md).
+**Status:** draft. Family context in [Business](README.md); numbers in brackets, like [1], are its [sources](README.md#sources).
 
 ## 1. Snapshot
-Runs an established company: a family manufacturer in an industrial belt, or a mid size services firm. Spends most of the working day in meetings, 72% of working time in one study of 27 chief executives, and wants the bottom line first `[D]` `[G]`.
+Runs an established company: a family manufacturer in an industrial belt, or a mid size services firm. Spends most of the working day in meetings: in a study of 27 chief executives that logged 60,000 of their hours, 72% of working time went to meetings, 70% of meetings lasted an hour or more, and the week ran to 62.5 hours, with work on 79% of weekend days `[D]` [1]. Wants the bottom line first `[G]`.
 
 ## 2. The day
 | Time | Where | Doing | Hands and eyes | Phone use | Interruptions |
@@ -13,7 +13,7 @@ Runs an established company: a family manufacturer in an industrial belt, or a m
 | Evening | Home or a dinner | Customers, the board, the family business `[G]` | Phone `[G]` | Messages `[G]` | |
 
 ## 3. The year
-The financial year end in March, budget season, board meetings each quarter `[G]`.
+The financial year ends on 31 March `[D]`; a company's board must meet at least four times a year, with no more than 120 days between meetings (Companies Act 2013, section 173) `[D]` [9]; budget season before the year end `[G]`.
 
 ## 4. Tools today
 Reports prepared by others, an ERP, email, a deck in every meeting `[G]`.
@@ -22,7 +22,7 @@ Reports prepared by others, an ERP, email, a deck in every meeting `[G]`.
 Reads what matters fully, and wants it on one page; an older managing director sets the phone's text large `[G]`.
 
 ## 6. Pressures
-Margins, cash, people, and too many decisions in too little time `[D]` `[G]`.
+Margins, cash, people `[G]`, and too many decisions in too little time: 61% of the chief executives' communication was face to face, 24% electronic `[D]` [1].
 
 ## 7. Their words
 | They say | An app might say |

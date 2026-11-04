@@ -3,7 +3,7 @@
 **Status:** draft from thin published sources. Family context in [Media](README.md).
 
 ## 1. Snapshot
-Films weddings, events and short brand pieces, often with a small crew and a drone `[G]`. Shoots long and backs up everything `[G]`; more and more of the work is reels cut for phones `[G]`. A good day is every angle covered and every card copied. A bad day is a corrupted card or a dead battery at the key moment `[G]`.
+Films weddings, events and short brand pieces, often with a small crew `[G]`. A drone shot comes with rules: under the Drone Rules 2021 only a drone of 250 g or less, or a micro drone flown for no pay, needs no remote pilot certificate, and green zones need no permission but a check of the Digital Sky airspace map before each flight `[D]`. Shoots long and backs up everything `[G]`; the cut that travels is the vertical reel, since India is Instagram's largest audience (414 million people reachable by its ads in January 2025) and a reel is 9:16, 1080 by 1920 pixels `[D]`. A good day is every angle covered and every card copied. A bad day is a corrupted card or a dead battery at the key moment `[G]`.
 
 ## 2. The day
 | Time | Where | Doing | Hands and eyes | Phone use | Interruptions |
@@ -14,7 +14,7 @@ Films weddings, events and short brand pieces, often with a small crew and a dro
 | Night | Home or studio | Backups, proxies `[G]` | Exhausted `[G]` | Client messages `[G]` | None `[G]` |
 
 ## 3. The year
-Wedding season peaks November to February `[A]`; event and brand work spreads across the year `[G]`.
+Wedding season peaks November to February `[A]`, on the auspicious dates: CAIT expected about 48 lakh weddings between 12 November and 16 December 2024 `[D]`. Event and brand work spreads across the year `[G]`.
 
 ## 4. Tools today
 Cameras, gimbal, drone, a laptop with card readers and drives `[G]`; WhatsApp for teasers `[A]`.

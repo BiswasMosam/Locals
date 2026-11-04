@@ -21,7 +21,7 @@ Court hours vary by complex; one Maharashtra district court lists 10:45 to 5:15 
 
 ## 3. The week, the month, the year
 
-- Court vacations, typically in summer and around Diwali, change the load `[G]`.
+- Court vacations change the load: the Bombay High Court's 2026 calendar has a summer vacation from 11 May to 7 June, Diwali from 6 to 18 November and Christmas from 25 December to 3 January `[D]` ([year study](../../year.md)); district courts' own vacations were not found and may differ `[G]`.
 - Dates cluster unpredictably; one adjournment moves a matter weeks or months `[D]`.
 
 ## 4. Tools today
@@ -43,7 +43,7 @@ Court hours vary by complex; one Maharashtra district court lists 10:45 to 5:15 
 ## 6. Pressures
 
 - Two matters called at once in different courtrooms `[A]`.
-- A missed date can cost a client their case `[G]`.
+- A missed date can cost a client their case: if the plaintiff does not appear when the suit is called, the court may dismiss it for default, and if the defendant does not, it may proceed against them ex parte (Code of Civil Procedure, Order IX, rules 6 and 8) `[D]`.
 - Clients expect updates the same day `[G]`.
 - Reputation: clients choose advocates they have seen before `[A]`.
 

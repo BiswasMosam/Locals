@@ -22,7 +22,7 @@ College portals, WhatsApp groups, Tally in some courses, a phone more than a lap
 Reads the start of each line and looks for what will come in the exam `[G]`.
 
 ## 6. Pressures
-Marks, a career after the degree, money `[G]`.
+Marks, with the same attendance rule to sit exams (75% on average at the University of Mumbai) `[D]`; a career after the degree, money `[G]`.
 
 ## 7. Their words
 | They say | An app might say |

@@ -14,7 +14,7 @@ Shoots weddings and family events, alone or with a small team, often for a bigge
 | Late night | Home | Backs up cards, culls `[G]` | Laptop, exhausted `[A]` | Client messages `[G]` | None `[G]` |
 
 ## 3. The year
-Peak from November to February; quieter in the monsoon `[A]`. Several events a day in season is common in the region `[A]`.
+Peak from November to February; quieter in the monsoon `[A]`. Several events a day in season is common in the region `[A]`. The dates are set by the calendar of auspicious days: the traders' body CAIT expected about 48 lakh weddings in India between 12 November and 16 December 2024, on 18 auspicious dates against 11 the year before, so the same few dates fill up for every photographer at once `[D]`.
 
 ## 4. Tools today
 | Tool | What it is good at |

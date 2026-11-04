@@ -18,8 +18,8 @@ An advocate in the first years of practice, attached to a senior's chamber in a 
 
 ## 3. The week, the month, the year
 
-- Filing deadlines and limitation periods drive panic days `[G]`.
-- Court vacations are when juniors catch up or look for paid work `[G]`.
+- Filing deadlines drive panic days, and limitation periods are fixed by statute: an appeal from a decree must be filed within 90 days to a High Court and 30 days to any other court (Limitation Act 1963, article 116), and filing late needs an application to excuse the delay (section 5) `[D]`.
+- Court vacations (in 2026 at the Bombay High Court: 11 May to 7 June, 6 to 18 November, 25 December to 3 January `[D]`) are when juniors catch up or look for paid work `[G]`.
 
 ## 4. Tools today
 

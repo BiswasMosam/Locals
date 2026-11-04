@@ -22,7 +22,7 @@ College portals, Google Classroom, WhatsApp groups, a laptop if they have one `[
 Skims fast; reads properly when marks depend on it `[G]`. Some came from schools taught in another language, and long English sentences slow them down `[G]`.
 
 ## 6. Pressures
-Attendance rules, internal marks, a backlog to clear, and placements `[A]` `[G]`.
+Attendance rules: under the University of Mumbai's ordinance a learner needs 75% attendance on average and at least 50% in each course to sit the exam, and some colleges ask 75% in every subject `[D]`; internal marks, a backlog to clear, and placements `[A]` `[G]`.
 
 ## 7. Their words
 | They say | An app might say |

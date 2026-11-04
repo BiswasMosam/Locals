@@ -16,7 +16,7 @@ A general practitioner with a neighbourhood clinic, open in the morning and agai
 Monsoon fevers in July to September are the busiest months `[D]`; winter brings coughs and colds `[G]`; Sundays are a half day `[G]`.
 
 ## 4. Tools today
-Prescription pads, sometimes clinic software, WhatsApp for reports and follow ups, a phone for teleconsults `[G]`.
+Prescription pads, sometimes clinic software, WhatsApp for reports and follow ups `[G]`, and a phone for teleconsults, which the Telemedicine Practice Guidelines of March 2020 allow a registered doctor to give `[D]`. Since 2016 the conduct rules ask for generic names written legibly, preferably in capitals `[D]`.
 
 ## 5. Phone and ability
 Skilled and quick, with no time to spare; reads the first words and decides `[G]`.

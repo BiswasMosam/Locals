@@ -1,6 +1,6 @@
 # HR recruiter
 
-**Status:** draft. Family context in [Business](README.md).
+**Status:** draft. Family context in [Business](README.md); numbers in brackets, like [1], are its [sources](README.md#sources).
 
 ## 1. Snapshot
 Finds and screens candidates and runs the hiring process: a campus recruiter at an IT services company on drive days, or an HR business partner at a plant. A campus drive usually runs an aptitude test, sometimes a group discussion, one or more technical interviews and an HR round of about 15 to 20 minutes `[A]`. Resumes get a first look of seconds: 7.4 on average in one eye tracking study, whose method was thinly reported `[D]`.
@@ -19,10 +19,10 @@ Campus season runs through the second half of the year into early the next, by m
 An applicant tracker, spreadsheets, job portals, the phone `[G]`.
 
 ## 5. Phone and ability
-Glances for keywords; reads carefully when it is policy `[D]` `[G]`.
+Glances: in an eye tracking study the first look at a résumé lasted 7.4 seconds on average, drawn to job titles and headings `[D]` [10]; reads carefully when it is policy `[G]`.
 
 ## 6. Pressures
-Numbers to hire by a date, and candidates who drop out after an offer `[G]`.
+Numbers to hire by a date `[G]`, and candidates who drop out after an offer: for 22% of the companies in a 2025 Mint and Shine survey, candidates walking away after accepting was the biggest hiring problem of the quarter, often for a counteroffer `[D]` [11].
 
 ## 7. Their words
 | They say | An app might say |

@@ -19,7 +19,7 @@ Monsoon is the worst season for trips and earth faults; summer peaks load `[G]`.
 Logbooks, meters, permits, SAP or a maintenance system, WhatsApp `[G]`.
 
 ## 5. Phone and ability
-Short phone use with gloves on; careful and procedural `[G]`.
+Short phone use with gloves on; careful and procedural `[G]`. In a factory, shifts follow factory law: an adult worker's day is at most 9 hours and the week 48, spread over no more than 10.5 hours, with overtime paid at twice the rate (Factories Act 1948, sections 51, 54, 56, 59) `[D]`.
 
 ## 6. Pressures
 Safety; outages; audits `[G]`.

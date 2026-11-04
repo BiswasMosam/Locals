@@ -16,7 +16,7 @@ Works for a services company on a client's project, often for a client in the US
 Client holidays matter more than local ones; appraisal season and project ends bring stress `[G]`.
 
 ## 4. Tools today
-Client's tools, timesheet portals, Teams, VPN `[G]`.
+Client's tools, timesheet portals, Teams, VPN `[G]`. One of about 5.43 million people in India's technology industry in 2023 to 24, which earned some $199 billion from exports, mostly from North America and Europe (Nasscom) `[D]`.
 
 ## 5. Phone and ability
 Comfortable with tech; tired by evening `[A]` `[D]`.

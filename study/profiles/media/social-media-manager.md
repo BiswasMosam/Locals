@@ -21,10 +21,10 @@ Every festival is a campaign; Diwali is the biggest, followed by year end and sa
 | A content calendar in a spreadsheet or tool `[A]` | Everyone sees what goes out when |
 | Scheduling tools `[G]` | Posting without being awake at 7 AM |
 | WhatsApp groups with clients `[G]` | Fast approvals |
-| Quick image tools `[G]` | Resizing and converting creatives for each platform |
+| Quick image tools `[G]` | Resizing and converting creatives for each platform: a reel at 9:16, 1080 by 1920 `[D]` |
 
 ## 5. Phone and ability
-Lives on the phone; expert in every social app; zero patience for slow tools `[G]`.
+Lives on the phone; expert in every social app; zero patience for slow tools `[G]`. The audience is large: India is Instagram's biggest market, 414 million people reachable by its ads in January 2025 `[D]`.
 
 ## 6. Pressures
 Approvals that come late; mistakes in public; many brands at once `[G]`.

@@ -18,7 +18,7 @@ A lawyer employed by a company rather than a firm or court practice, serving col
 ## 3. The week, the month, the year
 
 - Quarter end: sales pushes to sign deals `[G]`.
-- Statutory filing deadlines and board meetings `[G]`.
+- Statutory filing deadlines and board meetings: the board must meet at least four times a year, no more than 120 days apart (Companies Act 2013, section 173), the financial statements go to the registrar within 30 days of the annual general meeting and the annual return within 60 (sections 137 and 92) `[D]`.
 - Contract renewals scattered across the year `[G]`.
 
 ## 4. Tools today

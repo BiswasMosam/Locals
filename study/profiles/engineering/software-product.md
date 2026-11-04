@@ -16,13 +16,13 @@ Builds and runs a product used by many people: a standup, focused coding, code r
 Release crunches and sale days for the product; quiet around Diwali and year end `[G]`.
 
 ## 4. Tools today
-An IDE, Git, chat, issue trackers, dashboards `[G]`.
+An IDE (Visual Studio Code for 73.6% of developers in the 2024 Stack Overflow survey) `[D]`, Git, chat, issue trackers, dashboards `[G]`.
 
 ## 5. Phone and ability
 Expert; expects keyboard shortcuts, dark mode and instant feedback `[G]`.
 
 ## 6. Pressures
-Deadlines, incidents, context switching `[G]`.
+Deadlines and incidents `[G]`, and context switching: 68% of workers in Microsoft's 2023 Work Trend Index said they lacked enough uninterrupted focus time, and its 2025 telemetry counted a meeting, email or chat ping about every two minutes, 275 in a day `[D]`.
 
 ## 7. Their words
 | They say | An app might say |

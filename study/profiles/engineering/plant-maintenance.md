@@ -19,7 +19,7 @@ Planned shutdowns, often around Diwali, are the busiest maintenance weeks `[G]`;
 Logbooks, checklists, SAP PM, permit forms, WhatsApp groups for the shift `[A]` `[G]`.
 
 ## 5. Phone and ability
-Uses the phone in short bursts, often with gloves or dirty hands `[G]`.
+Uses the phone in short bursts, often with gloves or dirty hands `[G]`. Works shifts under factory law: an adult worker's day is at most 9 hours and the week 48, spread over no more than 10.5 hours, with overtime paid at twice the rate (Factories Act 1948, sections 51, 54, 56, 59) `[D]`.
 
 ## 6. Pressures
 Downtime; safety; parts not in store `[A]` `[G]`.

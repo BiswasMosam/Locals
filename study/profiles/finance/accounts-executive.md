@@ -13,7 +13,7 @@ Keeps the books inside one small business: vouchers in Tally, daily bank reconci
 | Month middle | Accounts desk | GST data to the CA `[A]` `[G]` | Excel exports `[G]` | WhatsApp with the CA's office `[G]` | Missing invoices `[G]` |
 
 ## 3. The year
-The 11th and 20th of every month for GST `[D]`; quarterly TDS returns `[A]`; March closing and the audit after it `[G]`; Diwali bonuses and dealer payments `[G]`.
+The 11th and 20th of every month for GST `[D]`; quarterly TDS returns, due by 31 July, 31 October, 31 January and 31 May (Income-tax Rules, rule 31A) `[D]`; March closing, since every company's financial year ends on 31 March `[D]`, and the audit after it `[G]`; Diwali bonuses and dealer payments `[G]`.
 
 ## 4. Tools today
 Tally Prime or Tally ERP 9, Excel, net banking, the GST portal through the CA, WhatsApp `[A]`.

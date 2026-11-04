@@ -27,3 +27,7 @@ Lawyers in the town, split into four types by **how differently their day runs**
 - Women advocates, government reply via [The Leaflet](https://theleaflet.in/international-womens-day/towards-an-inclusive-bar-why-indias-women-lawyers-are-litigating-their-way-into-the-bar).
 - Vahura survey of over 1,450 professionals at over 300 Indian law firms, via [Bar & Bench](https://www.barandbench.com/amp/story/news/prioritizing-mental-health-enabling-safe-spaces-regulating-work-hours-how-law-firms-in-india-can-curb-attrition-and-attract-talent).
 - In-house contract review time, LegalOn and In-House Connect survey (global, vendor run), [LegalOn](https://legalontech.com/resources/contract-survey-report).
+- Code of Civil Procedure 1908, Order IX, rules 6 and 8 (appearance and default), [India Code](https://www.indiacode.nic.in/handle/123456789/2191).
+- Limitation Act 1963, section 5 and article 116, [India Code](https://www.indiacode.nic.in/handle/123456789/1565).
+- Companies Act 2013, sections 92, 137 and 173, [India Code](https://www.indiacode.nic.in/handle/123456789/2114).
+- Bombay High Court calendar 2026: see the [year study](../../year.md#sources).

@@ -1,6 +1,6 @@
 # Hiring manager
 
-**Status:** draft. Family context in [Business](README.md).
+**Status:** draft. Family context in [Business](README.md); numbers in brackets, like [1], are its [sources](README.md#sources).
 
 ## 1. Snapshot
 Leads a team and needs someone who can do the work soon: an engineering manager at a product company, or a regional sales manager. Interviews on top of their own work `[G]`; the person they hire sits in their team `[G]`.
@@ -19,7 +19,7 @@ Headcount opens with the budget; hiring comes in bursts `[G]`.
 The team's own tools (code, a CRM), the applicant tracker HR runs, calendars `[G]`.
 
 ## 5. Phone and ability
-Skims, and stops at what shows the work: code, numbers, results `[G]`.
+Skims, and stops at what shows the work: code, numbers, results `[G]`. Makes up their mind early: in over 600 real interviews, 4.9% of decisions came within the first minute and 25.5% within five `[D]` [6].
 
 ## 6. Pressures
 An empty seat in the team and their own work piling up `[G]`.
