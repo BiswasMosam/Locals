@@ -291,41 +291,34 @@ Each run lands in `runs/` with the feed, every step the local took, and a screen
 
 ## Roadmap
 
-### Level two: from an impressive town to findings you can trust
+### Level two: findings you can trust
 
-Level one built the town. Level two is about showing that what the locals do is worth acting on.
+The town is built. Now the work is showing that what the locals do is worth acting on.
 
-- [x] **Tests for the engine.** The run loop, slips, the calendar, the derived numbers and the checks on every take, tested without a browser or a model (`python -m unittest discover -s tests -t .`)
-- [x] **Model or person?** An answer no person could give (tapping something that is not on the screen, a slider with no value) is the model's mistake: it is asked again and never costs a local their patience. Every run records how often, and `python -m town report` counts clean runs apart
-- [x] **Do the limits matter?** The same locals with and without their limits (`python -m town ablate`). On an easy task they hardly do; on a harder one they change four of six outcomes, but the locals with no limits did worse, because reading everything overwhelms a 4B model. Written up in the [validity study](study/validity.md)
-- [x] **A stronger mind.** A bigger model was worse: qwen3:8b, with its reasoning off, wandered out of the app. Deciding in two stages worked: a local first says what they notice, then acts only on that. With no limits the locals now finish (6 of 6 on both tasks), and with their limits they stumble the way people do (10 of 12, against 78% for real people). Two stages are now the default
-- [x] **Rooms: give a talk.** A deck (PDF or PowerPoint), a script or a recording, given to a class, a project review, an interview panel, a boardroom, a pitch or a crowd from the town. Code tracks each listener's attention by rules from the lecture and jargon research, and calls who got hooked, who drifted, who got the phone out and who fell asleep, and why. Business and student families join the town (fifteen more locals, a new block of flats). Written up in the [rooms study](study/rooms.md)
-- [x] **The marks.** Graders mark the talk on the room's rubric (oral communication adapted from AAC&U, an interview scorecard, a pitch weighted by what 885 investors said matters), each mark pointing at what they took in, with bonuses and penalties from the room: hooked till the end, the room fell asleep, over time
-- [x] **Rooms against real audiences.** The rules for time, breaks and where attention starts are fitted to two lectures where people's attention was measured (`python -m town rooms --check`): minds wandered at 41% of moments without tests and 19% with three short tests, and the room now gives 41% and 19% (the first guesses gave 55% and 30%). Attention falls half a point a minute and does not speed up, so time alone no longer puts anyone to sleep. Written up in the [rooms study](study/rooms.md#against-real-audiences)
-- [x] **An accuracy score against real people.** Locals on screens from Android in the Wild (715,000 recorded human runs), read from the dataset's own files and scored by its own matching rule (`python -m town aitw`): 15% of first moves matched as themselves, 15% with no limits, 15% for the model with no person at all. The person a local plays costs no accuracy; the model is the ceiling. Written up in the [validity study](study/validity.md#5-the-first-move-against-peoples)
-- [x] **Ring one in depth.** Desk study profiles for a household hiring a fabricator, a fresh graduate applying for jobs, a recruiter reading a portfolio and a toy car collector, and task cards for the live apps: the portfolio, the Biswas Fabricators site (read only; a call link is recorded, never dialled) and Fill.ai, loaded into Chrome as an extension with its toolbar button. The town's own people play these situations, so the town is still 114
-- [x] **Seeing pixels.** Each step's screenshot is read by code: controls a loading screen covers leave the local's screen, text below WCAG's contrast is marked faint (PixelShift's IN and OUT labels measure 2.5:1), and on a laptop what colour and brightness pull the eye to first is named. Phones keep their reading order, because on phones colour did not predict where people look. Written up in [seeing pixels](study/pixels.md)
-- [x] **A desk study pass, family by family.** Statutes, court calendars, tax and banking rules and published surveys replaced or sourced claims in every family; `python -m town guesses` keeps count (877 guesses before, 870 after; sourced claims 404 to 445)
-- [ ] **The guesses nothing published covers.** Most of the 870 left are the hour by hour of a working day: who holds the phone when, what interrupts lunch. No study publishes those for these jobs; only people who do them can settle them, through the [profile form](../../issues/new?template=correct-a-profile.yml)
+- [x] **Tested.** The engine has its own tests, so a change cannot quietly break it.
+- [x] **The AI's slips are not the local's.** When the AI does something no person could, like tapping a button that is not there, it is asked again and the local is not blamed.
+- [x] **The human limits matter.** The same locals ran with and without their limits, and the results changed. See the [validity study](study/validity.md).
+- [x] **Look first, then act.** Each local now says what they notice on the screen, then acts only on that. They finish about as often as real people do: 83%, against 78% for people.
+- [x] **Give a talk.** Hand the town a deck, a script or a recording and pick a room: a class, a project review, an interview, a boardroom, a pitch or a crowd. See who stays hooked, who drifts and who falls asleep. Business people and students joined the town. See the [rooms study](study/rooms.md).
+- [x] **Marks for your talk.** A professor, an interview panel or investors mark it the way they would in real life, and every mark points at the moment that earned it.
+- [x] **Rooms that match real audiences.** How fast attention fades is tuned to lectures where real people's attention was measured.
+- [x] **Scored against real people.** Locals were shown the same phone screens as people in a large public recording of phone use, and their first tap was compared with the person's. They match 15% of the time so far, and the person they play costs nothing: the AI itself is what holds the score back.
+- [x] **The apps closest to home.** Profiles and tasks for the people around the apps this town was built for: a family hiring a fabricator, a graduate applying for jobs, a recruiter reading a portfolio, a toy car collector.
+- [x] **Seeing the screen.** Locals now notice text too faint to read and buttons hidden behind a loading screen. See [seeing pixels](study/pixels.md).
+- [x] **Fewer guesses.** Laws, court calendars, tax and bank rules and published surveys replaced guesses in every job profile.
+- [ ] **The last guesses.** What is left is the hour by hour of a working day, which no study writes down. Only people who do these jobs can fill it in. Do one? [Correct a profile](../../issues/new?template=correct-a-profile.yml).
 
 ### Level one: the town
 
-- [x] Name, method and profile template
-- [x] First two profiles drafted from a real business
-- [x] Law family: four types of lawyer drafted
-- [x] Eighteen draft locals that use web apps in a real browser
-- [x] Dashboard: the town, the live feed, replay, setup with machine meters, your own sites
+- [x] The method, and the first profiles drawn from a real business
+- [x] Locals that use websites in a real browser and Android apps on a phone emulator
+- [x] The dashboard: the town, the live feed, replays, and a setup screen that shows what a day will cost your machine
 - [x] A whole city, and a celebration when 90% get it done
-- [x] A simulated year: weekdays and weekends, monsoon, festivals across religions, a pandemic
-- [x] Media family: photographers, videographers, video editors, social media teams (fifteen more locals, a banquet hall)
-- [x] Engineering family: eight types, twenty four more locals
-- [x] Locals on Android: drop an APK, first runs on Pops on the emulator
-- [x] Setup screen with the resource estimate
-- [x] The town view
-- [x] Profiles for the wider town: finance, health and education families (forty two more locals, a bank, a clinic, a college, coaching classes)
-- [x] The golden path, and a recorder for watching real people do the same tasks, web and Android
-- [x] Their take: each job notices different things, checked against evidence and sourced facts
-- [x] Limits from published studies of typing, touch, reading, age and walking, in place of live interviews
+- [x] A year in the town: weekdays, monsoon, festivals across religions, a pandemic
+- [x] Ninety nine locals: the people who use the apps, then law, media, engineering, finance, health and education
+- [x] Your golden path, and a recorder for watching a real person do the same task
+- [x] Their take: each job notices different things, and every remark must show its evidence
+- [x] Human limits from published studies of typing, touch, reading, age and walking
 
 ## Leave a review
 
