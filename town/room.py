@@ -24,9 +24,14 @@ from .talk import clock, measure, sentences
 
 ROOMS = ROOT / "rooms"
 
-START = {"grader": 85, "audience": 70}       # attention as the talk begins: a grader is there to listen
+# Attention is the share of the time a listener is with the talk, so 100 less a room's average is the share of probes at
+# which minds wandered. Fitted to two measured lectures (town/roomfit.py, study/rooms.md): Farley, Risko and Kingstone
+# 2013 for how fast attention falls and that the fall does not speed up; Szpunar, Khan and Schacter 2013 for where it
+# starts (41% wandering over 21 minutes) and what a question to the room is worth (19% with three short tests).
+START = {"grader": 85, "audience": 64}       # attention as the talk begins; a grader is there to listen (a guess)
 LOW = {"grader": ("checking email", "stopped listening"), "audience": ("phone out", "asleep")}
-DRIFT, DRIFT_GROWS, DRIFT_MAX = 1.0, 5.0, 4.0  # points a minute: one, and one more for every 5 minutes without a break, at most 4
+DRIFT = 0.5                                   # points a minute, at the same pace however long it runs (fitted)
+DRIFT_GROWS, DRIFT_MAX = None, 4.0            # a speed up the longer since a break: the fit found none (None turns it off)
 # Minds wander less with age: young adults on 41% of probes, older adults on 28% (Maillet and others 2018), so from 30
 # to 60 the drift falls to 0.7 of a young adult's.
 OLDER = 0.7
@@ -35,7 +40,8 @@ PACE = {"fluent": 250, "slow": 150}           # words a minute a listener follow
 READ_SHARE = 0.5                              # share of the time a slide is up that a listener can spend reading it
 TEXT_CAP, PACE_CAP = 12, 12
 MATTERS = {"yes": 4, "somewhat": 0, "no": -4}
-BREAK, SPARK = 10, 5                          # a story, example, demonstration or question; a surprising number or a joke
+BREAK, SPARK = 15, 5                          # a question to the room (fitted to the tests), and so a story, example or
+                                              # demonstration (a guess); a surprising number or a joke (a guess)
 WAITING = 8                                   # each part that goes by after point_by without the point
 ASLEEP_AFTER = 8                              # minutes: nobody nods off in a short talk, whatever it is; they reach for the phone
 FLOOR = 5
@@ -323,7 +329,8 @@ def update(l, part, facts, reply, minute, point_late, kinds=None):
     m = part.seconds / 60
     changes = {}
     if m:
-        changes["too long without a break"] = -min(DRIFT_MAX, DRIFT + l.since_break / DRIFT_GROWS) * m * age_drift(l.local.age)
+        rate = min(DRIFT_MAX, DRIFT + (l.since_break / DRIFT_GROWS if DRIFT_GROWS else 0))
+        changes["too long without a break"] = -rate * m * age_drift(l.local.age)
     unknown = unknown_to(l, facts["terms"], kinds or {}, told(took)) if listening else []
     if unknown:
         changes["too technical"] = -min(JARGON_CAP, JARGON * len(unknown))

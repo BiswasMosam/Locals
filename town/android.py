@@ -140,6 +140,10 @@ class Android:
         return {"items": items, "blocks": list(dict.fromkeys(blocks))[:30], "title": self.task.app,
                 "url": f"android:{self.task.package}", "scrollable": scrollable, "at_bottom": not scrollable}
 
+    def box_of(self, item):
+        """A control's box in the screenshot's pixels (town/pixels.py)."""
+        return self.crops.get(item["id"], (0, 0, 0, 0))
+
     def settle(self):
         time.sleep(1.2)
 

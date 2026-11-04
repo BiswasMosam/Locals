@@ -6,7 +6,7 @@ import time
 from dataclasses import replace
 from datetime import datetime
 
-from . import expertise, mind, tasks, year
+from . import expertise, mind, pixels, tasks, year
 from .android import Android
 from .feed import Feed
 from .limits import slip, typo
@@ -68,6 +68,8 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
     told = ""
     if task.platform == "android":
         local = replace(local, limits=replace(local.limits, device="phone"))  # an app on a phone is used on a phone
+    elif task.device:
+        local = replace(local, limits=replace(local.limits, device=task.device))  # a desktop extension, on their laptop
     if today is not None:
         local, told = year.shape(local, today)
         seed += today.day.toordinal() % 997  # a different date is a different day, not a replay
@@ -101,6 +103,11 @@ def run(local, task, out, watch=False, seed=7, listen=None, stop=None, today=Non
             shot = out / f"step-{n:02d}.png"
             web.snapshot(shot)
             feed.shot = shot.relative_to(ROOT).as_posix()
+            try:  # what the pixels show and the words cannot: what is really drawn, faint text, what stands out
+                pixels.look_file(shot, screen, web.box_of, limits.device)
+                pixels.visible_only(screen)
+            except Exception as e:
+                print(f"  no pixels: {type(e).__name__}: {e}"[:160], flush=True)
 
             sig = signature(screen)
             seen[sig] = seen.get(sig, 0) + 1

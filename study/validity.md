@@ -2,7 +2,7 @@
 
 Level one built a town of locals. Level two asks whether what they do is worth acting on. A finding from Locals is only useful if a real person in that job would have run into the same thing, so this study collects every check we can make without interviews, and says plainly what each one shows.
 
-**Status:** started 3 November 2026.
+**Status:** started 3 November 2026; the first move score added 4 November 2026.
 
 ## 1. Model or person?
 
@@ -79,11 +79,34 @@ So two stages on qwen3:4b-instruct are now the town's default (`LOCALS_STAGES=1`
 | Check | Real people | The town | What it says |
 |---|---|---|---|
 | Task completion | 78% average across 1,189 usability tasks [1] | `python -m town report` | Whether locals are too good or too poor overall |
-| First action on the same screen | Android in the Wild: 715,000 recorded human runs of Android tasks, screens and actions [2] | not yet | Whether locals go where people go |
+| First action on the same screen | Android in the Wild: 715,000 recorded human runs of Android tasks, screens and actions [2] | `python -m town aitw`: 15% (below) | Whether locals go where people go |
 | Typing, touch and reading | the studies in [limits](limits.md) | built into every local | Whether each local's numbers are human |
 
-**Next: an accuracy score.** Put locals on screens from Android in the Wild, ask what they would tap first, and count how often they match the human. Two cautions: those humans were trained demonstrators who knew the task, not first time users, so the score measures whether locals find the right control, not whether they stumble like a newcomer; and a first-click study of real users found GPT's first clicks differed significantly from 3,431 people's in 53% of tasks [3], so a low score would be the expected starting point, and the number to beat.
+## 5. The first move, against people's
 
+Android in the Wild records people doing tasks on Android phones: the goal they were given, every screen as an image with the words and icons a detector found on it, and what they did next. `python -m town aitw` puts a local on the same screen with the same goal and asks what they would do, the same two stages and the same prompt as a run, with slips left out so the score is what they meant to do. The answer is scored with the dataset's own rule: a tap matches when it lands in the same detected element as the human's, the element grown to 240% of its size, or within 14% of the screen of it; a scroll matches a scroll on the same axis; anything else matches the same kind of action [2]. The data is read straight from the dataset's public files, three of them (about 180 MB, from its general and single step parts), without TensorFlow.
+
+**What was run.** The same six locals as before (a cook, a fabricator, a wedding photographer, a plant engineer, an insurance agent and an ASHA worker), each on 40 screens: the first move of 20 multi step tasks (after the demonstrator's habit of pressing home to start clean) and 20 single step tasks, as themselves and with no limits. Then the same model with no person at all, one stage, reading everything, the nearest thing to how the dataset's paper prompted PaLM 2.
+
+| Who | Matched the human | Where a match was possible |
+|---|---|---|
+| The six locals, as themselves | 36 of 240 (15%) | 36 of 162 (22%) |
+| The same six, no limits | 37 of 240 (15%) | 37 of 162 (23%) |
+| The model, no person, one stage (two passes) | 12 of 80 (15%) | 12 of 54 (22%) |
+| PaLM 2, the paper's prompt, every step [2] | 30.9% zero shot, 39.6% with five examples | 58% with five examples |
+
+A match was possible on 27 of the 40 screens. On the rest the person did something a local cannot (pressed home or enter, swiped sideways) or tapped a place the detector found nothing at, like the empty part of a search bar; the paper reports the same gap, a third of its test episodes holding a tap on no detected element.
+
+**What it showed.**
+- **The locals are far from people on these screens, and the person they play is not why.** Fifteen per cent as themselves, fifteen with no limits, fifteen with no person at all. Playing a fabricator or an ASHA worker, reading less, deciding in two stages: none of it moved the score. What does is the model, on a screen given as scraps of detected text: a home screen's app icons arrive as "icon, shows a google", and a search bar with no words on it does not arrive at all.
+- **Single step goals go better than first moves of long ones.** 22% on single step tasks, 8% on the first move of multi step ones, where the person's first move is often a tap on an unlabelled app icon or a swipe to the app drawer.
+- **Some misses are sensible.** Locals never matched a person who typed (0 of 18): the person's keyboard was already in a search box the dataset does not mark, so the locals tapped the box first, or tapped a suggestion already on screen with the words they were about to type. The dataset's rule counts both as wrong.
+- **Locals agree with each other.** On an average screen two thirds of the six locals gave the same answer. Different people, mostly the same move: the flattening the persona research warns about (see the [study](README.md#what-the-research-on-ai-personas-says)).
+- **PaLM 2 did about twice as well**, on every step of a different split and a model many times larger. The paper's own trained agents reached 73%. A 4B model on a laptop is the starting point, and the number to beat.
+
+**What it does not say.** The demonstrators were paid contractors with written instructions and a tutorial, working an emulator with a mouse [2]: the score is about finding the way, not about stumbling like a newcomer. The town's own runs read the accessibility tree, which names buttons and boxes that this dataset's screens only show as scraps of text, so locals see more in a run than here. Forty screens and six locals, one seed each.
+
+**Next, if the score is to rise:** feed the screenshot itself to a vision model that fits in 8 GB, and give the town's own screens the same test with recorded people (`python -m town watch --for`).
 ## Sources
 
 1. Sauro, *What Is A Good Task-Completion Rate?* [MeasuringU](https://measuringu.com/task-completion/)

@@ -11,3 +11,6 @@ study/observed/
 
 # Your own sites and uploads from the dashboard
 tasks/mine/
+
+# Datasets downloaded for the benchmarks (python -m town aitw)
+data/

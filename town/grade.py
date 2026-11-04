@@ -119,7 +119,8 @@ def marks(l, room, rubric, result, recorded, about, seed):
     if recorded and any(c.get("needs") == "voice" for c in criteria):
         user += "\n\nOnly the voice was heard, not seen: mark delivery on the voice alone (pace, pauses, fillers)."
     shape = schema(criteria, top)
-    first = mind.chat(sys, user, shape, seed, num_ctx=8192, default={"marks": [], "overall": ""})
+    first = mind.chat(sys, user, shape, seed, num_ctx=8192, default={"marks": [], "overall": "", "timed_out": True})
+    silent = bool(first.get("timed_out"))  # no answer in time is not the same as marks that did not hold up
     kept, dropped = check(first, criteria, ev, top)
     overall = short(first.get("overall", ""))
     missing = [c for c in criteria if c["id"] not in kept]
@@ -143,7 +144,8 @@ def marks(l, room, rubric, result, recorded, about, seed):
     verdict = next((words for floor, words in rubric.get("verdict", []) if total is not None and total / rubric["out_of"] >= floor), "")
     return {"grader": l.local.id, "name": l.local.name, "number": l.local.number, "job": l.local.job, "marks": kept,
             "not marked": {c["id"]: UNSEEN for c in unseen}, "unsupported": [c["id"] for c in criteria if c["id"] not in kept],
-            "dropped": dropped, "base": base, "markers": bonus, "total": total, "verdict": verdict, "overall": overall}
+            "dropped": dropped, "base": base, "markers": bonus, "total": total, "verdict": verdict, "overall": overall,
+            "timed_out": silent}
 
 
 def grade(room, result, listeners, recorded, about="", seed=7):
@@ -163,7 +165,9 @@ def grade(room, result, listeners, recorded, about="", seed=7):
     for i, l in enumerate(graders):
         g = marks(l, room, rubric, result, recorded, about, seed + 300 + i)
         out.append(g)
-        head = f"{g['total']:g} of {rubric['out_of']}" if g["total"] is not None else "no mark held up"
+        head = (f"{g['total']:g} of {rubric['out_of']}" if g["total"] is not None else
+                "no answer from the model in time: is something else using the graphics card? Run it again"
+                if g["timed_out"] else "no mark held up")
         print(f"\n  {l.local.number:>3} {l.local.name.upper():<10} {BOLD}{head}{RESET}" + (f"  {g['verdict']}" if g["verdict"] else ""))
         for c in rubric["criterion"]:
             if c["id"] in g["marks"]:
@@ -172,7 +176,7 @@ def grade(room, result, listeners, recorded, about="", seed=7):
                 print(f"      {names[c['id']]:<34} {m['level']} of {top}  {DIM}{first[:170]}  [{', '.join(m['about'])}]{RESET}")
             elif c["id"] in g["not marked"]:
                 print(f"      {names[c['id']]:<34} {DIM}not marked: {UNSEEN}{RESET}")
-            else:
+            elif not g["timed_out"]:
                 print(f"      {names[c['id']]:<34} {DIM}no mark held up against the evidence{RESET}")
         for k, v in g["markers"]:
             print(f"      {('+' if v > 0 else '') + str(v):<4} {k}")

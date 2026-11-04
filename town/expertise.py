@@ -11,7 +11,7 @@ import zipfile
 from functools import cache
 from pathlib import Path
 
-from . import mind
+from . import mind, pixels
 from .people import ROOT
 
 LENSES = ROOT / "expertise" / "lenses.toml"
@@ -203,6 +203,19 @@ def measure(instruments, seen, observed, downloads, inputs, task, steps):
         if small:
             n, i = small[0]
             out.append(f"{len(small)} control(s) smaller than {floor} x {floor} {unit}; first: \"{n[:40]}\" at {i['w']} x {i['h']} {unit}.")
+        # Measured on the screenshots (town/pixels.py), against the contrast WCAG asks for.
+        faint = pixels.faint_items(steps)
+        if faint:
+            n, i = faint[0]
+            out.append(f"{len(faint)} control(s) fainter than WCAG's minimum contrast in the screenshots; faintest: \"{n[:40]}\" "
+                       f"at {i['contrast']:.1f}:1 where {pixels.needs(i):.1f}:1 is asked.")
+        elif any("contrast" in i for s in steps for i in s["screen"]["items"]):
+            out.append("Every control measured in the screenshots meets WCAG's minimum contrast.")
+        first = next((s for s in steps if s["screen"].get("stands_out")), None)
+        if first:
+            names = {i["id"]: i["text"] or i["hint"] or "an icon" for i in first["screen"]["items"]}
+            out.append(f"At step {first['step']}, colour and brightness pull the eye first to: "
+                       + ", ".join(f'"{names.get(x, x)[:30]}"' for x in first["screen"]["stands_out"]) + ".")
     if "units" in instruments:
         found = sorted({m.group(0) for t in text for m in UNIT.finditer(t)})
         if found:

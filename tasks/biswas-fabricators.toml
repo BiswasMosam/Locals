@@ -1,0 +1,21 @@
+app = "Biswas Fabricators"
+url = "https://biswasfabricators.com/"
+# Ring one: a household in Mumbai, Thane or Navi Mumbai looking for a fabricator (study/profiles/homeowner.md). Any
+# local can be that household. Read only: this is a real business, so a local never sends anything through the site,
+# and a call link is recorded when tapped and never dialled.
+
+[[task]]
+id = "call-about-grills"
+story = """
+Pigeons keep sitting on your balcony, and a neighbour told you about invisible grills.
+This shop fits grills in your area. Check that they do invisible grills, then call them to ask for a visit.
+"""
+done = { called = true }
+
+[[task]]
+id = "area-and-hours"
+story = """
+You live in Kharghar, Navi Mumbai, and want mosquito nets on two windows.
+Find out whether this shop comes to your area, and when you can call them.
+"""
+done = {}

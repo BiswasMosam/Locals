@@ -1,0 +1,34 @@
+app = "Fill.ai"
+device = "laptop"
+# Ring one: a fresh graduate applying for jobs (study/profiles/fresh-graduate.md); the town's final year students play
+# them. Fill.ai is a Chrome extension, so the run loads it into Playwright's own Chromium. It is the extension's test
+# build: the same code as the release, except that its panel is drawn in an open shadow root (so the locals' eyes can
+# read it, as a person's can), it does not open its settings page by itself on install, and it lets the run press its
+# toolbar button. Build it first, in the Fill.ai folder: node build.mjs --test
+# Fill.ai thinks with its own model through Ollama (qwen3.5:4b by default), next to the locals' model.
+extension = "../Fill.ai/dist-test"
+toolbar = "Fill.ai"
+toolbar_call = "fillaiTest.openPanel"
+serve = "../Fill.ai/test/fixtures"
+url = "job-form.html"
+
+[[task]]
+id = "set-up"
+url = "extension:options.html"
+story = """
+You just added Fill.ai to Chrome. It says it can fill job applications for you once it knows who you are.
+Your resume is on your laptop as resume.pdf. Set Fill.ai up with it.
+"""
+files = [{ name = "resume.pdf", kind = "given", path = "tasks/fillai/made-up-resume.pdf" }]
+done = { extension_has = "profile.basics.full_name" }
+
+[[task]]
+id = "fill-job-form"
+story = """
+You are applying for a junior developer job, and the company's application form is open on your laptop.
+Last week you set Fill.ai up with your resume. Use it to fill this form. Do not submit yet: you want to check it first.
+"""
+# What Fill.ai already knows: a made-up person from Fill.ai's own tests, never a real one. So the check counts the
+# answers on the form, not whose they are.
+seed = "tasks/fillai/made-up-profile.json"
+done = { filled = 8 }

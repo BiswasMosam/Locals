@@ -105,38 +105,39 @@ The same subject, making an order app work offline, told twice to the same crowd
 
 ```
 ATTENTION  one bar a part, z asleep
-    4 SUNIL      ▅▄▄▃▂▂zz  ends 17  asleep at P7: too technical: Service Worker, precache, Workbox, app shell
-    1 PRAKASH    ▆▅▅▄▃▃▃▃  ends 28  phone out at P5: too technical: Dexie, IndexedDB, schema, UUIDv7
-   10 ROHIT      ▅▄▃▂▂▂zz  ends 5   asleep at P7: not what they came for
-   83 KALPANA    ▆▅▄▃▃▃▃▂  ends 23  phone out at P4: too technical: CacheFirst, TTL, max entries, API GET
-  114 FAIZAN     ▆▅▃▂▂▂zz  ends 7   asleep at P7: too technical: CacheFirst, TTL, max entries, API GET
-   34 ISHAAN     ▆▆▇▇▇▇▇▇  ends 79  never drifted
+    4 SUNIL      ▅▄▃▂▂▂zz  ends 11  asleep at P7: not what they came for
+    1 PRAKASH    ▅▅▄▄▄▃▃▃  ends 32  phone out at P6: too technical: CacheFirst, TTL, max entries, API GET
+   10 ROHIT      ▅▄▃▂▂▁zz  ends 7   asleep at P7: not what they came for
+   83 KALPANA    ▅▄▄▃▂▂zz  ends 19  asleep at P7: too technical: Service Worker, precache, Workbox, manifest
+   70 MADHAV     ▅▄▄▃▃▃▃▃  ends 28  phone out at P4: too technical: Service Worker, precache, Workbox, manifest
+  114 FAIZAN     ▅▄▃▂▂▁zz  ends 7   asleep at P7: not what they came for
+   34 ISHAAN     ▅▅▆▆▆▆▆▇  ends 75  never drifted
 
 THE ROOM
-  - LOST THE ROOM          6 of 8 had drifted by P3: too technical (Service Worker, caching layer, IndexedDB, persistence)
-  - THE ROOM FELL ASLEEP   4 of 8 in the audience were asleep by P7
+  - LOST THE ROOM          6 of 8 had drifted by P2: too technical (Service Worker, caching layer, IndexedDB, persistence)
+  - THE ROOM FELL ASLEEP   5 of 8 in the audience were asleep by P7
 ```
 
 Then told for the people who use the app, with a story about a lost order, a question to the room and a live demonstration:
 
 ```
 P1    0:00  When the network drops, the order should not    story
-                 HOOKED  the story                          (seven of eight)
+                 HOOKED  the story                          (all eight)
 P4    4:32  Watch                                           demonstration
 
 ATTENTION  one bar a part, z asleep
-    4 SUNIL      ▇▇▇▇▇▇▆▆  ends 68  never drifted
-    1 PRAKASH    ▇█▇▇█▇▇▇  ends 86  never drifted
-   10 ROHIT      ▇▇▆▆▇▆▆▅  ends 55  never drifted
+    4 SUNIL      ▇█▇█████  ends 91  never drifted
+    1 PRAKASH    ▇███████  ends 93  never drifted
+   10 ROHIT      ▇▇▆▆▇▆▆▅  ends 57  never drifted
    34 ISHAAN     ▇███████  ends 97  never drifted
 
 THE ROOM
     REMEMBERED THE POINT   8 of 8 could say your point afterwards
 ```
 
-The engineer stayed with both. In the first, six of the eight had drifted by the third slide and four were asleep by the seventh; in the second, nobody drifted at all, and all eight could say the point afterwards. The older listeners held on longer than the young ones in the technical talk: minds wander less with age, and that finding is one of the room's rules.
+The engineer stayed with both. In the first, six of the eight had drifted by the second slide and five were asleep by the seventh, for what the talk did (terms they did not know, a subject that was not why they came), not for how long it ran; in the second, nobody drifted at all, and all eight could say the point afterwards. The older listeners held on longer than the young ones in the technical talk: minds wander less with age, and that finding is one of the room's rules.
 
-**How it stays honest.** Asked whether a talk is engaging, a small model says yes; asked which terms a cook would not know, it ticks nearly all of them for everyone, a backend engineer's "timeout" included. So the model is only asked what a person in that seat would think, and to sort the talk's terms into the field they belong to. Code decides who knows which terms (a term is known when it is everyday, in one of the listener's own fields, or one of their own work words), and moves attention by rules whose direction comes from published research: minds wander more the longer a lecture runs and less with age, jargon lowers engagement even when it is defined, demonstrations and questions to the class are followed by fewer lapses, comprehension holds until about 250 words a minute. Hooked, drifting, phone out and asleep are thresholds on that number. How many points each rule moves is still a first guess, marked as one in the [rooms study](study/rooms.md).
+**How it stays honest.** Asked whether a talk is engaging, a small model says yes; asked which terms a cook would not know, it ticks nearly all of them for everyone, a backend engineer's "timeout" included. So the model is only asked what a person in that seat would think, and to sort the talk's terms into the field they belong to. Code decides who knows which terms (a term is known when it is everyday, in one of the listener's own fields, or one of their own work words), and moves attention by rules whose direction comes from published research: minds wander more the longer a lecture runs and less with age, jargon lowers engagement even when it is defined, demonstrations and questions to the class are followed by fewer lapses, comprehension holds until about 250 words a minute. Hooked, drifting, phone out and asleep are thresholds on that number. The rules for time, breaks and where attention starts are fitted to lectures where people's attention was measured: minds wandered at 41% of moments in a 21 minute lecture and at 19% with three short tests in it, and the room now gives 41% and 19% (`python -m town rooms --check`). The first guesses gave 55% and 30%, and put a 20 year old to sleep at minute 18 of a plain lecture; now time alone puts nobody to sleep, and a room is lost by what a talk does. The other sizes are still first guesses, marked as such in the [rooms study](study/rooms.md).
 
 **The marks.** Graders mark only what reached them, on a rubric for the room: oral communication adapted from the AAC&U rubric for a class, an anchored scorecard for an interview panel, and for a pitch, weights from what 885 venture capitalists said matters (the team named by 95% of them). Every mark must point at a part they took in, a measured fact (pace, pauses, fillers, words on the busiest slide, the smallest text) or a moment in the room, or it is dropped. Posture and eye contact cannot be seen in a file, so delivery is marked from a recording's voice or not at all. Then the room adds its own: a point for keeping everyone hooked till the end, one off if the room fell asleep, one off for running over time.
 
@@ -146,14 +147,14 @@ The same two talks in a college class, marked by Dr. Vandana, an associate profe
 MARKS  Oral communication · out of 20 · Adapted from the AAC&U Oral Communication VALUE rubric, in our words
 
    94 VANDANA    10.2 of 20                                 the talk for engineers
-      Organization                       3 of 4  The speaker opens clearly with a statement of the topic and structure  [P1 to P6]
-      Language                           2 of 4  The speaker uses technical terms like 'Service Worker', 'IndexedDB', 'idempotent commands'…  [P1 to P6]
+      Organization                       3 of 4  The speaker begins with a clear opening, outlines a logical sequence of components…  [P1 to P4]
+      Language                           2 of 4  The speaker uses technical terms like 'CacheFirst', 'TTL', 'ETag validation'… without explanation  [P3, P4]
       Delivery                           not marked: posture, gestures and eye contact cannot be seen in a file, and the voice needs a recording
-      Supporting material                2 of 4  The speaker provides specific technical details, but these are presented as facts without explanation  [P3 to P6]
-      Central message                    2 of 4  The central message is stated only briefly and not repeated or emphasized  [P1 to P6]
+      Supporting material                2 of 4  Lists technical components but gives no examples, analogies or real cases  [P3 to P8]
+      Central message                    2 of 4  The central message is stated, but not repeated or emphasized  [P1 to P3]
       -1   the room fell asleep
 
-   94 VANDANA    20 of 20                                   the talk for people
+   94 VANDANA    19.8 of 20                                 the talk for people
 ```
 
 In a job interview panel, a fresher's introduction for a junior backend role (as a script, and again as a recording) got "move forward" from all three panelists, and each asked a follow up about the work itself:
@@ -189,6 +190,10 @@ Pick **A SITE** in setup and paste an address: your live site, or the one on you
 
 For an Android app, pick **ANDROID APP** and drop the APK. Locals use it on an Android emulator, or a phone plugged in with USB debugging, and each one gets a fresh install. They read the screen through Android's accessibility tree, the same one screen readers use, so it works for Flutter apps without changing them. A button with no label still shows its symbol to a sighted person, so a small vision model (`qwen2.5vl:3b`) looks at it and names it: "a plus, round, bottom right".
 
+Task cards for the live apps come with the town: the [portfolio](tasks/portfolio.toml) (open the résumé, open a project's code), the [Biswas Fabricators site](tasks/biswas-fabricators.toml) (read only: a call link is recorded when tapped and never dialled) and [Fill.ai](tasks/fillai.toml), which is a Chrome extension. For an extension the run loads it into Chrome through the DevTools protocol, gives the locals its toolbar button, and can start it already set up with a made up person, so a local can open it on a job form and use what it filled.
+
+The first runs on them gave signals worth checking. On the Biswas Fabricators site, asked to check for invisible grills and call, a teacher and an insurance agent both gave up: "Call Us Now" scrolls the page, and "Inquire Now" on a product card shows a pop up with the numbers instead of opening the dialler or WhatsApp (the site builds a WhatsApp link there and never uses it). "I need to call the shop, but I don't see a way to actually make a call." On Fill.ai, a final year student asked to fill a form with it tapped the form's own boxes and gave up: nothing on the page says Fill.ai is there, it lives in the browser's toolbar.
+
 The first Android runs were on [Pops](https://github.com/BiswasMosam/Pops), unchanged. Asked to add a new customer, the fabrication owners opened the **Book** tab first, again and again: they read it as booking a visit, while in Pops it is the ledger of finished jobs. The ones who found the plus then met an empty address book with societies, buildings and flats to create before any customer can be added. Both are questions for the real shop owner, which is exactly what a run is for.
 
 ## Real people are the yardstick
@@ -202,13 +207,16 @@ You can also watch a real person yourself. It opens the app on the same screen w
 
 Recordings of real people name nobody and stay on your machine; git never sees them.
 
+**Against people's first moves.** [Android in the Wild](https://arxiv.org/abs/2307.10088) records people doing tasks on Android phones, screen by screen. `python -m town aitw` puts locals on the same screens with the same goals and scores their first move with the dataset's own rule. Six locals matched the person on 15% of 240 screens, 22% where a match was possible; with no limits, 15%; the same model with no person at all, 15%. So the people the locals play cost nothing in accuracy, and the ceiling is a 4B model reading a screen given as scraps of detected text (PaLM 2 scored 31% zero shot on the same rule). It is the number to beat, written up with what it does and does not say in the [validity study](study/validity.md#5-the-first-move-against-peoples).
+
 ## How it works
 
 | Part | What it does |
 |---|---|
 | **The town** | A workday hands each local tasks with real pressure: a call in the middle of a form, a dropped connection, a killed app. |
 | **The locals** | One model, many people. A local is a profile from the study turned into a prompt plus a set of limits. |
-| **Eyes** | Locals see what a person sees: visible controls by their visible words, a big card line by line, the placeholder in an empty box, and the symbol on a button with no words. On the web this comes from a real Chrome on a phone sized or laptop sized screen; on Android from the accessibility tree of an emulator or phone. |
+| **Eyes** | Locals see what a person sees: visible controls by their visible words, a big card line by line, the placeholder in an empty box, the words just above a box with no label, and the symbol on a button with no words. On the web this comes from a real Chrome on a phone sized or laptop sized screen, open shadow roots and an extension's toolbar button included; on Android from the accessibility tree of an emulator or phone. |
+| **Pixels** | The screenshot of every step is read too, by code: a control whose words leave no mark (a loading screen over it) is taken off their screen, text below WCAG's contrast is marked faint, and on a laptop the controls that colour and brightness pull the eye to first are named. Phones keep their reading order, because on phones colour did not predict where people look. See [seeing pixels](study/pixels.md). |
 | **Limits** | Code, not the prompt, makes a local human: a patience budget, a reading budget, a slip rate that grows on small targets, rules for giving up. Research shows a prompt alone leaves AI users far too patient and accurate, so the numbers come from studies of real people. |
 | **Two stages** | Each step, a local first says what they notice on the screen (three to eight things, by how they read), then acts on only those. Using something they never noticed is the model's mistake and is asked again; when nothing they noticed helps, they look around once before feeling stuck. |
 | **The golden path** | You do each task once while it is recorded. Wherever a local reaches for something you never used, the feed says OFF PATH: the UI led them there. |
@@ -227,7 +235,10 @@ So every local starts as a profile of a real job, built from interviews and publ
 |---|---|---|
 | Fabrication shop owner | Pops | [Draft](study/profiles/fabricator.md) |
 | Food stall counter | Order Control | [Draft](study/profiles/food-stall.md) |
-| Fresh graduate, photographer, collector, recruiter | Fill.ai, PixelShift, Peghunt, portfolio | Planned |
+| Household hiring a fabricator | Biswas Fabricators site | [Draft](study/profiles/homeowner.md), played by the town's own people |
+| Fresh graduate applying for jobs | Fill.ai | [Draft](study/profiles/fresh-graduate.md), played by the final year students |
+| Recruiter reading a portfolio | Portfolio | [Draft](study/profiles/recruiter.md), played by the business family |
+| Toy car collector | Peghunt | [Draft](study/profiles/collector.md) |
 | [Law](study/profiles/law/README.md): trial court advocate, junior advocate, firm associate, in-house counsel | The wider town | Drafts |
 | [Media](study/profiles/media/README.md): wedding photographer, product photographer, videographer, video editor, social media manager | PixelShift and the wider town | Drafts |
 | [Engineering](study/profiles/engineering/README.md): software (product and services), mechanical (plant and design), civil (site and planning), electrical, embedded | The wider town | Drafts |
@@ -259,9 +270,14 @@ python -m town take 2026-11-03_145536                             # ask a past d
 python -m town derive                                             # everyone's numbers from published data and their traits
 python -m town report                                             # how the town is doing, against real people's 78%
 python -m town ablate pixelshift:small-jpg sunil rohit            # the same locals with and without their limits
+python -m town aitw sunil prakash --screens 20                    # first moves against real people's on Android in the Wild
+python -m town guesses                                            # how much of each family's profiles is still a guess
+python -m town run biswas-fabricators:call-about-grills rashmi    # a live site, read only
+python -m town run fillai:fill-job-form aryan                     # a Chrome extension (build Fill.ai's test build first)
 python -m unittest discover -s tests -t .                         # the tests
 
 python -m town rooms                                              # the rooms a talk can be given in, and who sits there
+python -m town rooms --check                                      # the attention rules against two measured lectures
 python -m town room crowd talk.pptx --minutes 10                  # who stays with you, who drifts, who falls asleep
 python -m town grade class talk.pdf script.txt                    # a deck and what you say over it, marked by the professor
 python -m town grade interview intro.m4a --about "Junior backend engineer"   # a recording: real pace, pauses and fillers
@@ -285,11 +301,12 @@ Level one built the town. Level two is about showing that what the locals do is 
 - [x] **A stronger mind.** A bigger model was worse: qwen3:8b, with its reasoning off, wandered out of the app. Deciding in two stages worked: a local first says what they notice, then acts only on that. With no limits the locals now finish (6 of 6 on both tasks), and with their limits they stumble the way people do (10 of 12, against 78% for real people). Two stages are now the default
 - [x] **Rooms: give a talk.** A deck (PDF or PowerPoint), a script or a recording, given to a class, a project review, an interview panel, a boardroom, a pitch or a crowd from the town. Code tracks each listener's attention by rules from the lecture and jargon research, and calls who got hooked, who drifted, who got the phone out and who fell asleep, and why. Business and student families join the town (fifteen more locals, a new block of flats). Written up in the [rooms study](study/rooms.md)
 - [x] **The marks.** Graders mark the talk on the room's rubric (oral communication adapted from AAC&U, an interview scorecard, a pitch weighted by what 885 investors said matters), each mark pointing at what they took in, with bonuses and penalties from the room: hooked till the end, the room fell asleep, over time
-- [ ] **Rooms against real audiences:** the sizes of the attention rules are first guesses; calibrate them against people reporting their attention through a talk, the way the clicker studies did
-- [ ] **An accuracy score against real people:** locals on screens from Android in the Wild (715,000 recorded human runs), scored on whether their first tap matches the human's
-- [ ] **Ring one in depth:** a deep desk study for the people our apps serve, and locals and tasks for the live apps (the portfolio, the Biswas Fabricators site, Fill.ai)
-- [ ] **Seeing pixels:** a look at the screenshot for what words cannot show, like contrast and what stands out
-- [ ] **The remaining guesses in the profiles replaced from published sources, family by family**
+- [x] **Rooms against real audiences.** The rules for time, breaks and where attention starts are fitted to two lectures where people's attention was measured (`python -m town rooms --check`): minds wandered at 41% of moments without tests and 19% with three short tests, and the room now gives 41% and 19% (the first guesses gave 55% and 30%). Attention falls half a point a minute and does not speed up, so time alone no longer puts anyone to sleep. Written up in the [rooms study](study/rooms.md#against-real-audiences)
+- [x] **An accuracy score against real people.** Locals on screens from Android in the Wild (715,000 recorded human runs), read from the dataset's own files and scored by its own matching rule (`python -m town aitw`): 15% of first moves matched as themselves, 15% with no limits, 15% for the model with no person at all. The person a local plays costs no accuracy; the model is the ceiling. Written up in the [validity study](study/validity.md#5-the-first-move-against-peoples)
+- [x] **Ring one in depth.** Desk study profiles for a household hiring a fabricator, a fresh graduate applying for jobs, a recruiter reading a portfolio and a toy car collector, and task cards for the live apps: the portfolio, the Biswas Fabricators site (read only; a call link is recorded, never dialled) and Fill.ai, loaded into Chrome as an extension with its toolbar button. The town's own people play these situations, so the town is still 114
+- [x] **Seeing pixels.** Each step's screenshot is read by code: controls a loading screen covers leave the local's screen, text below WCAG's contrast is marked faint (PixelShift's IN and OUT labels measure 2.5:1), and on a laptop what colour and brightness pull the eye to first is named. Phones keep their reading order, because on phones colour did not predict where people look. Written up in [seeing pixels](study/pixels.md)
+- [x] **A desk study pass, family by family.** Statutes, court calendars, tax and banking rules and published surveys replaced or sourced claims in every family; `python -m town guesses` keeps count (877 guesses before, 870 after; sourced claims 404 to 445)
+- [ ] **The guesses nothing published covers.** Most of the 870 left are the hour by hour of a working day: who holds the phone when, what interrupts lunch. No study publishes those for these jobs; only people who do them can settle them, through the [profile form](../../issues/new?template=correct-a-profile.yml)
 
 ### Level one: the town
 

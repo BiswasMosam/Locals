@@ -1,5 +1,5 @@
 """python -m town dashboard | people | run <app:task> <local ...|all> | watch <app:task> --golden|--for <local> | calibrate <local>
-| rooms | room <room> <files> | grade <room> <files>"""
+| rooms [--check] | room <room> <files> | grade <room> <files> | aitw <local ...> | guesses"""
 import argparse
 import re
 import sys
@@ -39,13 +39,16 @@ def main():
     ask.add_argument("day", help="the day's folder in runs/, for example 2026-11-03_144319")
     ask.add_argument("locals", nargs="*", help="local ids (default: everyone that day)")
     sub.add_parser("report", help="how the town is doing across every saved day, against real people's benchmark")
+    sub.add_parser("guesses", help="how much of each family's profiles is still a guess, and which break the study's rule")
     abl = sub.add_parser("ablate", help="run locals as themselves and again with no limits, to see what the limits change")
     abl.add_argument("task", help="app:task, for example pixelshift:small-jpg")
     abl.add_argument("locals", nargs="+", help="local ids, or all")
     abl.add_argument("--seed", type=int, default=7)
     der = sub.add_parser("derive", help="set reading, slips and typos from published studies and each local's traits")
     der.add_argument("--apply", action="store_true", help="write the traits and numbers into everyone's file")
-    sub.add_parser("rooms", help="the rooms a talk can be given in, and who sits in each")
+    rms = sub.add_parser("rooms", help="the rooms a talk can be given in, and who sits in each")
+    rms.add_argument("--check", action="store_true", help="the attention rules against two measured lectures")
+    rms.add_argument("--fit", action="store_true", help="search for the rule sizes closest to those lectures")
     for name, text in (("room", "give a talk to a room of locals: who stays with you, who drifts, who falls asleep"),
                        ("grade", "give a talk to a room, then let its graders mark it")):
         talk = sub.add_parser(name, help=text)
@@ -55,6 +58,12 @@ def main():
         talk.add_argument("--point", help="the one thing you want them to take away (default: read from the talk)")
         talk.add_argument("--about", help="what the talk is for, like the role you are interviewing for")
         talk.add_argument("--seed", type=int, default=7)
+    wild = sub.add_parser("aitw", help="score locals against real people's moves on Android in the Wild screens")
+    wild.add_argument("locals", nargs="*", help="local ids, or all")
+    wild.add_argument("--screens", type=int, default=20, help="episodes from each part of the dataset (default 20)")
+    wild.add_argument("--every-step", action="store_true", help="every step of each episode, not only the first move")
+    wild.add_argument("--seed", type=int, default=7)
+    wild.add_argument("--show", help="print the summary of a past score, by its folder in runs/aitw/")
     cal = sub.add_parser("calibrate", help="turn watched runs into a local's limits")
     cal.add_argument("local", help="local id, for example prakash")
     cal.add_argument("--apply", action="store_true", help="write the measured numbers into the local's file")
@@ -119,6 +128,11 @@ def main():
         print("\n".join(lines) + f"\n\nSaved in {folder.relative_to(ROOT)}")
         return
 
+    if args.cmd == "guesses":
+        from . import guesses
+        print(guesses.report()[0])
+        return
+
     if args.cmd == "report":
         from .report import report
         print(report(ROOT / "runs"))
@@ -136,6 +150,14 @@ def main():
             if args.apply:
                 derive.write(l, t, v)
         print("\nWritten into people/." if args.apply else "\nTo write these into people/: python -m town derive --apply")
+        return
+
+    if args.cmd == "rooms" and (args.check or args.fit):
+        from . import roomfit
+        print(roomfit.report(before=roomfit.FIRST_GUESS))
+        if args.fit:
+            err, best = roomfit.fit()
+            print(f"\nClosest on the grid (mean squared error {err:.1f}): " + ", ".join(f"{k} = {v}" for k, v in best.items()))
         return
 
     if args.cmd == "rooms":
@@ -157,6 +179,18 @@ def main():
             result["grade"] = grade(place, result, listeners, talk.recorded, args.about or "", args.seed)
             (out / "room.json").write_text(json.dumps(result, indent=1, ensure_ascii=False), encoding="utf-8")
         print(f"\nSaved in {out.relative_to(ROOT)}")
+        return
+
+    if args.cmd == "aitw":
+        from . import aitw
+        if args.show:
+            print(aitw.summary(ROOT / "runs" / "aitw" / args.show))
+            return
+        if not args.locals:
+            raise SystemExit("Name the locals to score, for example: python -m town aitw sunil prakash")
+        who = people.everyone() if args.locals == ["all"] else [people.load(i) for i in args.locals]
+        out = aitw.run(who, count=args.screens, seed=args.seed, first_only=not args.every_step)
+        print("\n" + aitw.summary(out) + f"\n\nSaved in {out.relative_to(ROOT)}")
         return
 
     if args.cmd == "calibrate":

@@ -79,6 +79,7 @@ def notice(system, seen, local, seed, wider=False):
 def describe(screen, local, history, notes, only=None):
     """The screen as this person takes it in, after skimming; with only, just the things they noticed."""
     from .limits import skim
+    from .pixels import words_for
     w = local.limits.read_words
     lines = [f'Screen: "{skim(screen["title"], 8)}"']
     if screen["blocks"]:
@@ -91,7 +92,11 @@ def describe(screen, local, history, notes, only=None):
         if i["role"] == "text box":
             label = f'filled with "{i["value"]}"' if i["value"] else f'empty, shows "{skim(i["hint"], w)}"' if i["hint"] else "empty"
         elif len(i.get("lines", [])) > 1:
-            label = "a large area showing: " + " / ".join(skim(line, w) for line in i["lines"][:8])
+            # Measured on the screenshot (town/pixels.py).
+            faint = {t.lower(): c for t, c in i.get("line_contrast", {}).items()}
+            label = "a large area showing: " + " / ".join(
+                skim(line, w) + (f" ({words_for(faint[line.lower()]).split(',')[0]})" if line.lower() in faint else "")
+                for line in i["lines"][:8])
         elif i["text"]:
             label = skim(i["text"], w)
         elif i.get("looks"):
@@ -100,12 +105,17 @@ def describe(screen, local, history, notes, only=None):
         else:
             label = f'icon, no words (hint: "{skim(i["hint"], w)}")' if i["hint"] else "icon, no words"
         state = []
+        if i.get("faint"): state.append(words_for(i["contrast"]))
         if i["disabled"]: state.append("greyed out")
         if i["active"]: state.append("selected")
         if i["checked"]: state.append("ticked")
         if i["value"] and i["role"] != "text box": state.append(f'value {i["value"]}')
         extra = f" ({', '.join(state)})" if state else ""
-        lines.append(f'[{i["id"]}] {i["role"]}: {label}{extra}')
+        under = f' under "{skim(i["near"], w)}"' if i.get("near") and not i["text"] and i["near"] != i["hint"] else ""
+        lines.append(f'[{i["id"]}] {i["role"]}{under}: {label}{extra}')
+    standout = [x for x in screen.get("stands_out", []) if not only or x in only]
+    if standout:
+        lines.append("What catches the eye first on this screen: " + ", ".join(f"[{x}]" for x in standout))
     if only and len(only) < len(screen["items"]):
         lines.append("They have not looked at anything else on this screen yet. If none of this helps, they can look around "
                      "by saying stuck, scroll, or go back.")

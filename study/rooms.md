@@ -21,21 +21,39 @@ With a deck and a speech together, each sentence goes to the slide whose words i
 
 ## How attention moves
 
-Every listener starts a talk at 70 out of 100, or 85 if they are there to grade it `[G]`. Each part of the talk then moves it:
+Attention is the share of the time a listener is with the talk, so 100 less a room's average is the share of moments minds wandered, the number the probe studies measure. Every listener starts a talk at 64 out of 100, fitted to measured lectures (below) `[D]`, or 85 if they are there to grade it `[G]`. Each part of the talk then moves it:
 
 | Rule | What the research says | The size here |
 |---|---|---|
-| **Time without a break** | Mind wandering rises and memory falls the longer a lecture runs [2] [3]; lapses come more often as a lecture goes on [4] `[D]` | 1 point a minute, plus 1 more for every 5 minutes since the last break, at most 4 a minute `[G]` |
-| **Age** | Young adults reported mind wandering on 41% of probes in daily life, older adults on 28% [5] `[D]` | Drift falls from 1 at 30 to 0.7 at 60 and over, the ratio of the two `[D]` |
+| **Time without a break** | Mind wandering rises and memory falls the longer a lecture runs [2] [3]; lapses come more often as a lecture goes on [4] `[D]` | Half a point a minute, at the same pace however long the talk runs, fitted to measured lectures `[D]` (first guess: 1 a minute, growing to 4) |
+| **Age** | Young adults reported mind wandering on 41% of probes in daily life, older adults on 28% [5] `[D]` | Drift falls to 0.7 of a young adult's from 30 to 60 and over, the ratio of the two `[D]` |
 | **Terms they do not know** | Jargon lowers engagement and makes people feel the subject is not for them, even when the terms are defined [6] `[D]` | 2 points for each term outside their fields that reached them in a part, at most 8 a part `[G]` |
 | **Too fast** | Comprehension of speech holds up to about 250 to 275 words a minute for native listeners, then falls quickly [7] `[D]`; slower speech helped lower intermediate second language listeners [8] `[D]` | Beyond 250 words a minute when English is easy for them, 150 when it is slow `[G]` |
 | **Too much to read** | Slides with a phrase headline and bullets led to worse comprehension and higher load than a sentence headline with visual evidence [9] `[D]`; reading the same words you are hearing gets in the way [10] `[D]` | A listener can read for half the time a slide is up, at their own reading speed; 1 point for every 4 words beyond that, at most 12 `[G]` |
 | **Why they came** | A listener's own reasons decide what holds them `[G]` | The model says whether a part matters to them: 4 points if it does, 4 off if it does not `[G]` |
 | **The point, late** | Chief executives spend 72% of their working time in meetings and say many could be a quarter of the length [11] `[D]` | In a boardroom or a pitch, 8 points off every part after the minute the room expects the point, until it comes `[G]` |
-| **A break** | Demonstrations and questions to the class were followed by fewer lapses than lecture [4] `[D]`; stories raise interest and are easier to follow [12] `[D]` | A story, an example, a demonstration or a question to the room: 10 points, and the drift starts over; a surprising number or a joke: 5 `[G]` |
+| **A break** | Demonstrations and questions to the class were followed by fewer lapses than lecture [4] `[D]`; stories raise interest and are easier to follow [12] `[D]` | A question to the room: 15 points, fitted to measured lectures `[D]`; a story, an example or a demonstration the same `[G]`; a surprising number or a joke: 5 `[G]` |
 | **Something that wakes you** | | A question to the room, a demonstration or a joke reaches even someone who has stopped listening `[G]` |
 
 What reaches a listener depends on where their attention is as a part begins. With you or hooked (50 and over), they hear it all and read each slide line as far as their reading budget goes. Drifting (35 to 50), they catch the title, two lines and the first sentence. Below that they only glance up at the title, and asleep, nothing. Graders never fall asleep; they check their email and then stop listening. Nobody falls asleep in the first 8 minutes of a talk, whatever it is: they reach for the phone instead `[G]`.
+
+## Against real audiences
+
+The rules for time, breaks and the starting point were first guesses. They are now fitted to two lectures where people's attention was measured, rebuilt as talks with nothing in them but time: no terms, no slides, a pace anyone follows, a subject neither why they came nor beside the point. `python -m town rooms --check` runs them through the room's own code.
+
+- **How fast attention falls.** Farley, Risko and Kingstone [3] had students rate their attention from 1 to 7 after every 5 minutes of a 40 minute lecture: 6.0, 6.3, 5.9, 5.9, 5.4, 5.2, 5.2, 4.9. The fall is steady, about half a point a minute on the room's scale, and it does not speed up. Only the shape is used, since a rating is not a probe.
+- **Where it starts, and what a question is worth.** Szpunar, Khan and Schacter [18] gave a 21 minute statistics lecture in four parts. Without tests between the parts, minds wandered at 41% of probes; with a short test after each of the first three, at 19%.
+
+| | People | The room, first guess | The room, fitted |
+|---|---|---|---|
+| 21 minutes, no tests: minds wandering | 41% | 55% | 41% |
+| 21 minutes, three short tests | 19% | 30% | 19% |
+| Attention lost from the 5th to the 40th minute (Farley, on 0 to 100) | 18 | 62 | 18 |
+| A plain 40 minute lecture puts a 20 year old to sleep | never | at minute 18 | never |
+
+A search over a grid of sizes found the closest fit at half a point a minute with no speed up, a start of 64 and 15 points for a question to the room. The first guesses lost a plain lecture's room three times too fast and put people to sleep on time alone; now a room is lost by what a talk does (terms it does not explain, a pace or a slide too heavy, a point that is not what they came for), not by the clock. A test in `tests/test_room.py` keeps the fit.
+
+**What the fit cannot say.** Two lectures, both to students, both on video in a lab. The other sizes (jargon, pace, slide text, why they came, the late point) are still first guesses, and the size of a story or a demonstration is taken to be a question's. Calibrating those needs talks measured part by part with those things in them.
 
 **Interviewers make up their minds.** Across more than 600 real interviews, 4.9% of interviewers decided in the first minute, 25.5% within five and 59.9% within fifteen [13] `[D]`. In the interview room each panelist draws when they decide from those shares, and what comes after that point is marked "after they had made up their mind" in their evidence.
 
@@ -72,7 +90,7 @@ Rubrics live in [rooms/rubrics.toml](../rooms/rubrics.toml) and rooms in [rooms/
 
 - **How you look.** No posture, gestures, eye contact or slides on a real screen. A recording gives the voice; nothing gives the body.
 - **A real room's mood.** Real audiences catch each other's boredom and laughter. Locals listen side by side, alone.
-- **The sizes.** The direction of every rule is sourced; how many points each one moves is a first guess. Calibrating them needs real audiences reporting their attention through a talk, the way the clicker studies did [4].
+- **Most of the sizes.** The direction of every rule is sourced; time, breaks and the start are fitted to measured lectures; how many points jargon, pace, slide text and a talk's relevance move is still a first guess.
 - **The model's own taste.** A 4B model decides what matters to a lawyer and which field a term belongs to. The checks keep it to the talk's own words, but not to the truth of a person.
 - **A kind grader.** Every mark must rest on evidence, but the level chosen is still the model's. On the first runs a professor gave a deliberately good talk 20 of 20 and a deliberately technical one 10.2; real professors seldom give full marks. Read a mark as where your talk stands between those two, not as the number a real professor would write.
 
@@ -101,3 +119,4 @@ Rubrics live in [rooms/rubrics.toml](../rooms/rubrics.toml) and rooms in [rooms/
 15. Campion, Palmer and Campion, *A review of structure in the selection interview*, Personnel Psychology 50, 1997.
 16. Gompers, Gornall, Kaplan and Strebulaev, *How Do Venture Capitalists Make Decisions?*, Journal of Financial Economics 135, 2020; [the authors' summary](https://corpgov.law.harvard.edu/2019/08/20/how-do-venture-capitalists-make-decisions).
 17. University of Washington DO-IT, [How can you make your presentation accessible?](https://www.washington.edu/doit/how-can-you-make-your-presentation-accessible); Newcastle University, [font size for presentations](https://services.ncl.ac.uk/itservice/help-services/accessibility-advice/designingaccessiblecontent/guidance/fontsize).
+18. Szpunar, Khan and Schacter, *Interpolated memory tests reduce mind wandering and improve learning of online lectures*, PNAS 110, 2013. [PMC3631699](https://pmc.ncbi.nlm.nih.gov/articles/PMC3631699/)

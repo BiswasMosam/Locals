@@ -1,0 +1,20 @@
+app = "Mosam Biswas, portfolio"
+url = "https://www.mosambiswas.com/"
+# Ring one: the people a portfolio is for are the ones hiring. The town's recruiter, HR partner, engineering manager
+# and founders play them (study/profiles/recruiter.md). Read only: nothing on the site is sent or submitted.
+
+[[task]]
+id = "resume"
+story = """
+A candidate's name came up for a junior AI and full stack role, and his site is open in front of you.
+Before you put him on the shortlist, open his résumé.
+"""
+done = { url_contains = "resume" }
+
+[[task]]
+id = "see-code"
+story = """
+You are reading a candidate's portfolio before his interview. You want to see code he really wrote,
+not just a description of it. Open the source code of one of his projects.
+"""
+done = { url_contains = "github.com/BiswasMosam/" }

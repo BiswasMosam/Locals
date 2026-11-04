@@ -106,10 +106,22 @@ class AttentionTests(unittest.TestCase):
         l.took.append(room.take_in(l, p, minute))
         return room.update(l, p, facts or {"terms": [], "moments": []}, reply, minute, late)
 
-    def test_drift_alone_is_a_point_a_minute_for_the_young(self):
+    def test_drift_alone_is_half_a_point_a_minute_for_the_young(self):
         l = listener()
         changes, _ = self.hear(l, part())
-        self.assertEqual(changes, {"too long without a break": -1.0})
+        self.assertEqual(changes, {"too long without a break": -0.5})
+        l.since_break = 30  # the fit found no speed up the longer a lecture runs without a break
+        changes, _ = self.hear(l, part())
+        self.assertEqual(changes, {"too long without a break": -0.5})
+
+    def test_the_rules_reproduce_the_measured_lectures(self):
+        from town import roomfit
+        m = roomfit.measures()
+        for name, (people, town) in m["szpunar"].items():
+            self.assertAlmostEqual(town, people, delta=2, msg=name)  # minds wandering, % of probes
+        self.assertIsNone(m["asleep_at"])  # time alone does not put a listener to sleep in 40 minutes
+        fall = lambda xs: xs[0] - xs[-1]
+        self.assertAlmostEqual(fall([t for _, _, t in m["farley"]]), fall([p for _, p, _ in m["farley"]]), delta=3)
 
     def test_older_minds_wander_less(self):
         self.assertEqual(room.age_drift(25), 1.0)
