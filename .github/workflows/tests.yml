@@ -20,4 +20,12 @@ jobs:
           cache: pip
       # av decodes recordings; it normally arrives with the optional faster-whisper.
       - run: pip install -r requirements.txt av
+      # The Fill.ai task cards point at its test build in a checkout beside this one.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Build Fill.ai beside Locals
+        run: |
+          git clone --depth 1 https://github.com/BiswasMosam/Fill.ai.git ../Fill.ai
+          cd ../Fill.ai && npm ci && npm run build:test
       - run: python -m unittest discover -s tests -t . -v

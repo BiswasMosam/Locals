@@ -10,6 +10,10 @@ from PIL import Image, ImageDraw
 
 from town import aitw, mind, people, pixels
 
+# The Fill.ai task cards point at the extension's test build in a Fill.ai checkout beside this one.
+FILLAI_BUILT = (people.ROOT.parent / "Fill.ai" / "dist-test").is_dir()
+NO_FILLAI = "needs Fill.ai beside Locals, built with npm run build:test"
+
 
 def card(fg, bg=(255, 255, 255), size=(200, 60)):
     """A box of background with a bar of 'ink' across it, like a line of text."""
@@ -200,7 +204,10 @@ class LiveAppChecks(unittest.TestCase):
         from town import tasks
         for ref, words in (("biswas-fabricators:call-about-grills", "calls"), ("portfolio:resume", "resume"),
                            ("fillai:fill-job-form", "fields"), ("fillai:set-up", "extension")):
-            self.assertIn(words, tasks.describe_check(tasks.load(ref).done), ref)
+            with self.subTest(ref):
+                if ref.startswith("fillai:") and not FILLAI_BUILT:
+                    self.skipTest(NO_FILLAI)
+                self.assertIn(words, tasks.describe_check(tasks.load(ref).done), ref)
 
     def test_a_call_link_proves_the_call(self):
         from town import tasks
@@ -208,12 +215,14 @@ class LiveAppChecks(unittest.TestCase):
         self.assertEqual(tasks.check(t, self.FakeWeb(), []), (False, None))
         self.assertEqual(tasks.check(t, self.FakeWeb(called=["tel:+910000000000"]), []), (True, None))
 
+    @unittest.skipUnless(FILLAI_BUILT, NO_FILLAI)
     def test_a_form_counts_as_filled_from_eight_answers(self):
         from town import tasks
         t = tasks.load("fillai:fill-job-form")
         self.assertFalse(tasks.check(t, self.FakeWeb(filled=7), [])[0])
         self.assertTrue(tasks.check(t, self.FakeWeb(filled=10), [])[0])
 
+    @unittest.skipUnless(FILLAI_BUILT, NO_FILLAI)
     def test_set_up_is_done_when_the_extension_has_a_name(self):
         from town import tasks
         t = tasks.load("fillai:set-up")
