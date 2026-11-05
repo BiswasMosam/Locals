@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/BiswasMosam/Locals/actions/workflows/tests.yml"><img alt="Tests" src="https://img.shields.io/github/actions/workflow/status/BiswasMosam/Locals/tests.yml?branch=master&label=tests&style=flat-square&labelColor=0c0e13"></a>
   <a href="#run-it"><img alt="Runs locally" src="https://img.shields.io/badge/runs-locally-ffc94d?style=flat-square&labelColor=0c0e13"></a>
   <a href="study/README.md"><img alt="Study first" src="https://img.shields.io/badge/study-first-ffc94d?style=flat-square&labelColor=0c0e13"></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-8a8f9c?style=flat-square&labelColor=0c0e13"></a>

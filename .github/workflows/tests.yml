@@ -1,0 +1,23 @@
+# Runs the whole unit suite on every push and pull request. The tests use a
+# fake app and a scripted model, so no browser or Ollama is needed here.
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+          cache: pip
+      # av decodes recordings; it normally arrives with the optional faster-whisper.
+      - run: pip install -r requirements.txt av
+      - run: python -m unittest discover -s tests -t . -v

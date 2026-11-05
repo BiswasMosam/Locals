@@ -1,5 +1,6 @@
 """The rooms: reading a talk, the attention rules, the markers and the checks on every mark. No model, no Ollama."""
 import contextlib
+import importlib.util
 import io
 import json
 import shutil
@@ -72,6 +73,7 @@ class TalkTests(unittest.TestCase):
         self.assertEqual(len(t.parts), 2)
         self.assertFalse(t.deck)
 
+    @unittest.skipUnless(importlib.util.find_spec("av"), "recordings need the optional faster-whisper install")
     def test_a_recording_is_decoded_to_16_khz_mono(self):
         import math
         import wave
