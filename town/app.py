@@ -34,7 +34,8 @@ class Town(QObject):
     """Everything the pages can read and ask for."""
     changed = Signal()       # who lives here, this machine, the saved days
     liveChanged = Signal()   # the running day moved on
-    heard = Signal("QVariantMap")  # every entry as it arrives, for pages that keep their own account
+    heard = Signal("QVariantMap")  # each moment of the day as it arrives, for the feed
+    dayReset = Signal()      # the feed began again: a day started, or a kept one was opened or closed
     noticeChanged = Signal()
     _arrived = Signal(object)
     _loaded = Signal(object)
@@ -59,9 +60,12 @@ class Town(QObject):
             self._arrived.emit(q.get())
 
     def _hear(self, entry):
-        self.live.hear(entry)
+        again, moment = self.live.hear(entry)
+        if again:
+            self.dayReset.emit()
         self.liveChanged.emit()
-        self.heard.emit(entry)
+        if moment:
+            self.heard.emit(moment)
         if entry.get("type") == "year" and entry.get("phase") == "end":
             if self.live.error:
                 self._say(self.live.error)
@@ -74,6 +78,8 @@ class Town(QObject):
         self._info = got["info"]
         self._families = appstate.families(self._info["groups"])
         self._names = {p["id"]: p["name"] for f in self._families for p in f["people"]}
+        self.live.names = self._names
+        self.live.patience = {p["id"]: p["patience"] for f in self._families for p in f["people"]}
         self._meta = {d["day"]: d for d in got["days"]}
         self._days = [appstate.day_row(d, self._names) for d in got["days"]]
         self.changed.emit()
@@ -106,6 +112,40 @@ class Town(QObject):
     def busy(self):
         return self.live.running
 
+    @Property("QVariantList", notify=liveChanged)
+    def strips(self):
+        return self.live.strips()
+
+    @Property("QVariantList", notify=dayReset)
+    def moments(self):
+        """The whole feed so far, for a page that has just been told it began again."""
+        return list(self.live.moments)
+
+    @Property(str, constant=True)
+    def root(self):
+        """Where a moment's screenshot lives: its path is kept relative to the project."""
+        return QUrl.fromLocalFile(str(session.ROOT)).toString() + "/"
+
+    @Slot(str)
+    def openDay(self, day_id):
+        """Puts a kept day on the page to be read. Not while a day is running: that one is on the page."""
+        if self.live.running or day_id not in self._meta:
+            return
+        try:
+            log = records.day_log(day_id, self.runs)
+        except (OSError, ValueError, KeyError) as e:
+            return self._say(f"That day could not be read: {e}")
+        self.live.load(log["meta"], log["entries"])
+        self.dayReset.emit()
+        self.liveChanged.emit()
+
+    @Slot()
+    def closeDay(self):
+        if not self.live.running:
+            self.live.clear()
+            self.dayReset.emit()
+            self.liveChanged.emit()
+
     @Property(str, notify=noticeChanged)
     def notice(self):
         return self._notice
@@ -130,6 +170,7 @@ class Town(QObject):
         try:
             spec = session.plan(appstate.spec_again(meta))
             self.live.start()
+            self.dayReset.emit()
             self.session.start(spec)
             self.ran = True
         except (ValueError, session.Busy, OSError) as e:
@@ -144,8 +185,9 @@ class Town(QObject):
             self.session.stop()
             self.liveChanged.emit()
 
-    def demo(self):
-        """A scripted day for looking at the window without a model: the same entries a worker sends."""
+    def demo(self, finish=False):
+        """A scripted day for looking at the window without a model: the same entries a worker sends.
+        finish: carry it through to everyone done, to see the town celebrate."""
         who = ["rohit", "sunil", "neha"]
         day = {"day": "2026-01-01_000000", "task": "PixelShift: small-jpg", "ref": "pixelshift:small-jpg", "locals": who,
                "index": [1, 1], "today": "Wed 1 Jul 2026 · heavy rain"}
@@ -156,12 +198,20 @@ class Town(QObject):
                   {"type": "event", "local": "rohit", "kind": "DONE", "says": "photo.jpg, 0.5 MB · 4 steps · 28s"},
                   {"type": "event", "local": "sunil", "kind": "START", "says": "Runs a Chinese food stall, on a phone"},
                   {"type": "step", "local": "sunil", "step": 1, "line": 'tap [F] "BMP"', "thought": "This one says picture, must be it."},
-                  {"type": "event", "local": "sunil", "kind": "GAVE UP", "says": "Gave up on the app."},
+                  {"type": "event", "local": "sunil", "kind": "SLIP", "says": 'Meant to tap [E] "JPG", hit [F] "BMP".'},
+                  {"type": "step", "local": "sunil", "step": 2, "line": 'tap [F] "BMP"', "thought": "JPG, the one the customer asked for."},
+                  {"type": "event", "local": "sunil", "kind": "STUCK", "says": "Kept landing on the same screen; nothing they tried changed it."},
+                  {"type": "event", "local": "sunil", "kind": "DONE" if finish else "GAVE UP", "says": "photo.jpg, 0.6 MB" if finish else "Gave up on the app."},
                   {"type": "event", "local": "neha", "kind": "START", "says": "Associate at a law firm, on a laptop"},
                   {"type": "step", "local": "neha", "step": 3, "line": 'set [L] "QUALITY" = 30', "thought": "Lower quality should make it smaller."}]
         self.live.start()
         for entry in script:
             self._hear(entry)
+        if finish:
+            for entry in ({"type": "event", "local": "neha", "kind": "DONE", "says": "photo.jpg, 0.4 MB · 5 steps · 31s"},
+                          {"type": "day", "phase": "end", **day, "results": {"rohit": "DONE", "sunil": "DONE", "neha": "DONE"}},
+                          {"type": "year", "phase": "end", "task": day["task"], "days": []}):
+                self._hear(entry)
 
 
 def pages_of(window):
@@ -197,7 +247,7 @@ def dark_title_bar(window):
         pass  # an older Windows keeps its own title bar; nothing else depends on this
 
 
-def main(demo=False, snapshot=None, size=None):
+def main(demo=False, snapshot=None, size=None, open_day=None, finish=False):
     app = QGuiApplication(sys.argv[:1])
     app.setApplicationName("Locals")
     app.setWindowIcon(icon())
@@ -249,7 +299,9 @@ def main(demo=False, snapshot=None, size=None):
 
     app.aboutToQuit.connect(leave)
     if demo:
-        town.demo()
+        town.demo(finish)
+    if open_day:
+        town.openDay(open_day)
     if snapshot:
         out, pages = Path(snapshot), pages_of(window)
         out.mkdir(parents=True, exist_ok=True)

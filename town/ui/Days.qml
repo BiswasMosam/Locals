@@ -3,6 +3,7 @@ import QtQuick
 // Every day that was kept, newest first.
 Item {
     id: page
+    signal opened()
     Heading { id: over; x: Theme.gutter; y: 38; text: "Days" }
     Text {
         id: head
@@ -19,7 +20,7 @@ Item {
         clip: true
         boundsBehavior: Flickable.StopAtBounds
         model: town.days
-        delegate: DayRow { long: true }
+        delegate: DayRow { long: true; onOpened: page.opened() }
     }
     // Where you are in the list, shown only while there is more than fits.
     Rectangle {

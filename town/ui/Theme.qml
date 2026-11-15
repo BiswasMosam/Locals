@@ -10,6 +10,7 @@ QtObject {
     readonly property color slab: "#161a24"
     readonly property color dark: "#1d2231"     // a window with nobody up
     readonly property color line: "#262c3b"
+    readonly property color step: "#3a4152"     // a step taken, in a local's strip
     readonly property color light: "#ffc94d"
     readonly property color waiting: "#6e5c2f"  // out today, not yet at work
     readonly property color ink: "#ebe7dc"

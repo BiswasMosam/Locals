@@ -46,7 +46,9 @@ class WindowTests(unittest.TestCase):
             qt.processEvents()
         # The same calls the buttons make, made the way the pages make them.
         for call in ("town.refresh()", "town.dismiss()", "town.runAgain('no-such-day')", "town.stop()",
-                     "town.now.states['rohit']", "town.machine.model.name", "town.families[0].people[0].reads"):
+                     "town.now.states['rohit']", "town.machine.model.name", "town.families[0].people[0].reads",
+                     "town.openDay('no-such-day')", "town.closeDay()", "town.strips.length", "town.moments.length",
+                     "town.now.verdict.win", "town.root.length"):
             said = QQmlExpression(engine.rootContext(), window, call)
             said.evaluate()
             self.assertFalse(said.hasError(), f"{call}: {said.error().toString()}")

@@ -5,6 +5,7 @@ Item {
     id: row
     required property var modelData
     property bool long: false
+    signal opened()
     width: parent ? parent.width : 0
     height: long ? 64 : 52
 
@@ -59,10 +60,12 @@ Item {
         }
         Btn {
             id: again
+            z: 1
             visible: (over.hovered || activeFocus) && row.modelData.again && !town.busy
             text: "Run again"
-            onPressed: town.runAgain(row.modelData.day)
+            onPressed: { town.runAgain(row.modelData.day); row.opened() }
         }
     }
-    HoverHandler { id: over }
+    HoverHandler { id: over; cursorShape: town.busy ? Qt.ArrowCursor : Qt.PointingHandCursor }
+    TapHandler { enabled: !town.busy; onTapped: { town.openDay(row.modelData.day); row.opened() } }
 }

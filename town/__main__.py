@@ -19,6 +19,8 @@ def main():
     win.add_argument("--demo", action="store_true", help="a scripted day, with no model and no browser")
     win.add_argument("--snapshot", help="offscreen: save each page as a PNG in this folder, then quit")
     win.add_argument("--size", help="open at this size, like 1360x860, for checking")
+    win.add_argument("--finish", action="store_true", help="with --demo: carry the day through to everyone done")
+    win.add_argument("--open", metavar="DAY", help="open with this kept day on the page, by its folder in runs/")
     board = sub.add_parser("dashboard", help="open the town in your browser")
     board.add_argument("--port", type=int, default=7300)
     board.add_argument("--no-open", action="store_true", help="do not open a browser tab")
@@ -80,7 +82,8 @@ def main():
             raise SystemExit(f"The window needs PySide6 ({e.name} is missing). Run: pip install -r requirements.txt\n"
                              "Everything else works without it: python -m town --help")
         size = tuple(int(v) for v in args.size.split("x")) if getattr(args, "size", None) else None
-        return window(getattr(args, "demo", False), getattr(args, "snapshot", None), size)
+        return window(getattr(args, "demo", False), getattr(args, "snapshot", None), size,
+                      getattr(args, "open", None), getattr(args, "finish", False))
 
     if args.cmd == "dashboard":
         from .dashboard import serve

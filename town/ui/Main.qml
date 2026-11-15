@@ -38,7 +38,7 @@ Window {
         anchors { left: rail.right; right: parent.right; top: parent.top; bottom: strip.top }
         Home { anchors.fill: parent; opacity: root.page === "town" ? 1 : 0; visible: opacity > 0
                Behavior on opacity { NumberAnimation { duration: 140 } } }
-        Days { anchors.fill: parent; opacity: root.page === "days" ? 1 : 0; visible: opacity > 0
+        Days { onOpened: root.page = "town"; anchors.fill: parent; opacity: root.page === "days" ? 1 : 0; visible: opacity > 0
                Behavior on opacity { NumberAnimation { duration: 140 } } }
     }
 

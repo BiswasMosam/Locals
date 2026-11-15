@@ -75,6 +75,84 @@ class LiveTests(unittest.TestCase):
         self.assertEqual((v["running"], v["stopping"], v["error"]), (False, False, "The engine stopped by itself (exit 1)."))
 
 
+def step(who, n, line="tap [A]"):
+    return {"type": "step", "local": who, "step": n, "line": line, "thought": "trying", "at": f"{n}s", "secs": 1.5, "shot": f"runs/x/{who}/step-{n:02d}.png"}
+
+
+def event(who, kind, says=""):
+    return {"type": "event", "local": who, "kind": kind, "says": says, "at": "9s", "shot": None}
+
+
+class StripTests(unittest.TestCase):
+    """A local's strip is read at a glance, so an amber cell has to sit on the step that went wrong. The engine
+    reports a slip just before the step it spoiled, and being stuck just after the step that got nowhere."""
+
+    def live(self):
+        return appstate.Live({"neha": "Neha", "sunil": "Sunil"}, {"neha": 10, "sunil": 4})
+
+    def test_a_slip_marks_the_step_after_it_and_stuck_the_step_before(self):
+        live = self.live()
+        for e in (day("sunil"), step("sunil", 1), event("sunil", "SLIP"), step("sunil", 2), step("sunil", 3),
+                  event("sunil", "STUCK"), event("sunil", "GAVE UP"), event("sunil", "TAKE", "It never changed.")):
+            live.hear(e)
+        row = live.strips()[0]
+        self.assertEqual([c["tone"] for c in row["cells"]], ["step", "warn", "warn"])
+        self.assertEqual((row["outcome"], row["left"]), ("GAVE UP", 0))  # patience spent is not patience left
+        self.assertEqual(live.moments[row["end"]]["kind"], "GAVE UP")
+        self.assertEqual(live.moments[row["cells"][1]["i"]]["step"], 2)  # a cell leads back to its own moment
+
+    def test_patience_left_is_shown_while_they_work_and_when_they_finish(self):
+        live = self.live()
+        for e in (day("neha", "sunil"), step("neha", 1), step("neha", 2)):
+            live.hear(e)
+        neha, sunil = live.strips()
+        self.assertEqual((len(neha["cells"]), neha["left"], sunil["cells"], sunil["left"]), (2, 8, [], 4))
+        live.hear(event("neha", "DONE"))
+        self.assertEqual(live.strips()[0]["left"], 8)
+
+    def test_every_moment_has_every_key_whatever_the_entry_left_out(self):
+        bare = appstate.moment({"type": "event", "local": "neha", "kind": "ERROR"}, 0, {})
+        full = appstate.moment(step("neha", 1), 1, {"neha": "Neha"})
+        self.assertEqual(sorted(bare), sorted(full))
+        self.assertEqual([type(bare[k]) for k in sorted(bare)], [type(full[k]) for k in sorted(full)])
+        self.assertEqual((bare["shot"], bare["tone"], full["name"]), ("", "bad", "Neha"))
+
+    def test_a_kept_day_opens_as_it_ended(self):
+        live = self.live()
+        meta = {"day": "2026-11-03_145536", "task": "PixelShift: small-jpg", "locals": ["neha", "sunil"],
+                "results": {"neha": "DONE", "sunil": "GAVE UP"}}
+        live.load(meta, [step("neha", 1), event("neha", "DONE"), step("sunil", 1), event("sunil", "GAVE UP")])
+        v = live.view()
+        self.assertEqual((v["kept"], v["running"], v["open"], v["who"]), (True, False, True, ""))
+        self.assertEqual((v["states"], v["verdict"]["head"]), ({"neha": "DONE", "sunil": "GAVE UP"}, "1 of 2 got it done."))
+        live.clear()
+        self.assertFalse(live.view()["open"])
+
+
+class VerdictTests(unittest.TestCase):
+    def test_nine_in_ten_of_at_least_three_is_great_by_name(self):
+        v = appstate.verdict("PixelShift: small-jpg", [{"results": {"a": "DONE", "b": "DONE", "c": "SAYS DONE"}}])
+        self.assertEqual((v["win"], v["head"]), (True, "PixelShift is great."))
+
+    def test_two_locals_are_not_enough_to_celebrate(self):
+        v = appstate.verdict("PixelShift: small-jpg", [{"results": {"a": "DONE", "b": "DONE"}}])
+        self.assertEqual((v["win"], v["head"]), (False, "2 of 2 got it done."))
+
+    def test_a_plain_count_says_what_else_happened(self):
+        v = appstate.verdict("localhost-5173: sign-up", [{"results": {"a": "DONE", "b": "GAVE UP", "c": "GAVE UP", "d": "ASKED"}}])
+        self.assertEqual((v["win"], v["sub"]), (False, "25% · 2 gave up · 1 asked for help"))
+
+    def test_a_stopped_day_has_no_verdict(self):
+        self.assertIsNone(appstate.verdict("PixelShift: small-jpg", [{"results": {"a": "DONE", "b": "STOPPED"}}]))
+        self.assertIsNone(appstate.verdict("PixelShift: small-jpg", [{"results": {}}]))
+
+    def test_a_year_names_its_hardest_day(self):
+        days = [{"label": "Mon 2 Feb", "results": {"a": "DONE", "b": "DONE"}}, {"label": "Wed 1 Jul, heavy rain", "results": {"a": "DONE", "b": "GAVE UP"}}]
+        v = appstate.verdict("PixelShift: small-jpg", days)
+        self.assertEqual((v["win"], v["head"], v["note"]), (False, "3 of 4 local days done.", "Hardest day: Wed 1 Jul, heavy rain, 1 of 2 done."))
+        self.assertEqual(appstate.verdict("a.example: x", [{"results": {"a": "DONE", "b": "DONE"}}] * 2)["head"], "Your site is great all year.")
+
+
 class RowsTests(unittest.TestCase):
     def test_everyone_in_town_is_one_window_in_one_family(self):
         from town import records, session
