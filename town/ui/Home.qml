@@ -4,6 +4,7 @@ import QtQuick
 // local is looking at and what they think, the town below, and a strip and a feed beside it.
 Item {
     id: home
+    objectName: "town"
     signal setUp()
     readonly property var now: town.now
     readonly property bool day: now.open
@@ -41,6 +42,7 @@ Item {
     // The town celebrates a day that went well, once, when it ends; not a kept day opened later.
     readonly property bool won: !now.running && !now.kept && now.verdict.win
     onWonChanged: if (won) sky.celebrate()
+    function celebrate() { sky.celebrate() }
 
     function nameOf(id) {
         for (const f of town.families) for (const p of f.people) if (p.id === id) return p.name
@@ -110,6 +112,7 @@ Item {
                       : ""
             }
             T { y: 14; visible: !who.p; color: Theme.faint; text: "One window, one local." }
+            T { y: 14; anchors.right: parent.right; visible: !who.p && !home.day; color: Theme.faint; text: town.sceneToday.label }
         }
 
         Skyline {
@@ -123,6 +126,7 @@ Item {
             Behavior on height { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
             states: home.now.states
             only: home.only
+            scene: home.day ? home.now.scene : town.sceneToday
             onPicked: (id) => home.only = home.only === id ? "" : id
         }
 

@@ -77,13 +77,11 @@ class Town(unittest.TestCase):
         everyone = people.everyone()
         self.assertEqual([l.number for l in everyone], list(range(1, len(everyone) + 1)))
 
-    def test_every_local_has_a_profile_a_lens_and_a_workplace(self):
-        townview = (ROOT / "dashboard" / "townview.js").read_text(encoding="utf-8")
+    def test_every_local_has_a_profile_and_a_lens(self):
         for l in people.everyone():
             group = Path(l.profile).stem
             self.assertTrue((ROOT / l.profile).exists(), l.profile)
             self.assertIsNotNone(expertise.lens_for(l), group)
-            self.assertIn(f"'{group}':", townview, f"{group} has no workplace in the town")
 
     def test_every_lens_cites_facts_that_exist(self):
         refs = {r["id"] for r in expertise.data()["reference"]}

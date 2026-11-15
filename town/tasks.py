@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
 TASKS = ROOT / "tasks"
-MINE = TASKS / "mine"  # sites you add from the dashboard; git ignores this folder
+MINE = TASKS / "mine"  # sites you add from the window; git ignores this folder
 
 
 @dataclass
@@ -101,7 +101,7 @@ def slug(text, fallback):
 
 
 def add_site(url, goal, check, value, files):
-    """Saves a site from the dashboard as a task card in tasks/mine/ and returns its ref."""
+    """Saves a site from the window as a task card in tasks/mine/ and returns its ref."""
     parsed = urlparse(url)
     if parsed.scheme not in ("http", "https") or not parsed.netloc:
         raise ValueError("The address must start with http:// or https://")

@@ -1,4 +1,4 @@
-"""The feed: what each local reports, printed live, saved for replay and sent to the dashboard."""
+"""The feed: what each local reports, printed live, saved for replay and sent to the window."""
 import json
 import time
 

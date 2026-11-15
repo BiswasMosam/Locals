@@ -9,7 +9,7 @@ runs/
 study/interviews/
 study/observed/
 
-# Your own sites and uploads from the dashboard
+# Your own sites and uploads from the window
 tasks/mine/
 
 # Datasets downloaded for the benchmarks (python -m town aitw)

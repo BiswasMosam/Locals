@@ -36,8 +36,7 @@ def town_info(session):
     calendar = {"years": years, "picks": year.picks(years[-1]) if years else [],
                 "sample": [d.isoformat() for d in year.sample(years[-1])] if years else [],
                 "default": (now if now.year in years else date(years[-1], 2, 10)).isoformat() if years else None}
-    return {"groups": list(groups.values()), "tasks": tasks.catalogue(), "busy": session.busy(), "day": session.day,
-            "calendar": calendar,
+    return {"groups": list(groups.values()), "tasks": tasks.catalogue(), "calendar": calendar,
             "machine": {"gpu": machine.gpu(), "memory": machine.memory(), "model": machine.model(), "pace": machine.pace(),
                         "android": machine.android()}}
 

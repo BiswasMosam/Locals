@@ -196,6 +196,12 @@ def verdict(task, days):
             "note": "Send at least three locals for the town to celebrate." if pct >= 90 else ""}
 
 
+def scene_view(scene):
+    """What a day does to the look of the town (year.Today.scene), with every key there for the page."""
+    scene = scene or {}
+    return {key: scene.get(key) or "" for key in ("rain", "lights", "pandemic", "label")}
+
+
 class Live:
     """The day on the page: the one that is running, or a kept one that was opened. Built from the entries
     a session sends, which are the same entries a kept day has in its feed files."""
@@ -205,7 +211,7 @@ class Live:
         self.running = self.stopping = self.kept = False
         self.task = self.today = self.error = self.day = ""
         self.index, self.locals, self.states, self.moments = [1, 1], [], {}, []
-        self.who, self.began, self.verdict = "", 0.0, None
+        self.who, self.began, self.verdict, self.scene = "", 0.0, None, {}
 
     def clear(self):
         self.__init__(self.names, self.patience)
@@ -230,6 +236,7 @@ class Live:
         self.task, self.today, self.index = e.get("task", ""), e.get("today", ""), e.get("index") or [1, 1]
         self.day, self.locals = e.get("day", ""), list(e.get("locals", []))
         self.states, self.moments, self.who = {i: "out" for i in self.locals}, [], ""
+        self.scene = e.get("scene") or {}
 
     def _entry(self, e):
         who, kind = e["local"], e.get("type")
@@ -299,6 +306,7 @@ class Live:
         return {"running": self.running, "stopping": self.stopping, "kept": self.kept, "open": bool(self.locals),
                 "day": self.day, "task": self.task, "today": self.today, "index": self.index, "locals": self.locals,
                 "states": dict(self.states), "who": self.who, "error": self.error, "began": self.began,
+                "scene": scene_view(self.scene),
                 "step": last["step"] if last and last["kind"] == "STEP" and last["local"] == self.who else 0,
                 "line": (last["title"] if last["kind"] == "STEP" else f"{last['title']}. {last['text']}") if last else "",
                 "thought": last["text"] if last and last["kind"] == "STEP" else "",

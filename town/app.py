@@ -195,6 +195,14 @@ class Town(QObject):
         self.refresh()  # a new site or app is now a saved task
         return ""
 
+    @Property("QVariantMap", notify=changed)
+    def sceneToday(self):
+        """What today's own date does to the town, for when no day is on the page: its rain, its festival."""
+        try:
+            return appstate.scene_view(year.today(date.today()).scene())
+        except ValueError:  # no calendar for this year
+            return appstate.scene_view(None)
+
     @Property(str, notify=changed)
     def modelProblem(self):
         """Why nothing can be started on this machine right now, or nothing."""
@@ -357,7 +365,8 @@ class Town(QObject):
         finish: carry it through to everyone done, to see the town celebrate."""
         who = ["rohit", "sunil", "neha"]
         day = {"day": "2026-01-01_000000", "task": "PixelShift: small-jpg", "ref": "pixelshift:small-jpg", "locals": who,
-               "index": [1, 1], "today": "Wed 1 Jul 2026 · heavy rain"}
+               "index": [1, 1], "today": "Wed 1 Jul 2026 · heavy rain",
+               "scene": {"rain": "" if finish else "heavy", "lights": "diwali" if finish else None, "pandemic": None}}
         script = [{"type": "year", "phase": "start", "task": day["task"]}, {"type": "day", "phase": "start", **day},
                   {"type": "event", "local": "rohit", "kind": "START", "says": "Junior advocate, on a phone"},
                   {"type": "step", "local": "rohit", "step": 1, "line": 'tap [D] "IMAGE CONVERTER"', "thought": "Need to upload photo.png first."},

@@ -6,6 +6,7 @@ Item {
     property var states: ({})        // local id -> where they are in the day
     property string only: ""         // the one local the feed is narrowed to, if any
     property var looking: null       // the local under the pointer
+    property var scene: ({ rain: "", lights: "", pandemic: "" })   // what the day does to the town
     signal picked(string id)
 
     readonly property int count: Math.max(1, town.families.length)
@@ -20,10 +21,13 @@ Item {
     readonly property real gap: Math.max(2, Math.round(unit * 0.36))
     readonly property real win: Math.round(unit)
     readonly property real tall: Math.round(unit * 1.26)
+    readonly property real foot: 44  // under the buildings: the street, then each family's name
+    readonly property real wide: cols * (win + gap) + gap
+    function high(f) { return Math.ceil(f.people.length / cols) * (tall + gap) + gap }
 
     // When the app is great, the lights of the whole town come on in a wave, left to right, twice.
     property real wave: -1
-    function celebrate() { party.restart() }
+    function celebrate() { party.restart(); above.celebrate() }
     SequentialAnimation {
         id: party
         loops: 2
@@ -45,8 +49,8 @@ Item {
                 spacing: 10
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width: sky.cols * (sky.win + sky.gap) + sky.gap
-                    height: Math.ceil(building.modelData.people.length / sky.cols) * (sky.tall + sky.gap) + sky.gap
+                    width: sky.wide
+                    height: sky.high(building.modelData)
                     color: Theme.panel
                     Repeater {
                         model: building.modelData.people
@@ -86,6 +90,7 @@ Item {
                 }
                 Column {
                     anchors.horizontalCenter: parent.horizontalCenter
+                    height: sky.foot - 10
                     spacing: 1
                     T { anchors.horizontalCenter: parent.horizontalCenter; width: Math.min(implicitWidth, sky.slot - 4)
                         text: building.modelData.family; font.pixelSize: sky.slot < 76 ? 10 : 12; color: Theme.dim }
@@ -94,5 +99,13 @@ Item {
                 }
             }
         }
+    }
+
+    Sky {
+        id: above
+        anchors.fill: parent
+        scene: sky.scene
+        ground: sky.height - sky.foot
+        roofs: town.families.map((f, i) => ({ x: i * sky.slot + (sky.slot - sky.wide) / 2, y: sky.height - sky.foot - sky.high(f), w: sky.wide }))
     }
 }

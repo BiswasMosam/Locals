@@ -21,10 +21,10 @@
 ## The town
 
 <p align="center">
-  <img src="brand/dashboard-town.png" alt="The Locals dashboard during a real day. Pixel art town at night: Sunil stands at the Chinese stall with a thinking bubble and his phone lit, Kavita waits at the court, Neha at the law firm. The feed on the right shows his first step." width="100%">
+  <img src="brand/window-town.png" alt="The Locals window with a real day on it: Ganesh Chaturthi, festival lights strung from roof to roof over a skyline where every window is a local. The screen Rohit saw is on the left, and the feed on the right shows Sunil giving up after three steps and Rohit getting it done in five." width="100%">
 </p>
 
-A hundred and fourteen locals live here: cooks, shop owners, lawyers, photographers, engineers, nurses, teachers, students and more. One at a time they try your website or Android app, thinking out loud, while the feed on the right shows every step and the exact screen they saw.
+A hundred and fourteen locals live here: cooks, shop owners, lawyers, photographers, engineers, nurses, teachers, students and more. One at a time they try your website or Android app, thinking out loud, while the window shows every step and the exact screen they saw.
 
 ## A real run
 
@@ -57,7 +57,7 @@ Signals to check with real users, not verdicts.
 ## A year in the town
 
 <p align="center">
-  <img src="brand/dashboard-monsoon.png" alt="A real day in the dashboard: Wednesday 1 July 2026, heavy rain falling over the pixel city. The feed shows Sunil's day: wet hands and drops on the screen, roads flooded, trains stopped." width="100%">
+  <img src="brand/window-monsoon.png" alt="A real day in the window: Wednesday 1 July 2026, heavy rain falling over the town. One of three got it done. The feed shows Shreya's day: wet hands and drops on the screen, roads flooded, trains stopped." width="100%">
 </p>
 
 Pick any date and the day changes things: festivals, exams, tax deadlines, monsoon rain, even a lockdown. Festivals change the city, never a person's faith.
@@ -75,10 +75,16 @@ Give the town your slides, script or recording, pick a room (a class, an intervi
 
 Told again with a story and a demonstration, nobody drifted and all eight remembered the point. Then the room marks you, like a professor or an interview panel would.
 
+<p align="center">
+  <img src="brand/window-talk.png" alt="A real talk given to a college class: a row of windows for each of five listeners, one window for every slide, lit while they were with the speaker and dark once they were gone. By the fourth slide three have their phones out. The professor's marks, 10.2 of 20, are on the right with her reasons." width="100%">
+</p>
+
+One window for every listener in every part: lit while they are with you, dark once they are gone.
+
 ## When it works
 
 <p align="center">
-  <img src="brand/dashboard-celebration.png" alt="End of a real day: a band reads PIXELSHIFT IS GREAT, 3 of 3 locals got it done, 100%. Fireworks burst over the skyline and confetti falls while three locals with green ticks stand outside their workplaces." width="100%">
+  <img src="brand/window-celebration.png" alt="The end of a real day: the headline reads PixelShift is great, 3 of 3 locals got it done, 100%. The lights of the whole town come on and a firework bursts over the skyline." width="100%">
 </p>
 
 When nine in ten get it done, the town celebrates your app by name.
@@ -98,7 +104,7 @@ python -m venv .venv
 .venv/Scripts/pip install -r requirements.txt   # macOS or Linux: .venv/bin/pip
 ollama pull qwen3:4b-instruct
 
-python -m town dashboard
+python -m town
 ```
 
 Everything else: `python -m town --help`.

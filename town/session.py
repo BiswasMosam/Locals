@@ -2,10 +2,10 @@
 
     python -m town.session        # the worker; what a Session starts, not something to type
 
-The day used to run on a thread inside the dashboard's web server. Stop was a flag the day read between
+The day used to run on a thread inside the web server of a dashboard in the browser, since removed. Stop was a flag the day read between
 steps, so a model call that hung held the day for up to four minutes, and nothing could end the Chrome and
-adb children a run leaves behind. Now the day is a worker process. Whoever shows it (the dashboard today,
-the window next) holds a Session, which starts the worker, passes on what it reports, and can end it.
+adb children a run leaves behind. Now the day is a worker process. Whoever shows it (the window, town/app.py)
+holds a Session, which starts the worker, passes on what it reports, and can end it.
 
 The worker reports on its standard output, one JSON object per line: the same entries the feed has always
 written (town/feed.py) and the day and year markers from town/day.py. Everything the engine prints for a
@@ -47,7 +47,7 @@ OUTCOMES = {"DONE", "SAYS DONE", "WRONG DONE", "GAVE UP", "ASKED", "STOPPED", "E
 APK = re.compile(r"runs/_uploads/[0-9a-f]{8}/[A-Za-z0-9._-]+\.apk")
 KEPT_FILE = re.compile(r"runs/_uploads/[0-9a-f]{8}/[A-Za-z0-9._-]+")
 # The worker keeps a console of its own with no window, and its children inherit it: nothing flashes up
-# behind a window, and Ctrl+C in the terminal that opened the dashboard reaches the dashboard only.
+# behind a window, and Ctrl+C in the terminal that opened the window reaches the window only.
 NO_WINDOW = 0x08000000 if sys.platform == "win32" else 0
 
 

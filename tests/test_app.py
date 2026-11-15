@@ -52,7 +52,7 @@ class WindowTests(unittest.TestCase):
                      "town.calendar.sample.length", "town.today('2026-07-01', '').label", "town.today('1800-01-01', '').ok",
                      "town.estimate([10, 12], 1, 'saved', false).time", "town.keepFile('no-such-file.apk').error",
                      "town.startDay({locals: []})", "town.compare('no-such-day', 'nor-this')", "town.comparison.rows",
-                     "town.endCompare()", "town.rooms[0].seats[0].name", "town.talks.length", "town.report.all.pct",
+                     "town.endCompare()", "town.sceneToday.rain", "town.now.scene.rain", "town.rooms[0].seats[0].name", "town.talks.length", "town.report.all.pct",
                      "town.report.by_task.length", "town.modelProblem.length", "town.busyWith.length",
                      "town.talk.listeners[0].cells[0].tone", "town.talk.marks.graders.length", "town.talk.parts[0].title",
                      "town.startTalk({room: 'class', files: []})", "town.openTalk('no-such-talk')"):

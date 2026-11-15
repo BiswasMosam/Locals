@@ -1,4 +1,4 @@
-"""python -m town dashboard | people | run <app:task> <local ...|all> | watch <app:task> --golden|--for <local> | calibrate <local>
+"""python -m town | people | run <app:task> <local ...|all> | watch <app:task> --golden|--for <local> | calibrate <local>
 | rooms [--check] | room <room> <files> | grade <room> <files> | aitw <local ...> | guesses"""
 import argparse
 import re
@@ -21,9 +21,6 @@ def main():
     win.add_argument("--size", help="open at this size, like 1360x860, for checking")
     win.add_argument("--finish", action="store_true", help="with --demo: carry the day through to everyone done")
     win.add_argument("--open", metavar="DAY", help="open with this kept day on the page, by its folder in runs/; or a kept talk, by its folder in runs/rooms/")
-    board = sub.add_parser("dashboard", help="open the town in your browser")
-    board.add_argument("--port", type=int, default=7300)
-    board.add_argument("--no-open", action="store_true", help="do not open a browser tab")
     sub.add_parser("people", help="list everyone who lives in the town")
     run = sub.add_parser("run", help="send locals to do a task in an app")
     run.add_argument("task", help="app:task, for example pixelshift:small-jpg")
@@ -84,10 +81,6 @@ def main():
         size = tuple(int(v) for v in args.size.split("x")) if getattr(args, "size", None) else None
         return window(getattr(args, "demo", False), getattr(args, "snapshot", None), size,
                       getattr(args, "open", None), getattr(args, "finish", False))
-
-    if args.cmd == "dashboard":
-        from .dashboard import serve
-        return serve(args.port, not args.no_open)
 
     if args.cmd == "people":
         for l in people.everyone():

@@ -242,6 +242,25 @@ class KeepTests(unittest.TestCase):
             session.keep_file(runs / "not-there.apk", runs)
 
 
+class SceneTests(unittest.TestCase):
+    """The town in the window looks like the day: its rain, its festival, a lockdown. A day kept before days carried
+    a scene, and the town with no day on it in a year with no calendar, must still give the page every key."""
+
+    def test_the_day_on_the_page_carries_its_weather_and_its_festival(self):
+        live = appstate.Live()
+        live.hear({"type": "day", "phase": "start", "day": "2026-09-14_000000", "task": "T", "locals": ["sunil"],
+                   "scene": {"date": "2026-09-14", "label": "Mon 14 Sep 2026", "rain": "heavy", "lights": "ganesh", "pandemic": None, "season": "monsoon"}})
+        self.assertEqual(live.view()["scene"], {"rain": "heavy", "lights": "ganesh", "pandemic": "", "label": "Mon 14 Sep 2026"})
+        live.clear()
+        self.assertEqual(live.view()["scene"], {"rain": "", "lights": "", "pandemic": "", "label": ""})
+
+    def test_a_day_kept_without_a_scene_is_a_clear_night(self):
+        live = appstate.Live()
+        live.load({"day": "2026-11-03_022611", "task": "T", "locals": ["rohit"], "results": {"rohit": "DONE"}}, [])
+        self.assertEqual(live.view()["scene"]["rain"], "")
+        self.assertEqual(appstate.scene_view(None), {"rain": "", "lights": "", "pandemic": "", "label": ""})
+
+
 class RowsTests(unittest.TestCase):
     def test_the_roster_is_everyone_once_by_family_and_job(self):
         from town import records, session
