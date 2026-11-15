@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Locals</title>
+<meta name="description" content="A working copy of the Locals window with real data: set up a day, watch locals try an app, read kept talks, then install the real one.">
+<meta name="theme-color" content="#0c0e13">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Locals">
+<meta property="og:description" content="A small town of AI users that lives on your own machine. Try the window here, then install it.">
+<meta property="og:url" content="https://mosambiswas.com/Locals/">
+<meta property="og:image" content="https://mosambiswas.com/Locals/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230c0e13'/%3E%3Crect x='17' y='11' width='6' height='42' fill='%23ffc94d'/%3E%3Crect x='17' y='47' width='30' height='6' fill='%23ffc94d'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="window.css">
+</head>
+<body>
+<div class="win">
+  <nav class="rail" id="rail" aria-label="Pages"></nav>
+  <main class="stage">
+    <section class="page on" id="p-town" aria-label="Town"></section>
+    <section class="page" id="p-setup" aria-label="Set up"></section>
+    <section class="page" id="p-days" aria-label="Days"></section>
+    <section class="page" id="p-rooms" aria-label="Rooms"></section>
+    <section class="page" id="p-report" aria-label="Report"></section>
+    <section class="page" id="p-install" aria-label="Install"></section>
+  </main>
+  <div class="strip" id="strip" aria-live="polite"></div>
+</div>
+<noscript><p style="padding:40px">This is a working copy of the Locals window and needs JavaScript. The source is at github.com/BiswasMosam/Locals.</p></noscript>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="data.js"></script>
+<script src="town.js"></script>
+<script src="window.js"></script>
+</body>
+</html>
