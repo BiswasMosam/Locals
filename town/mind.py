@@ -3,7 +3,9 @@ import json
 import os
 import urllib.request
 
-OLLAMA = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+# The number, not "localhost": on Windows the name tries IPv6 first and stalls about two seconds before every request
+# (measured here, 15 Nov 2026: 2,060 ms against 20 to 50 ms), and a step is two or more requests.
+OLLAMA = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
 MODEL = os.environ.get("LOCALS_MODEL", "qwen3:4b-instruct")
 THINK = os.environ.get("LOCALS_THINK") == "1"  # models that reason before answering are far slower; off unless asked for
 STAGES = int(os.environ.get("LOCALS_STAGES", "2"))  # first what they notice, then what they do with it; 1: the whole screen at once

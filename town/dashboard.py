@@ -5,118 +5,22 @@ import re
 import secrets
 import threading
 import webbrowser
-from datetime import date, datetime
+from datetime import date
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from . import day, machine, mind, people, tasks, year
+from . import records, session, year
 from .people import ROOT
+from .session import RUNS
 
 WEB = ROOT / "dashboard"
-RUNS = ROOT / "runs"
 UPLOADS = RUNS / "_uploads"
 FONTS = ROOT / "brand" / "fonts"
 DAY_ID = re.compile(r"\d{4}-\d{2}-\d{2}_\d{6}")
 
 
-class Town:
-    """The one day that can run at a time, and everyone watching it."""
-
-    def __init__(self):
-        self.lock = threading.Lock()
-        self.watchers, self.log = [], []
-        self.thread, self.stop, self.day = None, threading.Event(), None
-
-    def emit(self, entry):
-        with self.lock:
-            self.log.append(entry)
-            for q in self.watchers:
-                q.put(entry)
-
-    def watch(self):
-        q = queue.Queue()
-        with self.lock:
-            self.watchers.append(q)
-            return q, list(self.log)
-
-    def unwatch(self, q):
-        with self.lock:
-            if q in self.watchers:
-                self.watchers.remove(q)
-
-    def busy(self):
-        return self.thread is not None and self.thread.is_alive()
-
-    def start(self, task, who, watch, days, pandemic, take=True):
-        with self.lock:
-            self.log = []
-        self.stop.clear()
-        self.day = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-        self.thread = threading.Thread(target=day.run_year, args=(task, who, days, RUNS, watch, 7, self.emit, self.stop, pandemic, take),
-                                       daemon=True)
-        self.thread.start()
-
-
-TOWN = Town()
-
-
-def profile_title(profile):
-    path = ROOT / profile
-    first = path.read_text(encoding="utf-8").splitlines()[0] if path.exists() else ""
-    return first.lstrip("# ").strip() or Path(profile).stem
-
-
-def family(profile):
-    """The family a job belongs to: its folder in study/profiles, or ring one for the jobs our apps already serve."""
-    folder = Path(profile).parent.name
-    return "Ring one" if folder == "profiles" else folder.capitalize()
-
-
-def town_info():
-    groups = {}
-    for l in people.everyone():
-        key = Path(l.profile).stem
-        group = groups.setdefault(key, {"key": key, "label": profile_title(l.profile), "profile": l.profile,
-                                        "family": family(l.profile), "people": []})
-        group["people"].append({"id": l.id, "number": l.number, "name": l.name, "age": l.age, "job": l.job,
-                                "status": l.status, "situation": l.situation, "habits": l.habits, "limits": vars(l.limits)})
-    years = year.years()
-    now = date.today()
-    calendar = {"years": years, "picks": year.picks(years[-1]) if years else [],
-                "sample": [d.isoformat() for d in year.sample(years[-1])] if years else [],
-                "default": (now if now.year in years else date(years[-1], 2, 10)).isoformat() if years else None}
-    return {"groups": list(groups.values()), "tasks": tasks.catalogue(), "busy": TOWN.busy(), "day": TOWN.day,
-            "calendar": calendar,
-            "machine": {"gpu": machine.gpu(), "memory": machine.memory(), "model": machine.model(), "pace": machine.pace(),
-                        "android": machine.android()}}
-
-
-def parse_days(values):
-    days = sorted({date.fromisoformat(v) for v in values})
-    if not 1 <= len(days) <= 12:
-        raise ValueError("Choose between one and twelve days.")
-    for d in days:
-        year.data(d.year)  # raises if there is no calendar for that year
-    return days
-
-
-def days():
-    out = []
-    for meta in sorted(RUNS.glob("*/day.json"), reverse=True)[:40]:
-        out.append(json.loads(meta.read_text(encoding="utf-8")))
-    return out
-
-
-def day_log(day_id):
-    folder = RUNS / day_id
-    meta = json.loads((folder / "day.json").read_text(encoding="utf-8"))
-    entries = []
-    for local_id in meta["locals"]:
-        feed = folder / local_id / "feed.jsonl"
-        if feed.exists():
-            entries += [e for e in map(json.loads, feed.open(encoding="utf-8")) if "type" in e]
-    return {"meta": meta, "entries": entries}
+SESSION = session.Session()
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -149,14 +53,14 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = urlparse(self.path).path
         if path == "/api/town":
-            return self.send_json(town_info())
+            return self.send_json(records.town_info(SESSION))
         if path == "/api/days":
-            return self.send_json(days())
+            return self.send_json(records.days())
         if path.startswith("/api/days/"):
             day_id = path.rsplit("/", 1)[1]
             if not DAY_ID.fullmatch(day_id) or not (RUNS / day_id / "day.json").exists():
                 return self.send_error(404)
-            return self.send_json(day_log(day_id))
+            return self.send_json(records.day_log(day_id))
         if path == "/api/today":
             query = parse_qs(urlparse(self.path).query)
             try:
@@ -177,7 +81,7 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("Content-Type", "text/event-stream")
         self.send_header("Cache-Control", "no-cache")
         self.end_headers()
-        q, backlog = TOWN.watch()
+        q, backlog = SESSION.watch()
         try:
             for entry in backlog:
                 self.wfile.write(f"data: {json.dumps(entry)}\n\n".encode())
@@ -192,16 +96,21 @@ class Handler(SimpleHTTPRequestHandler):
         except OSError:
             pass
         finally:
-            TOWN.unwatch(q)
+            SESSION.unwatch(q)
 
     def do_POST(self):
         parsed = urlparse(self.path)
+        # A browser names the page a request came from. Without this, any site open in another tab could
+        # start a day here and send the locals to an address of its choosing.
+        origin = self.headers.get("Origin")
+        if origin and urlparse(origin).netloc != self.headers.get("Host"):
+            return self.send_error(403)
         length = int(self.headers.get("Content-Length") or 0)
         if parsed.path == "/api/files":
             return self.upload(parse_qs(parsed.query).get("name", ["file"])[0], self.rfile.read(length))
         body = json.loads(self.rfile.read(length) or b"{}")
         if parsed.path == "/api/stop":
-            TOWN.stop.set()
+            SESSION.stop()
             return self.send_json({"ok": True})
         if parsed.path == "/api/run":
             return self.run_day(body)
@@ -215,28 +124,16 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_json({"name": name, "path": (folder / name).relative_to(ROOT).as_posix(), "size": len(data)})
 
     def run_day(self, body):
-        if TOWN.busy():
+        if SESSION.busy():
             return self.send_json({"error": "A day is already running."}, 409)
-        ids = [i for i in body.get("locals", []) if re.fullmatch(r"[a-z0-9_-]+", i) and (people.PEOPLE / f"{i}.toml").exists()]
-        if not ids:
-            return self.send_json({"error": "Choose at least one local."}, 400)
         try:
-            site, app = body.get("site"), body.get("app")
-            if site:
-                ref = tasks.add_site(site["url"], site["goal"], site["check"], site.get("value", ""), site.get("files", []))
-            elif app:
-                if not re.fullmatch(r"runs/_uploads/[0-9a-f]{8}/[A-Za-z0-9._-]+\.apk", app.get("apk", "")):
-                    raise ValueError("Drop the app's APK file first.")
-                ref = tasks.add_app(app["apk"], app["goal"], app["check"], app.get("value", ""), app.get("files", []))
-            else:
-                ref = body["task"]
-            task = tasks.load(ref)
-            days = parse_days(body.get("dates") or [date.today().isoformat()])
-        except (ValueError, KeyError, SystemExit) as e:
+            spec = session.plan(body)
+            SESSION.start(spec)
+        except session.Busy as e:
+            return self.send_json({"error": str(e)}, 409)
+        except ValueError as e:
             return self.send_json({"error": str(e)}, 400)
-        pandemic = body.get("pandemic") if body.get("pandemic") in year.PANDEMIC else None
-        TOWN.start(task, [people.load(i) for i in ids], bool(body.get("watch")), days, pandemic, body.get("take", True) is not False)
-        self.send_json({"ok": True, "ref": ref})
+        self.send_json({"ok": True, "ref": spec["ref"]})
 
 
 def serve(port=7300, open_browser=True):
@@ -250,5 +147,5 @@ def serve(port=7300, open_browser=True):
     except KeyboardInterrupt:
         pass
     finally:
-        TOWN.stop.set()
+        SESSION.close()
         server.server_close()
