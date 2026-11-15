@@ -31,7 +31,7 @@ Item {
     readonly property var when: wholeYear ? ({ ok: true, label: dates.length + " days, one after another, from January to December." })
                                           : town.today(day, pandemic)
     readonly property var cost: town.estimate(going.map(p => p.patience), dates.length, kind, !!apk)
-    readonly property string blocked: town.busy ? "A day is already running." : !when.ok ? when.label : cost.problem
+    readonly property string blocked: town.busy ? town.busyWith : !when.ok ? when.label : cost.problem
 
     function setCount(key, n, most) {
         const next = Object.assign({}, counts)

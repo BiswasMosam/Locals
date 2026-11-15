@@ -20,7 +20,7 @@ def main():
     win.add_argument("--snapshot", help="offscreen: save each page as a PNG in this folder, then quit")
     win.add_argument("--size", help="open at this size, like 1360x860, for checking")
     win.add_argument("--finish", action="store_true", help="with --demo: carry the day through to everyone done")
-    win.add_argument("--open", metavar="DAY", help="open with this kept day on the page, by its folder in runs/")
+    win.add_argument("--open", metavar="DAY", help="open with this kept day on the page, by its folder in runs/; or a kept talk, by its folder in runs/rooms/")
     board = sub.add_parser("dashboard", help="open the town in your browser")
     board.add_argument("--port", type=int, default=7300)
     board.add_argument("--no-open", action="store_true", help="do not open a browser tab")

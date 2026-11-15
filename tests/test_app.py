@@ -40,7 +40,7 @@ class WindowTests(unittest.TestCase):
         self.assertTrue(engine.rootObjects(), warnings)
         window = engine.rootObjects()[0]
         town.demo()
-        self.assertEqual(app.pages_of(window), ["town", "setup", "days"])
+        self.assertEqual(app.pages_of(window), ["town", "setup", "days", "rooms", "report"])
         for page in app.pages_of(window):
             window.setProperty("page", page)
             qt.processEvents()
@@ -52,13 +52,26 @@ class WindowTests(unittest.TestCase):
                      "town.calendar.sample.length", "town.today('2026-07-01', '').label", "town.today('1800-01-01', '').ok",
                      "town.estimate([10, 12], 1, 'saved', false).time", "town.keepFile('no-such-file.apk').error",
                      "town.startDay({locals: []})", "town.compare('no-such-day', 'nor-this')", "town.comparison.rows",
-                     "town.endCompare()"):
+                     "town.endCompare()", "town.rooms[0].seats[0].name", "town.talks.length", "town.report.all.pct",
+                     "town.report.by_task.length", "town.modelProblem.length", "town.busyWith.length",
+                     "town.talk.listeners[0].cells[0].tone", "town.talk.marks.graders.length", "town.talk.parts[0].title",
+                     "town.startTalk({room: 'class', files: []})", "town.openTalk('no-such-talk')"):
             said = QQmlExpression(engine.rootContext(), window, call)
             said.evaluate()
             self.assertFalse(said.hasError(), f"{call}: {said.error().toString()}")
         qt.processEvents()
         self.assertEqual(warnings, [])
         self.assertEqual(town.now["states"]["rohit"], "DONE")
+        # The talk half given, then given to the end: the rooms page draws both, and closing it draws the setup again.
+        self.assertEqual((town.talk["running"], len(town.talk["listeners"][0]["cells"])), (True, 4))
+        town.demo_talk(finish=True)
+        qt.processEvents()
+        self.assertEqual((town.talk["running"], town.talk["head"]), (False, "16 of 20."))
+        said = QQmlExpression(engine.rootContext(), window, "town.closeTalk()")
+        said.evaluate()
+        qt.processEvents()
+        self.assertFalse(town.talk["open"])
+        self.assertEqual(warnings, [])
         del engine
 
 

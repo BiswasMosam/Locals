@@ -18,8 +18,13 @@ Stop asks first, so a day that can end cleanly does, with every file written as 
 not gone when the grace runs out, it and everything it started are killed, and the Session writes down
 what the worker could not: the local who was at work is marked STOPPED, and the day is saved with the
 results it had, so a stopped day is still in the list of past days.
+
+A talk given to a room (town/room.py) runs the same way, as a spec of kind "talk": it calls the model for
+minutes on end, so it needs the same Stop. Its entries have the type "talk". A talk that is stopped keeps
+nothing: who remembered the point and the marks are asked at the end, and half a talk has neither.
 """
 import contextlib
+import importlib.util
 import json
 import os
 import queue
@@ -40,6 +45,7 @@ from .people import ROOT
 RUNS = ROOT / "runs"
 OUTCOMES = {"DONE", "SAYS DONE", "WRONG DONE", "GAVE UP", "ASKED", "STOPPED", "ERROR"}
 APK = re.compile(r"runs/_uploads/[0-9a-f]{8}/[A-Za-z0-9._-]+\.apk")
+KEPT_FILE = re.compile(r"runs/_uploads/[0-9a-f]{8}/[A-Za-z0-9._-]+")
 # The worker keeps a console of its own with no window, and its children inherit it: nothing flashes up
 # behind a window, and Ctrl+C in the terminal that opened the dashboard reaches the dashboard only.
 NO_WINDOW = 0x08000000 if sys.platform == "win32" else 0
@@ -109,6 +115,34 @@ def plan(body):
             "take": body.get("take", True) is not False, "seed": 7}
 
 
+def plan_talk(body):
+    """What somebody asked for on the rooms page, checked, as the spec a worker runs. Raises ValueError with a
+    sentence for the person when the talk cannot be given."""
+    from . import room as rooms, talk as talks
+    place = rooms.rooms().get(body.get("room"))
+    if place is None:
+        raise ValueError("Choose a room.")
+    files = [f for f in body.get("files") or [] if isinstance(f, str)]
+    if not files or any(not KEPT_FILE.fullmatch(f) or not (ROOT / f).is_file() for f in files):
+        raise ValueError("Drop the talk's files first: a deck, a script or a recording.")
+    kinds = [Path(f).suffix.lower() for f in files]
+    decks, speeches = sum(k in talks.DECK for k in kinds), sum(k in talks.AUDIO | talks.SCRIPT for k in kinds)
+    if decks + speeches != len(files) or decks > 1 or speeches > 1:
+        raise ValueError("Give a deck (.pdf or .pptx), a speech (.txt, .md or a recording like .m4a), or one of each.")
+    if any(k in talks.AUDIO for k in kinds) and importlib.util.find_spec("faster_whisper") is None:
+        raise ValueError("Reading a recording needs faster-whisper, which is not installed here. "
+                         "Give the script as a .txt file, or run: pip install faster-whisper")
+    try:
+        minutes = float(body.get("minutes") or 0)
+    except (TypeError, ValueError):
+        minutes = -1
+    if not 0 <= minutes <= 180:
+        raise ValueError("How long the talk runs is a number of minutes, like 10.")
+    words = lambda key: " ".join(str(body.get(key) or "").split())[:300]
+    return {"kind": "talk", "room": place["id"], "files": files, "minutes": minutes or None, "point": words("point"),
+            "about": words("about"), "grade": body.get("grade", True) is not False, "seed": 7}
+
+
 class Session:
     def __init__(self, runs=RUNS, command=None, grace=12.0):
         self.runs = Path(runs)
@@ -123,6 +157,7 @@ class Session:
     def _forget(self):
         self._open, self._results, self._at_work, self._shot = None, {}, None, None
         self._summary, self._task, self._last = [], "", None
+        self._kind, self._talk = "day", ""
 
     # ---------- watching ----------
 
@@ -155,6 +190,7 @@ class Session:
                 raise Busy("A day is already running.")
             self.running, self.stopping, self.error, self.log = True, False, None, []
             self._forget()
+            self._kind = spec.get("kind", "day")
         try:
             folder = self.runs / "_session"
             folder.mkdir(parents=True, exist_ok=True)
@@ -211,7 +247,7 @@ class Session:
                 continue  # not ours: something wrote to the worker's output that was not the engine
             if not isinstance(entry, dict):
                 continue
-            if entry.get("type") == "year" and entry.get("phase") == "end":
+            if entry.get("type") in ("year", "talk") and entry.get("phase") == "end":
                 # Held back until the worker has gone, so whoever hears that the day is over can start the next at once.
                 self._last = entry
                 break
@@ -244,6 +280,8 @@ class Session:
             self._open = None
             self._summary.append({"date": entry.get("date"), "label": entry.get("today"), "day": entry.get("day"),
                                   "results": entry.get("results", {})})
+        elif kind == "talk":
+            self._talk = entry.get("talk") or self._talk
         elif "local" in entry:
             self._shot = entry.get("shot")
             if kind == "event" and entry.get("kind") in OUTCOMES:
@@ -257,6 +295,11 @@ class Session:
         kind = "STOPPED" if self.stopping else "ERROR"
         if kind == "ERROR":
             self.error = f"The engine stopped by itself (exit {proc.returncode}). {self._last_words()}".strip()
+        if self._kind == "talk":
+            self._last = {"type": "talk", "phase": "end", "talk": self._talk, "stopped": self.stopping, "ended_at": time.time()}
+            if self.error:
+                self._last["error"] = self.error
+            return
         meta = self._open
         if meta is not None:
             folder, results = self.runs / meta["day"], dict(self._results)
@@ -297,12 +340,40 @@ class Session:
 
 def work(spec, send, stop):
     """Runs what a spec asks for, reporting through send, until it is over or stop is set."""
+    if spec.get("kind") == "talk":
+        return hear(spec, send, stop)
     from . import day
     task = tasks.load(spec["ref"])
     who = [people.load(i) for i in spec["locals"]]
     days = [date.fromisoformat(d) for d in spec["dates"]]
     return day.run_year(task, who, days, Path(spec["runs"]), spec.get("watch", False), spec.get("seed", 7), send, stop,
                         spec.get("pandemic"), spec.get("take", True))
+
+
+def hear(spec, send, stop):
+    """Gives the talk a spec asks for to its room, reporting through send. Nothing is written until it is all
+    over, marks included, so a talk that was stopped leaves nothing behind."""
+    from . import room as rooms, talk as talks
+    place = rooms.load(spec["room"])
+    files = [ROOT / f for f in spec["files"]]
+    out = Path(spec["runs"]) / "rooms" / f"{datetime.now():%Y-%m-%d_%H%M%S}_{place['id']}"
+    send({"type": "talk", "phase": "reading", "talk": out.name, "room": place["id"], "name": place["name"],
+          "files": [f.name for f in files]})
+    end = {"type": "talk", "phase": "end", "talk": out.name}
+    try:
+        talk = talks.load(files, spec.get("minutes"))
+        about, seed = spec.get("about", ""), spec.get("seed", 7)
+        result, listeners = rooms.listen(place, talk, about, spec.get("point", ""), seed, None, send, stop)
+        if spec.get("grade", True):
+            from .grade import grade
+            result["grade"] = grade(place, result, listeners, talk.recorded, about, seed, send, stop)
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "room.json").write_text(json.dumps(result, indent=1, ensure_ascii=False), encoding="utf-8")
+    except rooms.Stopped:
+        end["stopped"] = True
+    except SystemExit as e:  # how the engine says a file cannot be read, in a sentence meant for a person
+        end["error"] = str(e)
+    send({**end, "ended_at": time.time()})
 
 
 def gone(pid):

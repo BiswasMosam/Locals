@@ -9,7 +9,7 @@ Window {
     minimumWidth: 980
     minimumHeight: 620
 
-    readonly property var pages: ["town", "setup", "days"]
+    readonly property var pages: ["town", "setup", "days", "rooms", "report"]
     property string page: "town"
     property bool leaving: false
 
@@ -24,6 +24,8 @@ Window {
     Shortcut { sequence: "Ctrl+1"; onActivated: root.page = "town" }
     Shortcut { sequence: "Ctrl+2"; onActivated: root.page = "setup" }
     Shortcut { sequence: "Ctrl+3"; onActivated: root.page = "days" }
+    Shortcut { sequence: "Ctrl+4"; onActivated: root.page = "rooms" }
+    Shortcut { sequence: "Ctrl+5"; onActivated: root.page = "report" }
     Shortcut { sequence: "F5"; onActivated: town.refresh() }
     Shortcut { sequence: "F11"; onActivated: root.visibility = root.visibility === Window.FullScreen ? Window.Windowed : Window.FullScreen }
 
@@ -43,6 +45,10 @@ Window {
                Behavior on opacity { NumberAnimation { duration: 140 } } }
         Days { onOpened: root.page = "town"; anchors.fill: parent; opacity: root.page === "days" ? 1 : 0; visible: opacity > 0
                Behavior on opacity { NumberAnimation { duration: 140 } } }
+        Rooms { anchors.fill: parent; opacity: root.page === "rooms" ? 1 : 0; visible: opacity > 0
+                Behavior on opacity { NumberAnimation { duration: 140 } } }
+        Report { anchors.fill: parent; opacity: root.page === "report" ? 1 : 0; visible: opacity > 0
+                 Behavior on opacity { NumberAnimation { duration: 140 } } }
     }
 
     Strip {

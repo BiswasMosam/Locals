@@ -11,7 +11,9 @@ Rectangle {
     readonly property var places: [
         { name: "town", label: "Town", rows: ["...X...", "..XXX..", ".XXXXX.", "XXXXXXX", ".X...X.", ".X.X.X.", ".X.X.X."] },
         { name: "setup", label: "Set up", rows: [".X.....", "XXXXXXX", ".X.....", ".....X.", "XXXXXXX", ".....X.", "......."] },
-        { name: "days", label: "Days", rows: ["XXXXXXX", "X.....X", "XXXXXXX", "X.X.X.X", "XXXXXXX", "X.X.X.X", "XXXXXXX"] }
+        { name: "days", label: "Days", rows: ["XXXXXXX", "X.....X", "XXXXXXX", "X.X.X.X", "XXXXXXX", "X.X.X.X", "XXXXXXX"] },
+        { name: "rooms", label: "Rooms", rows: ["XXXXXXX", ".......", ".X.X.X.", ".......", "X.X.X.X", ".......", ".X.X.X."] },
+        { name: "report", label: "Report", rows: ["......X", "......X", "...X..X", "...X..X", "X..X..X", "X..X..X", "XXXXXXX"] }
     ]
 
     Pix {

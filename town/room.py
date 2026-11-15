@@ -174,6 +174,7 @@ class Listener:
     unknown: list = field(default_factory=list)   # the talk's terms they did not know
     missed: list = field(default_factory=list)    # those terms, part by part
     recall: dict = field(default_factory=dict)
+    inner: list = field(default_factory=list)     # what went through their head in each part, "" where nothing did
 
 
 def fields_of(local):
@@ -195,11 +196,15 @@ def seat(s, rng=None):
     return l
 
 
-def band(l, a=None, minute=99):
-    a = l.attention if a is None else a
-    low, lowest = LOW[l.role]
+def band_of(role, a, minute=99):
+    """The band an attention falls in, for someone in that role, that many minutes into the talk."""
+    low, lowest = LOW[role]
     return ("hooked" if a >= 80 else "with you" if a >= 50 else "drifting" if a >= 35 else low if a >= 20
-            else lowest if minute >= ASLEEP_AFTER or l.role == "grader" else low)
+            else lowest if minute >= ASLEEP_AFTER or role == "grader" else low)
+
+
+def band(l, a=None, minute=99):
+    return band_of(l.role, l.attention if a is None else a, minute)
 
 
 # ---------- What reaches them ----------
@@ -475,8 +480,19 @@ def spark(l, talk):
     return "".join("z" if band(l, a, (p.start + p.seconds) / 60) == "asleep" else bars[min(7, int(a / 12.5))] for a, p in zip(l.trail, talk.parts))
 
 
-def listen(room, talk, about="", point="", seed=7, out=None):
-    """Gives the talk to the room. Prints it as it happens and returns everything that happened."""
+class Stopped(Exception):
+    """The talk was stopped part way through."""
+
+
+def listen(room, talk, about="", point="", seed=7, out=None, send=None, stop=None):
+    """Gives the talk to the room. Prints it as it happens and returns everything that happened.
+    send: told each thing as it happens, for a window (town/session.py). stop: when set, the talk ends with Stopped."""
+    say = send or (lambda entry: None)
+
+    def carry_on():
+        if stop is not None and stop.is_set():
+            raise Stopped()
+
     rng = random.Random(seed)
     interview = room["id"] == "interview"
     listeners = [seat(s, rng if interview else None) for s in room["seats"]]
@@ -484,9 +500,22 @@ def listen(room, talk, about="", point="", seed=7, out=None):
     print(f"\n{BOLD}ROOM{RESET}  {room['name']} · {talk.source} · {len(talk.parts)} parts · {clock(talk.seconds)} · {talk.kind} · {mind.MODEL}")
     for n in talk.notes:
         print(f"      {DIM}{n}{RESET}")
+    say({"type": "talk", "phase": "start", "room": room["id"], "name": room["name"], "source": talk.source, "kind": talk.kind,
+         "seconds": talk.seconds, "notes": talk.notes, "measured": facts_m,
+         "parts": [{"id": p.id, "title": p.title, "start": p.start, "seconds": p.seconds} for p in talk.parts],
+         "listeners": [{"id": l.local.id, "name": l.local.name, "number": l.local.number, "job": l.local.job, "role": l.role,
+                        "why": l.why, "began": l.attention} for l in listeners]})
+    carry_on()
     point, stated = central(talk, point, seed)
+    say({"type": "talk", "phase": "point", "point": point, "stated": stated.id if stated else None})
     print(f"{BOLD}POINT{RESET} {point}" + (f"  {DIM}(said in so many words in {stated.id}){RESET}" if stated else f"  {DIM}(never said in so many words){RESET}"))
-    every = [analyse(p, seed + 100 + i) for i, p in enumerate(talk.parts)]
+    every = []
+    for i, p in enumerate(talk.parts):
+        carry_on()
+        every.append(analyse(p, seed + 100 + i))
+        say({"type": "talk", "phase": "study", "done": i + 1, "of": len(talk.parts)})
+    carry_on()
+    say({"type": "talk", "phase": "sorting"})
     kinds = classify(list(dict.fromkeys(t for f in every for t in f["terms"])), seed + 90)
     parts = []
     for i, part in enumerate(talk.parts):
@@ -495,8 +524,10 @@ def listen(room, talk, about="", point="", seed=7, out=None):
         end = (part.start + part.seconds) / 60
         late = bool(room.get("point_by")) and end > room["point_by"] and (stated is None or talk.parts.index(stated) > i)
         print(f"\n{BOLD}{part.id:<4}{clock(part.start):>6}{RESET}  {part.title[:70]}" + (f"  {DIM}{', '.join(m['kind'] for m in facts['moments'])}{RESET}" if facts["moments"] else ""))
+        say({"type": "talk", "phase": "part", "part": part.id, "index": i, "moments": facts["moments"]})
         gone = []
         for j, l in enumerate(listeners):
+            carry_on()
             before = band(l, minute=minute)
             took = {"part": part.id, **take_in(l, part, minute)}
             l.took.append(took)
@@ -531,6 +562,9 @@ def listen(room, talk, about="", point="", seed=7, out=None):
                 window = range(i, i + 1) if up else range(since, i + 1)
                 l.events.append({"kind": kind, "part": part.id, "why": why([l.causes[k] for k in window],
                                                                         [t for k in window for t in l.missed[k]], up)})
+            l.inner.append((reply or {}).get("inner", ""))
+            say({"type": "talk", "phase": "heard", "part": part.id, "local": l.local.id, "attention": l.trail[-1],
+                 "inner": l.inner[-1], "unknown": unknown, "events": [e for e in l.events if e["part"] == part.id]})
             if reply is None and not kind:
                 gone.append(l.local.name.upper())
                 continue
@@ -543,11 +577,15 @@ def listen(room, talk, about="", point="", seed=7, out=None):
             print(f"  {DIM}{'still asleep' if all(band(l, minute=end) == 'asleep' for l in listeners if l.local.name.upper() in gone) else 'not listening'}: {', '.join(gone)}{RESET}")
         parts.append({"id": part.id, "title": part.title, "start": part.start, "seconds": part.seconds, "words": part.words,
                       "slide_words": part.slide_words, "wpm": round(part.wpm), **facts})
+    say({"type": "talk", "phase": "recalling"})
     for j, l in enumerate(listeners):
+        carry_on()
         l.recall = remember(l, room, point, about, seed + 50 + j)
         if l.recall.get("question"):
             l.questions.append(l.recall["question"])
+        say({"type": "talk", "phase": "recall", "local": l.local.id, "recall": l.recall})
     marks = markers(listeners, talk, room)
+    say({"type": "talk", "phase": "room", "markers": marks})
     print(f"\n{BOLD}ATTENTION{RESET}  {DIM}one bar a part, z asleep{RESET}")
     depth = ["ASLEEP", "STOPPED LISTENING", "PHONE OUT", "CHECKING EMAIL", "DRIFTING"]
     for l in listeners:
@@ -572,7 +610,7 @@ def listen(room, talk, about="", point="", seed=7, out=None):
               "measured": facts_m, "parts": parts, "markers": marks,
               "listeners": [{"id": l.local.id, "name": l.local.name, "number": l.local.number, "job": l.local.job, "role": l.role,
                              "why": l.why, "trail": l.trail, "events": l.events, "thoughts": l.thoughts, "questions": l.questions,
-                             "took": l.took, "causes": l.causes, "unknown": list(dict.fromkeys(l.unknown)), "recall": l.recall,
+                             "took": l.took, "causes": l.causes, "inner": l.inner, "unknown": list(dict.fromkeys(l.unknown)), "recall": l.recall,
                              "decided": l.decided} for l in listeners]}
     if out:
         out.mkdir(parents=True, exist_ok=True)

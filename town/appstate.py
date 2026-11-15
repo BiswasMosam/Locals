@@ -306,6 +306,235 @@ class Live:
                 "verdict": self.verdict or {"win": False, "head": "", "sub": "", "note": ""}}
 
 
+# ---------- a talk in a room ----------
+
+LIT = {"hooked": "hooked", "with you": "with", "drifting": "drift", "phone out": "low", "checking email": "low"}
+DEPTH = ["ASLEEP", "STOPPED LISTENING", "PHONE OUT", "CHECKING EMAIL", "DRIFTING"]
+GOOD_MARKS = ("hooked till the end", "brought them back")
+BAD_MARKS = ("lost the room", "the room fell asleep", "over time")
+UNSEEN = "Not marked: it cannot be judged from a file."
+
+
+def clock(seconds):
+    return f"{int(seconds // 60)}:{int(seconds % 60):02d}"
+
+
+def _listener(l, parts):
+    """One listener as the page shows them: a window for every part heard, lit by how far they were with the talk."""
+    from .room import band_of
+    trail = l.get("trail") or []
+    ends = [(p["start"] + p["seconds"]) / 60 for p in parts]
+    bands = [band_of(l["role"], a, ends[i] if i < len(ends) else 99) for i, a in enumerate(trail)]
+    inner = l.get("inner")
+    if inner is None:  # talks kept before each thought was filed under its part
+        thoughts = l.get("thoughts") or []
+        inner = thoughts if len(thoughts) == len(trail) else [""] * len(trail)
+    low = sorted((e for e in l.get("events") or [] if e["kind"] in DEPTH), key=lambda e: DEPTH.index(e["kind"]))
+    note = (f"{low[0]['kind'].capitalize()} at {low[0]['part']}" + (f": {low[0]['why']}" if low[0].get("why") else "")
+            if low else "Never drifted" if trail else "")
+    recall = l.get("recall") or {}
+    began = l.get("began", trail[0] if trail else 0)
+    return {"id": l["id"], "name": l["name"], "number": int(l.get("number") or 0), "job": l.get("job", ""),
+            "grader": l["role"] == "grader", "why": l.get("why", ""),
+            "cells": [{"tone": LIT.get(b, "out"), "band": b, "attention": round(a), "inner": str(inner[i] if i < len(inner) else "")}
+                      for i, (a, b) in enumerate(zip(trail, bands))],
+            "attention": round(trail[-1] if trail else began), "band": bands[-1] if bands else band_of(l["role"], began, 0),
+            "note": note, "decided": l.get("decided") or "", "same": recall.get("same", ""),
+            "point": recall.get("point") or recall.get("why", ""), "question": recall.get("question", ""),
+            "unknown": ", ".join(list(dict.fromkeys(l.get("unknown") or []))[:8])}
+
+
+def _marks(grade):
+    """The graders' marks as the page shows them. Every key is always there."""
+    out = {"has": bool(grade), "rubric": "", "out_of": 0, "mean": "", "spread": "", "verdict": "", "graders": []}
+    if not grade or not grade.get("rubric"):
+        return out
+    from .grade import rubrics
+    rubric = rubrics().get(grade["rubric"]) or {"name": grade["rubric"], "criterion": []}
+    top = len(rubric["criterion"][0]["levels"]) if rubric["criterion"] else 0
+    out.update(rubric=rubric["name"], out_of=grade.get("out_of", 0), verdict=grade.get("verdict", ""))
+    if grade.get("mean") is not None:
+        out["mean"] = f"{grade['mean']:g}"
+        out["spread"] = f"from {grade['low']:g} to {grade['high']:g}" if grade.get("low") != grade.get("high") else ""
+    for g in grade.get("graders") or []:
+        lines = []
+        for c in rubric["criterion"]:
+            m = g["marks"].get(c["id"])
+            lines.append({"name": c["name"], "level": m["level"] if m else 0, "top": top,
+                          "reason": m["reason"] if m else UNSEEN if c["id"] in g.get("not marked", {}) else
+                          "" if g.get("timed_out") else "No mark held up against the evidence.",
+                          "about": ", ".join(m["about"]) if m else ""})
+        head = (f"{g['total']:g} of {grade.get('out_of', 0)}" if g.get("total") is not None
+                else "No answer in time" if g.get("timed_out") else "No mark held up")
+        out["graders"].append({"name": g["name"], "job": g.get("job", ""), "head": head, "verdict": g.get("verdict", ""),
+                               "overall": g.get("overall", ""), "marks": lines, "dropped": len(g.get("dropped") or []),
+                               "bonus": [f"{'+' if v > 0 else ''}{v:g} {k}" for k, v in g.get("markers") or []]})
+    return out
+
+
+def talk_row(r):
+    """One kept talk as the list shows it."""
+    talk_id, grade = r["talk"], r.get("grade") or {}
+    people = [_listener(l, r.get("parts") or []) for l in r.get("listeners") or []]
+    got = sum(p["same"] in ("yes", "partly") for p in people)
+    return {"talk": talk_id, "date": talk_id[:10], "time": f"{talk_id[11:13]}:{talk_id[13:15]}", "name": r.get("name", ""),
+            "source": r.get("source", ""), "clock": clock(r.get("seconds") or 0),
+            "mark": f"{grade['mean']:g} of {grade['out_of']}" if grade.get("mean") is not None else "",
+            "got": f"{got} of {len(people)} got the point",
+            "lit": [p["cells"][-1]["tone"] if p["cells"] else "out" for p in people]}
+
+
+class Hall:
+    """The talk on the page: the one being given, or a kept one that was opened. A talk that is running is built
+    up from what the session sends into the same shape a kept talk has in its room.json, so both are shown one way."""
+
+    def __init__(self):
+        self.clear()
+
+    def clear(self):
+        self.running = self.stopping = self.kept = self.stopped = False
+        self.stage = self.error = self.talk = ""
+        self.began, self.result, self.studied, self.at = 0.0, None, [0, 0], -1
+
+    def start(self):
+        """A talk was asked for; nothing has been heard from it yet."""
+        self.clear()
+        self.running, self.began, self.stage = True, time.time(), "reading"
+
+    def load(self, talk_id, result):
+        """A kept talk, opened to be read."""
+        self.clear()
+        self.kept, self.talk, self.result, self.stage = True, talk_id, result, "over"
+
+    def _who(self, local_id):
+        return next(l for l in self.result["listeners"] if l["id"] == local_id)
+
+    def hear(self, e):
+        phase, r = e.get("phase"), self.result
+        if phase == "reading":
+            self.running, self.stage, self.talk = True, "reading", e.get("talk", "")
+            self.began = self.began or time.time()
+            self.result = {"room": e["room"], "name": e["name"], "source": " + ".join(e.get("files", [])), "parts": [],
+                           "listeners": [], "markers": [], "notes": [], "point": "", "stated": None, "seconds": 0}
+        elif phase == "end":
+            self.running = self.stopping = False
+            self.stopped, self.error, self.stage = bool(e.get("stopped")), e.get("error", ""), "over"
+        elif r is None:
+            return
+        elif phase == "start":
+            r.update({k: e[k] for k in ("source", "kind", "seconds", "notes", "measured") if k in e})
+            r["parts"] = [{**p, "moments": []} for p in e["parts"]]
+            r["listeners"] = [{**l, "trail": [], "inner": [], "events": [], "unknown": [], "recall": {}, "decided": ""}
+                              for l in e["listeners"]]
+            self.stage = "studying"
+        elif phase == "point":
+            r["point"], r["stated"] = e.get("point", ""), e.get("stated")
+        elif phase == "study":
+            self.studied = [e["done"], e["of"]]
+        elif phase == "sorting":
+            self.stage = "sorting"
+        elif phase == "part":
+            self.stage, self.at = "listening", e["index"]
+            r["parts"][e["index"]]["moments"] = e.get("moments", [])
+        elif phase == "heard":
+            l = self._who(e["local"])
+            l["trail"].append(e["attention"])
+            l["inner"].append(e.get("inner", ""))
+            l["events"] += e.get("events", [])
+            l["unknown"] += e.get("unknown", [])
+            if any(x["kind"] == "MADE UP THEIR MIND" for x in e.get("events", [])):
+                l["decided"] = e["part"]
+        elif phase == "recalling":
+            self.stage = "asking"
+        elif phase == "recall":
+            self._who(e["local"])["recall"] = e["recall"]
+        elif phase == "room":
+            r["markers"] = e["markers"]
+        elif phase == "marking":
+            self.stage = "marking"
+            r["grade"] = {"rubric": e["rubric"], "out_of": e["out_of"], "graders": [], "expected": e.get("graders", 0)}
+        elif phase == "marks":
+            r["grade"]["graders"].append(e["grader"])
+        elif phase == "marked":
+            r["grade"] = e["grade"]
+
+    def view(self):
+        """Everything the rooms page reads. Every key is always there, with the same kind of value."""
+        r = self.result or {}
+        parts = r.get("parts") or []
+        people = [_listener(l, parts) for l in r.get("listeners") or []]
+        grade, n = r.get("grade") or {}, len(people)
+        marks = _marks(grade)
+        with_you = sum(p["band"] in ("hooked", "with you") for p in people)
+        got = sum(p["same"] in ("yes", "partly") for p in people)
+        stayed = sum(bool(p["cells"]) and min(c["attention"] for c in p["cells"]) >= 50 for p in people)
+        stated = r.get("stated")
+        head = sub = ""
+        if self.stopping:
+            head, sub = "Stopping the talk.", "What they are in the middle of is finished first."
+        elif self.running and self.stage == "reading":
+            head, sub = "Reading the talk.", r.get("source", "")
+        elif self.running and self.stage == "studying":
+            head = "Reading the talk."
+            sub = (f"{self.studied[0]} of {self.studied[1]} parts read for their terms, stories and questions."
+                   if self.studied[1] else "Finding its point.")
+        elif self.running and self.stage == "sorting":
+            head, sub = "Reading the talk.", "Sorting its terms by the field they belong to. This is the slow part."
+        elif self.running and self.stage == "listening":
+            head = f"{with_you} of {n} are with you."
+            sub = f"{parts[self.at]['id']} of {len(parts)}  ·  {parts[self.at]['title']}" if 0 <= self.at < len(parts) else ""
+        elif self.running and self.stage == "asking":
+            head, sub = "The talk is over.", "Each of them is asked what the point was."
+        elif self.running:
+            head = "The graders are marking."
+            sub = f"{len(grade.get('graders') or [])} of {grade.get('expected', 0)} done."
+        elif self.stopped:
+            head, sub = "The talk was stopped.", "Nothing of it was kept."
+        elif r:
+            if marks["mean"]:
+                head = f"{marks['mean']} of {marks['out_of']}."
+                sub = "  ·  ".join(x for x in (marks["verdict"], marks["spread"], f"{got} of {n} could say your point") if x)
+            elif marks["rubric"]:
+                head, sub = "No mark held up.", f"{got} of {n} could say your point."
+            else:
+                head, sub = f"{got} of {n} could say your point.", f"{stayed} of {n} stayed with you all the way."
+        return {"open": bool(r), "running": self.running, "stopping": self.stopping, "kept": self.kept, "stopped": self.stopped,
+                "stage": self.stage, "talk": self.talk, "began": self.began, "at": self.at,
+                "room": r.get("room", ""), "name": r.get("name", ""), "source": r.get("source", ""), "kind": r.get("kind", ""),
+                "clock": clock(r.get("seconds") or 0), "head": head, "sub": sub, "point": r.get("point", ""),
+                "stated": (f"Said in so many words in {stated}." if stated else "Never said in so many words.") if r.get("point") else "",
+                "notes": list(r.get("notes") or []), "measured": [t for _, t in r.get("measured") or []],
+                "parts": [{"id": p["id"], "title": p["title"], "at": clock(p["start"]),
+                           "moments": ", ".join(dict.fromkeys(m["kind"] for m in p.get("moments") or []))} for p in parts],
+                "listeners": people,
+                "markers": [{"kind": m["kind"], "says": m["says"],
+                             "tone": "good" if m["kind"] in GOOD_MARKS else "bad" if m["kind"] in BAD_MARKS else "plain"}
+                            for m in r.get("markers") or []],
+                "marks": marks}
+
+
+def report_view(s):
+    """The town's report as the page shows it: how many runs finished, against real people, by task and by family."""
+    def row(name, t):
+        return {"name": name, "done": t["done"], "of": t["of"], "part": t["done"] / t["of"] if t["of"] else 0.0,
+                "pct": f"{round(t['done'] / t['of'] * 100)}%" if t["of"] else ""}
+
+    bench = round(s["benchmark"] * 100)
+    out = {"any": bool(s["runs"]), "runs": s["runs"], "tasks": s["tasks"], "benchmark": s["benchmark"], "bench": f"{bench}%",
+           "all": row("The town", s["all"]), "head": "No run has finished yet.", "sub": "Run a day, and the count starts here.",
+           "checked": False, "checked_runs": 0, "clean": row("", {"done": 0, "of": 0}), "cost": row("", {"done": 0, "of": 0}),
+           "retries": 0, "by_task": [row(g["name"], g) for g in s["by"].get("task", [])],
+           "by_family": [row(g["name"].capitalize(), g) for g in s["by"].get("family", [])]}
+    if s["runs"]:
+        out["head"] = f"{s['all']['done']} of {s['runs']} runs got it done."
+        out["sub"] = (f"{out['all']['pct']} across {s['tasks']} task{'' if s['tasks'] == 1 else 's'}. "
+                      f"Real people in usability tests finish {bench}% of theirs.")
+    if s["checked"]:
+        c = s["checked"]
+        out.update(checked=True, checked_runs=c["runs"], clean=row("", c["clean"]), cost=row("", c["cost"]), retries=c["retries"])
+    return out
+
+
 def spec_again(meta):
     """What to ask the session for to run a saved day once more: same task, same people, same date in the calendar."""
     body = {"locals": list(meta.get("locals", [])), "task": meta.get("ref", ""), "take": True}

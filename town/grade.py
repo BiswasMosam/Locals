@@ -14,7 +14,7 @@ from . import mind
 from .expertise import GUESS, short, tokens
 from .feed import BOLD, DIM, RESET
 from .limits import skim
-from .room import ROOMS, system, told
+from .room import ROOMS, Stopped, system, told
 
 UNSEEN = "posture, gestures and eye contact cannot be seen in a file, and the voice needs a recording"
 
@@ -148,13 +148,16 @@ def marks(l, room, rubric, result, recorded, about, seed):
             "timed_out": silent}
 
 
-def grade(room, result, listeners, recorded, about="", seed=7):
-    """Every grader in the room marks the talk. Prints the marks and returns them."""
+def grade(room, result, listeners, recorded, about="", seed=7, send=None, stop=None):
+    """Every grader in the room marks the talk. Prints the marks and returns them.
+    send and stop: as in room.listen, for a window."""
+    say = send or (lambda entry: None)
     if not room.get("rubric"):
         stayed = sum(min(l["trail"]) >= 50 for l in result["listeners"])
         got = sum(l["recall"].get("same") in ("yes", "partly") for l in result["listeners"])
         n = len(result["listeners"])
         print(f"\n{BOLD}MARKS{RESET}  A crowd gives no marks. {stayed} of {n} stayed with you all the way; {got} of {n} could say your point.")
+        say({"type": "talk", "phase": "marked", "grade": {"rubric": None, "stayed": stayed, "remembered": got, "of": n}})
         return {"rubric": None, "stayed": stayed, "remembered": got, "of": n}
     rubric = rubrics()[room["rubric"]]
     top = len(rubric["criterion"][0]["levels"])
@@ -162,9 +165,13 @@ def grade(room, result, listeners, recorded, about="", seed=7):
     print(f"\n{BOLD}MARKS{RESET}  {rubric['name']} · out of {rubric['out_of']} · {DIM}{rubric['source']}{RESET}")
     graders = [l for l in listeners if l.role == "grader"]
     out = []
+    say({"type": "talk", "phase": "marking", "rubric": rubric["id"], "out_of": rubric["out_of"], "graders": len(graders)})
     for i, l in enumerate(graders):
+        if stop is not None and stop.is_set():
+            raise Stopped()
         g = marks(l, room, rubric, result, recorded, about, seed + 300 + i)
         out.append(g)
+        say({"type": "talk", "phase": "marks", "grader": g})
         head = (f"{g['total']:g} of {rubric['out_of']}" if g["total"] is not None else
                 "no answer from the model in time: is something else using the graphics card? Run it again"
                 if g["timed_out"] else "no mark held up")
@@ -192,4 +199,5 @@ def grade(room, result, listeners, recorded, about="", seed=7):
         spread = f" (from {min(totals):g} to {max(totals):g})" if len(totals) > 1 else ""
         print(f"\n  {BOLD}THE ROOM'S MARK{RESET}  {mean:g} of {rubric['out_of']}{spread}" + (f"  {verdict}" if verdict else ""))
         summary.update({"mean": mean, "low": min(totals), "high": max(totals), "verdict": verdict})
+    say({"type": "talk", "phase": "marked", "grade": summary})
     return summary

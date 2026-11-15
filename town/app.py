@@ -3,6 +3,7 @@
     python -m town                         # what opens it
     python -m town app --demo              # a scripted day, with no model and no browser
     python -m town app --snapshot DIR      # offscreen: each page as a PNG in DIR, then quit
+    python -m town app --open DAY          # with a kept day, or a kept talk, on the page
 
 It holds a Session (town/session.py) in the same program, so there is no server and no port: the day runs in
 its worker, and what the worker reports arrives here as signals. This file is the join between that and the
@@ -25,6 +26,7 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuick import QQuickWindow  # noqa: F401  (without it the window arrives as a plain QWindow, which cannot be grabbed)
 
 from . import appstate, mind, records, session, year
+from .report import summary as town_so_far
 
 UI = Path(__file__).resolve().parent / "ui"
 NIGHT = "#0c0e13"
@@ -39,6 +41,7 @@ class Town(QObject):
     dayReset = Signal()      # the feed began again: a day started, or a kept one was opened or closed
     noticeChanged = Signal()
     comparisonChanged = Signal()
+    talkChanged = Signal()   # the talk on the rooms page moved on
     _arrived = Signal(object)
     _loaded = Signal(object)
 
@@ -47,6 +50,8 @@ class Town(QObject):
         self.session = session.Session(runs)
         self.runs = Path(runs)
         self.live = appstate.Live()
+        self.hall = appstate.Hall()
+        self._rooms, self._talks, self._report = [], [], {}
         self._info, self._families, self._days, self._meta, self._notice = {}, [], [], {}, ""
         self._names, self._asked, self._comparison = {}, 0.0, {}
         self.ran = False  # whether this window has run a day, and so may have left the model loaded
@@ -62,6 +67,8 @@ class Town(QObject):
             self._arrived.emit(q.get())
 
     def _hear(self, entry):
+        if entry.get("type") == "talk":
+            return self._hear_talk(entry)
         again, moment = self.live.hear(entry)
         if again:
             self.dayReset.emit()
@@ -73,8 +80,19 @@ class Town(QObject):
                 self._say(self.live.error)
             self.refresh()
 
+    def _hear_talk(self, entry):
+        self.hall.hear(entry)
+        if entry.get("phase") == "end":
+            if self.hall.error:  # it could not be given at all: back to setting one up, with the reason
+                self._say(self.hall.error)
+                self.hall.clear()
+            self.liveChanged.emit()
+            self.refresh()
+        self.talkChanged.emit()
+
     def _read(self):
-        return {"info": records.town_info(self.session), "days": records.days(self.runs)}
+        return {"info": records.town_info(self.session), "days": records.days(self.runs),
+                "talks": records.talks(self.runs), "report": town_so_far(self.runs)}
 
     def _take(self, got):
         self._info = got["info"]
@@ -84,6 +102,10 @@ class Town(QObject):
         self.live.patience = {p["id"]: p["patience"] for f in self._families for p in f["people"]}
         self._meta = {d["day"]: d for d in got["days"]}
         self._days = [appstate.day_row(d, self._names) for d in got["days"]]
+        folk = {p["id"]: p for f in self._families for p in f["people"]}
+        self._rooms = records.rooms(folk)
+        self._talks = [appstate.talk_row(t) for t in got["talks"]]
+        self._report = appstate.report_view(got["report"])
         self.changed.emit()
 
     def _say(self, words):
@@ -112,7 +134,12 @@ class Town(QObject):
 
     @Property(bool, notify=liveChanged)
     def busy(self):
-        return self.live.running
+        """A day is running, or a talk is being given: one thing at a time, they share the model."""
+        return self.live.running or self.hall.running
+
+    @Property(str, notify=liveChanged)
+    def busyWith(self):
+        return "A talk is being given." if self.hall.running else "A day is already running." if self.live.running else ""
 
     # ---------- setting up a day ----------
 
@@ -151,8 +178,8 @@ class Town(QObject):
     @Slot("QVariantMap", result=str)
     def startDay(self, body):
         """Starts the day the setup page describes. Returns nothing when it started, or the reason it did not."""
-        if self.live.running:
-            return "A day is already running."
+        if self.busy:
+            return self.busyWith
         try:
             spec = session.plan(body)
             self.live.start()
@@ -167,6 +194,66 @@ class Town(QObject):
         self.liveChanged.emit()
         self.refresh()  # a new site or app is now a saved task
         return ""
+
+    @Property(str, notify=changed)
+    def modelProblem(self):
+        """Why nothing can be started on this machine right now, or nothing."""
+        return appstate.estimate(self._info.get("machine", {}), [], 1)["problem"]
+
+    # ---------- a talk in a room ----------
+
+    @Property("QVariantList", notify=changed)
+    def rooms(self):
+        return self._rooms
+
+    @Property("QVariantList", notify=changed)
+    def talks(self):
+        return self._talks
+
+    @Property("QVariantMap", notify=talkChanged)
+    def talk(self):
+        return self.hall.view()
+
+    @Slot("QVariantMap", result=str)
+    def startTalk(self, body):
+        """Gives the talk the rooms page describes. Returns nothing when it began, or the reason it did not."""
+        if self.busy:
+            return self.busyWith
+        try:
+            spec = session.plan_talk(body)
+            self.hall.start()
+            self.session.start(spec)
+            self.ran = True
+        except (ValueError, session.Busy, OSError) as e:
+            self.hall.clear()
+            self.talkChanged.emit()
+            return str(e)
+        self.talkChanged.emit()
+        self.liveChanged.emit()
+        return ""
+
+    @Slot(str)
+    def openTalk(self, talk_id):
+        """Puts a kept talk on the page to be read. Not while one is being given: that one is on the page."""
+        if self.hall.running:
+            return
+        try:
+            self.hall.load(talk_id, records.talk_log(talk_id, self.runs))
+        except (OSError, ValueError, KeyError) as e:
+            return self._say(f"That talk could not be read: {e}")
+        self.talkChanged.emit()
+
+    @Slot()
+    def closeTalk(self):
+        if not self.hall.running:
+            self.hall.clear()
+            self.talkChanged.emit()
+
+    # ---------- the town so far ----------
+
+    @Property("QVariantMap", notify=changed)
+    def report(self):
+        return self._report
 
     # ---------- two days side by side ----------
 
@@ -241,7 +328,7 @@ class Town(QObject):
     @Slot(str)
     def runAgain(self, day_id):
         meta = self._meta.get(day_id)
-        if meta is None or self.live.running:
+        if meta is None or self.busy:
             return
         try:
             spec = session.plan(appstate.spec_again(meta))
@@ -260,6 +347,10 @@ class Town(QObject):
             self.live.stopping = True
             self.session.stop()
             self.liveChanged.emit()
+        elif self.hall.running and not self.hall.stopping:
+            self.hall.stopping = True
+            self.session.stop()
+            self.talkChanged.emit()
 
     def demo(self, finish=False):
         """A scripted day for looking at the window without a model: the same entries a worker sends.
@@ -288,6 +379,63 @@ class Town(QObject):
                           {"type": "day", "phase": "end", **day, "results": {"rohit": "DONE", "sunil": "DONE", "neha": "DONE"}},
                           {"type": "year", "phase": "end", "task": day["task"], "days": []}):
                 self._hear(entry)
+        self.demo_talk(finish)
+
+    def demo_talk(self, finish=False):
+        """A scripted talk for looking at the rooms page without a model: the same entries a worker sends.
+        finish: carry it through to the marks; otherwise it is left part way, still being given."""
+        folk = [("vandana", "grader", 85), ("aryan", "audience", 64), ("sakshi", "audience", 64), ("mohit", "audience", 64)]
+        names = {p["id"]: p for f in self._families for p in f["people"]}
+        titles = ["When the network drops, the order should not", "Where it happens", "What we would change", "Sync, queues and conflict resolution",
+                  "Let me show you", "What it costs"]
+        heard = {"vandana": [(88, "A real shop, a real lost order. Good opening."), (90, "Basements and lifts, yes."), (86, "Save first, send later. Clear."),
+                             (78, "Which version wins is the real question."), (92, "It works with the network off."), (89, "Two developers for a month.")],
+                 "aryan": [(70, "Mine is next, I should listen to how she starts."), (66, "This happens in the lab too."), (61, "Fine."),
+                           (44, ""), (63, "Oh, a demo."), (57, "Almost over.")],
+                 "sakshi": [(72, "I need one question from this."), (69, "Where does the order go?"), (71, "So it waits on the phone."),
+                            (52, "What is a queue here?"), (70, "It sent by itself."), (66, "Who pays for the month?")],
+                 "mohit": [(60, "Attendance."), (51, "Hot in here."), (43, ""), (28, ""), (40, "Something moved on the screen."), (31, "")]}
+        events = {("aryan", 3): [{"kind": "DRIFTING", "part": "P4", "why": "too technical: idempotent, CRDT"}],
+                  ("aryan", 4): [{"kind": "BACK", "part": "P5", "why": "the demonstration"}],
+                  ("mohit", 2): [{"kind": "DRIFTING", "part": "P3", "why": "too long without a break"}],
+                  ("mohit", 3): [{"kind": "PHONE OUT", "part": "P4", "why": "too technical: idempotent, CRDT"}]}
+        say = lambda **e: self.hall.hear({"type": "talk", **e})
+        say(phase="reading", talk="2026-01-01_000000_class", room="class", name="A college class", files=["offline-orders.pptx"])
+        say(phase="start", source="offline-orders.pptx", kind="slides and a script", seconds=600, measured=[],
+            notes=["What is said comes from the speaker notes."],
+            parts=[{"id": f"P{i + 1}", "title": t, "start": i * 100.0, "seconds": 100.0} for i, t in enumerate(titles)],
+            listeners=[{"id": i, "name": names.get(i, {}).get("name", i.capitalize()), "number": names.get(i, {}).get("number", 0),
+                        "job": names.get(i, {}).get("job", ""), "role": role, "why": "", "began": began} for i, role, began in folk])
+        say(phase="point", point="The app should keep working with no network and send the order when the signal returns.", stated="P1")
+        for i in range(len(titles) if finish else 4):
+            say(phase="part", part=f"P{i + 1}", index=i, moments=[{"kind": k, "quote": ""} for k in (["story"], [], [], [], ["demonstration"], [])[i]])
+            for who, _, _ in folk:
+                say(phase="heard", part=f"P{i + 1}", local=who, attention=heard[who][i][0], inner=heard[who][i][1],
+                    unknown=["idempotent", "CRDT"] if i == 3 and who != "vandana" else [], events=events.get((who, i), []))
+        if finish:
+            say(phase="recalling")
+            for who, same, point in (("vandana", "yes", "Orders are saved on the phone first and sent when the signal is back."),
+                                     ("aryan", "partly", "Something about the app working in a basement."),
+                                     ("sakshi", "yes", "The app keeps the order until there is network."), ("mohit", "no", "Not sure what it was about.")):
+                say(phase="recall", local=who, recall={"same": same, "point": point, "remember": "",
+                                                       "question": "How do you know which version of an order wins?" if who == "vandana" else ""})
+            say(phase="room", markers=[{"kind": "brought them back", "part": "P5", "says": "1 time someone came back; first at P5 with the demonstration"},
+                                       {"kind": "remembered the point", "says": "3 of 4 could say your point afterwards"}])
+            mark = lambda level, reason, about: {"level": level, "reason": reason, "about": about}
+            grader = {"grader": "vandana", "name": "Vandana", "job": names.get("vandana", {}).get("job", ""), "total": 16.0, "base": 15.0,
+                      "marks": {"organization": mark(3, "It opens with the shop owner's lost order and comes back to it at the end.", ["P1", "P6"]),
+                                "language": mark(3, "Plain words until the part on queues, which lost the back of the room.", ["P4"]),
+                                "support": mark(3, "The demonstration with the network off showed it working.", ["P5"]),
+                                "message": mark(3, "The point is said in the first part and again at the close.", ["P1"])},
+                      "not marked": {"delivery": ""}, "dropped": [], "markers": [["brought them back", 1]], "verdict": "",
+                      "overall": "A clear talk. Explain the part on queues in plainer words.", "timed_out": False}
+            say(phase="marking", rubric="oral-communication", out_of=20, graders=1)
+            say(phase="marks", grader=grader)
+            say(phase="marked", grade={"rubric": "oral-communication", "out_of": 20, "graders": [grader], "mean": 16.0, "low": 16.0,
+                                       "high": 16.0, "verdict": ""})
+            say(phase="end", talk="2026-01-01_000000_class")
+        self.talkChanged.emit()
+        self.liveChanged.emit()
 
 
 def pages_of(window):
@@ -376,7 +524,10 @@ def main(demo=False, snapshot=None, size=None, open_day=None, finish=False):
     app.aboutToQuit.connect(leave)
     if demo:
         town.demo(finish)
-    if open_day:
+    if open_day and records.TALK_ID.fullmatch(open_day):
+        town.openTalk(open_day)
+        window.setProperty("page", "rooms")
+    elif open_day:
         town.openDay(open_day)
     if snapshot:
         out, pages = Path(snapshot), pages_of(window)

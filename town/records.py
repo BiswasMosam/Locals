@@ -1,11 +1,14 @@
 """What the town can tell whoever is showing it: who lives here, what can be run, this machine, and the days kept in runs/."""
 import json
+import re
 from datetime import date
 from pathlib import Path
 
 from . import machine, people, tasks, year
 from .people import ROOT
 from .session import RUNS
+
+TALK_ID = re.compile(r"\d{4}-\d{2}-\d{2}_\d{6}_[a-z]+")
 
 
 def profile_title(profile):
@@ -55,3 +58,39 @@ def day_log(day_id, runs=RUNS):
         if feed.exists():
             entries += [e for e in map(json.loads, feed.open(encoding="utf-8")) if "type" in e]
     return {"meta": meta, "entries": entries}
+
+
+def rooms(folk):
+    """The rooms a talk can be given in, with who sits in each. folk: the town's people by id, each with a name and a job."""
+    from . import grade, room
+    out = []
+    for r in room.rooms().values():
+        rubric = grade.rubrics().get(r.get("rubric") or "")
+        out.append({"id": r["id"], "name": r["name"], "about": r.get("about", ""), "where": r.get("where", ""),
+                    "when": r.get("when", ""), "minutes": r.get("minutes", 0), "point_by": r.get("point_by", 0),
+                    "rubric": rubric["name"] if rubric else "", "out_of": rubric["out_of"] if rubric else 0,
+                    "seats": [{"id": s["local"], "name": folk.get(s["local"], {}).get("name", s["local"]),
+                               "job": folk.get(s["local"], {}).get("job", ""), "grader": s["role"] == "grader", "why": s["why"]}
+                              for s in r["seats"]]})
+    return out
+
+
+def talks(runs=RUNS, limit=40):
+    """The talks kept in runs/rooms, newest first, each as its room.json with its folder's name under "talk"."""
+    out = []
+    for path in sorted((Path(runs) / "rooms").glob("*/room.json"), reverse=True):
+        if not TALK_ID.fullmatch(path.parent.name):
+            continue
+        try:
+            out.append({**json.loads(path.read_text(encoding="utf-8")), "talk": path.parent.name})
+        except (OSError, ValueError):
+            continue  # a file somebody cut short is not a talk to list
+        if len(out) >= limit:
+            break
+    return out
+
+
+def talk_log(talk_id, runs=RUNS):
+    if not TALK_ID.fullmatch(talk_id):
+        raise ValueError(f"{talk_id} is not a talk.")
+    return json.loads((Path(runs) / "rooms" / talk_id / "room.json").read_text(encoding="utf-8"))

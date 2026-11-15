@@ -2,6 +2,7 @@
 of the struggle was the model's own mistakes rather than the locals' (study/limits.md)."""
 import json
 from collections import defaultdict
+from functools import cache
 from pathlib import Path
 
 from . import people
@@ -23,6 +24,7 @@ def rows(runs_dir):
     return out
 
 
+@cache
 def family(local_id):
     try:
         folder = Path(people.load(local_id).profile).parent.name
@@ -31,27 +33,43 @@ def family(local_id):
     return "ring one" if folder == "profiles" else folder
 
 
-def rate(rs):
-    done = sum(r["outcome"] in FINISHED for r in rs)
-    return f"{done} of {len(rs)}".ljust(10) + (f"{done / len(rs):>4.0%}" if rs else "   -")
+def tally(rs):
+    return {"done": sum(r["outcome"] in FINISHED for r in rs), "of": len(rs)}
 
 
-def report(runs_dir):
+def rate(t):
+    return f"{t['done']} of {t['of']}".ljust(10) + (f"{t['done'] / t['of']:>4.0%}" if t["of"] else "   -")
+
+
+def summary(runs_dir):
+    """The numbers behind the report, for whoever shows them: the command line below, or the window."""
     counted = [r for r in rows(runs_dir) if r["outcome"] not in ("STOPPED", "ERROR")]
-    if not counted:
-        return "No finished runs yet. Run a day first: python -m town run pixelshift:small-jpg rohit sunil"
     measured = [r for r in counted if r["unfixed"] is not None]
-    clean = [r for r in measured if r["unfixed"] == 0]
-    lines = [f"THE TOWN SO FAR · {len(counted)} runs on {len({r['task'] for r in counted})} task(s)", "",
-             f"  finished                     {rate(counted)}   real people in usability tests: {BENCHMARK:.0%}"]
+    out = {"runs": len(counted), "tasks": len({r["task"] for r in counted}), "all": tally(counted), "benchmark": BENCHMARK,
+           "checked": None, "by": {}}
     if measured:
-        lines += [f"  runs checked for model mistakes ({len(measured)}, the newer ones):",
-                  f"    clean, no mistake cost a step  {rate(clean)}",
-                  f"    a mistake cost a step          {rate([r for r in measured if r['unfixed']])}",
-                  f"    answers the model gave again   {sum(r['retries'] for r in measured)}"]
-    for title, key in (("by task", lambda r: r["task"]), ("by family", lambda r: family(r["local"]))):
+        out["checked"] = {"runs": len(measured), "clean": tally([r for r in measured if r["unfixed"] == 0]),
+                          "cost": tally([r for r in measured if r["unfixed"]]), "retries": sum(r["retries"] for r in measured)}
+    for title, key in (("task", lambda r: r["task"]), ("family", lambda r: family(r["local"]))):
         groups = defaultdict(list)
         for r in counted:
             groups[key(r)].append(r)
-        lines += ["", f"  {title}"] + [f"    {name[:28]:<28} {rate(rs)}" for name, rs in sorted(groups.items())]
+        out["by"][title] = [{"name": name, **tally(rs)} for name, rs in sorted(groups.items())]
+    return out
+
+
+def report(runs_dir):
+    s = summary(runs_dir)
+    if not s["runs"]:
+        return "No finished runs yet. Run a day first: python -m town run pixelshift:small-jpg rohit sunil"
+    lines = [f"THE TOWN SO FAR · {s['runs']} runs on {s['tasks']} task(s)", "",
+             f"  finished                     {rate(s['all'])}   real people in usability tests: {BENCHMARK:.0%}"]
+    if s["checked"]:
+        c = s["checked"]
+        lines += [f"  runs checked for model mistakes ({c['runs']}, the newer ones):",
+                  f"    clean, no mistake cost a step  {rate(c['clean'])}",
+                  f"    a mistake cost a step          {rate(c['cost'])}",
+                  f"    answers the model gave again   {c['retries']}"]
+    for title in ("task", "family"):
+        lines += ["", f"  by {title}"] + [f"    {g['name'][:28]:<28} {rate(g)}" for g in s["by"][title]]
     return "\n".join(lines)
