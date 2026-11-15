@@ -42,6 +42,101 @@ def families(groups):
     return list(out.values())
 
 
+def roster(groups):
+    """Everyone by family and then by job, for choosing who goes out: so many of each job, first in the file first."""
+    out = {}
+    for g in groups:
+        fam = out.setdefault(g["family"], {"family": g["family"], "jobs": []})
+        fam["jobs"].append({"key": g["key"], "label": g["label"],
+                            "people": [{"id": p["id"], "name": p["name"], "patience": p["limits"]["patience_steps"]} for p in g["people"]]})
+    return list(out.values())
+
+
+def spell(seconds):
+    if seconds < 90:
+        return f"{round(seconds)} seconds"
+    if seconds < 5400:
+        return f"{round(seconds / 60)} minutes"
+    return f"{seconds / 3600:.1f} hours"
+
+
+def estimate(machine, patience, days, kind="saved", has_apk=True):
+    """What a day with these locals will cost this machine, and the one thing that stops it starting, if anything.
+    patience is each chosen local's steps of patience. More locals take more time, not more GPU memory: they
+    share one model and take turns."""
+    model, gpu, pace = machine.get("model") or {}, machine.get("gpu"), machine.get("pace") or {}
+    secs, usual = pace.get("secs_per_step", 6.0), pace.get("steps_per_task", 6.0)
+    typical = days * sum(min(p, usual) * secs for p in patience)
+    worst = days * sum(p * secs for p in patience)
+    n = len(patience)
+    out = {"time": f"About {spell(typical)}" if n else "Nobody yet", "typical": typical, "worst": worst,
+           "note": (f"{n} local{'' if n == 1 else 's'}{f' on {days} days' if days > 1 else ''}, one at a time. "
+                    f"Up to {spell(worst)} if everyone uses all their patience. "
+                    + (f"{secs} seconds a step, measured on this machine." if pace.get("measured")
+                       else "Reckoned at 6 seconds a step until a day has run here.")) if n else "Choose who goes out.",
+           "gpu": "", "gpu_part": -1.0, "gpu_tight": False}
+    if gpu:
+        need = (model.get("size_gb") or 2.5) + 0.4
+        other = max(0.0, gpu["used_gb"] - (model.get("vram_gb", 0) if model.get("loaded") else 0))
+        tight = other + need > gpu["total_gb"]
+        out.update(gpu_part=(other + need) / gpu["total_gb"], gpu_tight=tight,
+                   gpu=("Not enough free GPU memory, so part of the model runs on the processor. Slower, but it works."
+                        if tight else f"The model needs about {need:.1f} GB of the GPU's {gpu['total_gb']:.0f}; "
+                                      f"other things are using {other:.1f}."))
+    else:
+        out["gpu"] = "No NVIDIA GPU found, so the model runs on the processor. Slower, but it works."
+    android = machine.get("android") or {}
+    out["problem"] = ("Ollama is not running. Start it, then come back." if not model.get("reachable")
+                      else f"The model is not downloaded yet. Run: ollama pull {model.get('name', '')}" if not model.get("installed")
+                      else "Start an Android emulator or connect a phone first." if kind == "apk" and not android.get("devices")
+                      else "Choose the app's APK file first." if kind == "apk" and not has_apk
+                      else "")
+    return out
+
+
+def _side(log, names):
+    """One day, per local: how it ended, in how many steps, and how often they were stuck or slipped."""
+    meta, out = log["meta"], {}
+    for i in meta.get("locals", []):
+        mine = [e for e in log["entries"] if e.get("local") == i]
+        run = (meta.get("runs") or {}).get(i) or {}
+        outcome = (meta.get("results") or {}).get(i, "")
+        if not outcome:
+            continue  # the day ended before their turn
+        out[i] = {"name": names.get(i, i), "outcome": outcome,
+                  "steps": run.get("steps", sum(e.get("type") == "step" for e in mine)),
+                  "stuck": sum(e.get("kind") == "STUCK" for e in mine), "slips": sum(e.get("kind") == "SLIP" for e in mine)}
+    return out
+
+
+def compare(before, after, names):
+    """Two kept days side by side, the earlier first: who did better, who did worse, and the count each way.
+    Meant for the same task before and after a change to the app; it says so when the tasks differ."""
+    if before["meta"]["day"] > after["meta"]["day"]:
+        before, after = after, before
+    a, b = _side(before, names), _side(after, names)
+    rows, tally = [], {"better": 0, "worse": 0}
+    for i in [*a, *(k for k in b if k not in a)]:
+        x, y = a.get(i), b.get(i)
+        if x and y:
+            was, now = x["outcome"] in FINISHED, y["outcome"] in FINISHED
+            change = ("better" if now and not was else "worse" if was and not now
+                      else "quicker" if now and y["steps"] < x["steps"] else "slower" if now and y["steps"] > x["steps"] else "same")
+        else:
+            change = "only after" if y else "only before"
+        if change in tally:
+            tally[change] += 1
+        rows.append({"id": i, "name": (x or y)["name"], "before": x or {}, "after": y or {}, "change": change})
+    count = lambda side: f"{sum(v['outcome'] in FINISHED for v in side.values())} of {len(side)}"
+    both = [r for r in rows if r["before"] and r["after"]]
+    note = (f"{tally['better']} did better and {tally['worse']} did worse, of the {len(both)} who went out both days."
+            if both else "Nobody went out on both days, so there is no one to compare.")
+    return {"head": f"{count(a)} got it done, then {count(b)}.", "note": note, "rows": rows,
+            "same_task": before["meta"].get("task") == after["meta"].get("task"),
+            "before": {"day": before["meta"]["day"], "task": before["meta"].get("task", ""), "today": before["meta"].get("today", "")},
+            "after": {"day": after["meta"]["day"], "task": after["meta"].get("task", ""), "today": after["meta"].get("today", "")}}
+
+
 def day_row(meta, names):
     """One saved day as the list shows it."""
     results = meta.get("results") or {}

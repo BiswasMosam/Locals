@@ -9,7 +9,7 @@ Window {
     minimumWidth: 980
     minimumHeight: 620
 
-    readonly property var pages: ["town", "days"]
+    readonly property var pages: ["town", "setup", "days"]
     property string page: "town"
     property bool leaving: false
 
@@ -22,7 +22,8 @@ Window {
     }
 
     Shortcut { sequence: "Ctrl+1"; onActivated: root.page = "town" }
-    Shortcut { sequence: "Ctrl+2"; onActivated: root.page = "days" }
+    Shortcut { sequence: "Ctrl+2"; onActivated: root.page = "setup" }
+    Shortcut { sequence: "Ctrl+3"; onActivated: root.page = "days" }
     Shortcut { sequence: "F5"; onActivated: town.refresh() }
     Shortcut { sequence: "F11"; onActivated: root.visibility = root.visibility === Window.FullScreen ? Window.Windowed : Window.FullScreen }
 
@@ -36,7 +37,9 @@ Window {
     Item {
         id: stage
         anchors { left: rail.right; right: parent.right; top: parent.top; bottom: strip.top }
-        Home { anchors.fill: parent; opacity: root.page === "town" ? 1 : 0; visible: opacity > 0
+        Setup { onStarted: root.page = "town"; anchors.fill: parent; opacity: root.page === "setup" ? 1 : 0; visible: opacity > 0
+                Behavior on opacity { NumberAnimation { duration: 140 } } }
+        Home { onSetUp: root.page = "setup"; anchors.fill: parent; opacity: root.page === "town" ? 1 : 0; visible: opacity > 0
                Behavior on opacity { NumberAnimation { duration: 140 } } }
         Days { onOpened: root.page = "town"; anchors.fill: parent; opacity: root.page === "days" ? 1 : 0; visible: opacity > 0
                Behavior on opacity { NumberAnimation { duration: 140 } } }

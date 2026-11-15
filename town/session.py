@@ -24,6 +24,8 @@ import json
 import os
 import queue
 import re
+import secrets
+import shutil
 import signal
 import subprocess
 import sys
@@ -56,6 +58,19 @@ def kill_tree(pid):
         os.killpg(os.getpgid(pid), signal.SIGKILL)
     except (ProcessLookupError, PermissionError):
         pass
+
+
+def keep_file(source, runs=RUNS):
+    """Copies a file somebody chose into runs/_uploads/, where a task card may point at it, and says where it went.
+    The folder's name is random, so two files with one name never meet and a card cannot name a path outside it."""
+    source = Path(source)
+    if not source.is_file():
+        raise ValueError(f"{source.name} is not a file that can be read.")
+    name = re.sub(r"[^A-Za-z0-9._-]+", "_", source.name)[:80] or "file"
+    folder = Path(runs) / "_uploads" / secrets.token_hex(4)
+    folder.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, folder / name)
+    return {"name": name, "path": (folder / name).relative_to(ROOT).as_posix(), "size": (folder / name).stat().st_size}
 
 
 def parse_days(values):

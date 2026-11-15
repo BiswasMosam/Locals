@@ -153,7 +153,103 @@ class VerdictTests(unittest.TestCase):
         self.assertEqual(appstate.verdict("a.example: x", [{"results": {"a": "DONE", "b": "DONE"}}] * 2)["head"], "Your site is great all year.")
 
 
+def kept(day_id, results, steps, task="PixelShift: small-jpg", stuck=()):
+    """A kept day as records.day_log returns it."""
+    entries = [step(i, n + 1) for i, count in steps.items() for n in range(count)] + [event(i, "STUCK") for i in stuck]
+    return {"meta": {"day": day_id, "task": task, "locals": list(steps), "results": results,
+                     "runs": {i: {"steps": n} for i, n in steps.items() if i in results}}, "entries": entries}
+
+
+class CompareTests(unittest.TestCase):
+    """Two days of one task, before and after a change to the app, is the question the days are kept for."""
+
+    def test_the_earlier_day_is_first_whichever_was_picked_first(self):
+        old = kept("2026-11-03_145536", {"rohit": "DONE", "rashmi": "GAVE UP", "anil": "DONE", "meera": "DONE"},
+                   {"rohit": 10, "rashmi": 9, "anil": 7, "meera": 4}, stuck=["rashmi", "rashmi"])
+        new = kept("2026-11-03_153643", {"rohit": "GAVE UP", "rashmi": "DONE", "anil": "DONE", "sunil": "DONE"},
+                   {"rohit": 12, "rashmi": 4, "anil": 5, "sunil": 3})
+        c = appstate.compare(new, old, {"rohit": "Rohit"})
+        self.assertEqual((c["before"]["day"], c["after"]["day"], c["same_task"]), ("2026-11-03_145536", "2026-11-03_153643", True))
+        self.assertEqual(c["head"], "3 of 4 got it done, then 3 of 4.")
+        self.assertEqual({r["id"]: r["change"] for r in c["rows"]},
+                         {"rohit": "worse", "rashmi": "better", "anil": "quicker", "meera": "only before", "sunil": "only after"})
+        self.assertEqual(c["note"], "1 did better and 1 did worse, of the 3 who went out both days.")
+        rashmi = next(r for r in c["rows"] if r["id"] == "rashmi")
+        self.assertEqual((rashmi["before"]["stuck"], rashmi["before"]["steps"], rashmi["after"]["steps"]), (2, 9, 4))
+        self.assertEqual(c["rows"][0]["name"], "Rohit")
+
+    def test_someone_the_day_ended_before_is_not_counted_as_having_gone(self):
+        stopped = kept("2026-11-15_025439", {"rohit": "STOPPED"}, {"rohit": 1, "sunil": 0})
+        later = kept("2026-11-15_063444", {"sunil": "DONE"}, {"sunil": 3})
+        c = appstate.compare(stopped, later, {})
+        self.assertEqual(c["head"], "0 of 1 got it done, then 1 of 1.")
+        self.assertEqual(c["note"], "Nobody went out on both days, so there is no one to compare.")
+
+    def test_two_different_tasks_are_said_to_be_different(self):
+        c = appstate.compare(kept("2026-11-03_145536", {"a": "DONE"}, {"a": 2}),
+                             kept("2026-11-04_182107", {"a": "DONE"}, {"a": 2}, task="Fill.ai: fill-job-form"), {})
+        self.assertFalse(c["same_task"])
+        self.assertEqual(c["rows"][0]["change"], "same")
+
+
+class EstimateTests(unittest.TestCase):
+    MACHINE = {"gpu": {"name": "RTX 4060", "total_gb": 8.0, "used_gb": 2.0},
+               "model": {"name": "qwen3:4b-instruct", "reachable": True, "installed": True, "size_gb": 2.3, "loaded": False, "vram_gb": 0},
+               "pace": {"secs_per_step": 8.0, "steps_per_task": 5.0, "measured": True}, "android": {"adb": True, "devices": []}}
+
+    def test_more_locals_and_more_days_take_more_time(self):
+        one = appstate.estimate(self.MACHINE, [10], 1)
+        self.assertEqual((one["typical"], one["worst"], one["time"], one["problem"]), (40.0, 80.0, "About 40 seconds", ""))
+        year = appstate.estimate(self.MACHINE, [10, 3], 12)
+        self.assertEqual((year["typical"], year["worst"]), (12 * (40 + 24), 12 * (80 + 24)))  # nobody takes more steps than their patience
+        self.assertIn("2 locals on 12 days", year["note"])
+
+    def test_what_stops_a_day_is_said_before_it_is_started(self):
+        down = {**self.MACHINE, "model": {"reachable": False}}
+        self.assertIn("Ollama is not running", appstate.estimate(down, [10], 1)["problem"])
+        missing = {**self.MACHINE, "model": {**self.MACHINE["model"], "installed": False}}
+        self.assertIn("ollama pull qwen3:4b-instruct", appstate.estimate(missing, [10], 1)["problem"])
+        self.assertIn("emulator", appstate.estimate(self.MACHINE, [10], 1, "apk")["problem"])
+        ready = {**self.MACHINE, "android": {"adb": True, "devices": ["emulator-5554"]}}
+        self.assertIn("APK", appstate.estimate(ready, [10], 1, "apk", has_apk=False)["problem"])
+        self.assertEqual(appstate.estimate(ready, [10], 1, "apk")["problem"], "")
+
+    def test_a_full_gpu_is_a_warning_and_not_a_refusal(self):
+        full = {**self.MACHINE, "gpu": {"name": "RTX 4060", "total_gb": 8.0, "used_gb": 7.0}}
+        e = appstate.estimate(full, [10], 1)
+        self.assertTrue(e["gpu_tight"])
+        self.assertEqual(e["problem"], "")
+        self.assertEqual(appstate.estimate({**self.MACHINE, "gpu": None}, [], 1)["time"], "Nobody yet")
+
+
+class KeepTests(unittest.TestCase):
+    def test_a_chosen_file_is_copied_where_a_task_card_may_point(self):
+        import shutil
+        import tempfile
+        from pathlib import Path
+        from town import session
+        from town.people import ROOT
+        (ROOT / "runs").mkdir(exist_ok=True)
+        runs = Path(tempfile.mkdtemp(dir=ROOT / "runs", prefix="_test-"))
+        self.addCleanup(shutil.rmtree, runs, True)
+        source = runs / "my app (final).apk"
+        source.write_bytes(b"12345")
+        got = session.keep_file(source, runs)
+        self.assertEqual((got["name"], got["size"]), ("my_app_final_.apk", 5))
+        self.assertTrue((ROOT / got["path"]).is_file())
+        self.assertRegex(got["path"], r"/_uploads/[0-9a-f]{8}/my_app_final_\.apk$")
+        with self.assertRaises(ValueError):
+            session.keep_file(runs / "not-there.apk", runs)
+
+
 class RowsTests(unittest.TestCase):
+    def test_the_roster_is_everyone_once_by_family_and_job(self):
+        from town import records, session
+        roster = appstate.roster(records.town_info(session.Session())["groups"])
+        ids = [p["id"] for f in roster for j in f["jobs"] for p in j["people"]]
+        self.assertEqual(sorted(ids), sorted(l.id for l in people.everyone()))
+        self.assertTrue(all(p["patience"] > 0 for f in roster for j in f["jobs"] for p in j["people"]))
+
     def test_everyone_in_town_is_one_window_in_one_family(self):
         from town import records, session
         fams = appstate.families(records.town_info(session.Session())["groups"])

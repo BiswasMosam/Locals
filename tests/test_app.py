@@ -40,7 +40,7 @@ class WindowTests(unittest.TestCase):
         self.assertTrue(engine.rootObjects(), warnings)
         window = engine.rootObjects()[0]
         town.demo()
-        self.assertEqual(app.pages_of(window), ["town", "days"])
+        self.assertEqual(app.pages_of(window), ["town", "setup", "days"])
         for page in app.pages_of(window):
             window.setProperty("page", page)
             qt.processEvents()
@@ -48,7 +48,11 @@ class WindowTests(unittest.TestCase):
         for call in ("town.refresh()", "town.dismiss()", "town.runAgain('no-such-day')", "town.stop()",
                      "town.now.states['rohit']", "town.machine.model.name", "town.families[0].people[0].reads",
                      "town.openDay('no-such-day')", "town.closeDay()", "town.strips.length", "town.moments.length",
-                     "town.now.verdict.win", "town.root.length"):
+                     "town.now.verdict.win", "town.root.length", "town.tasks[0].ref", "town.roster[0].jobs[0].people[0].patience",
+                     "town.calendar.sample.length", "town.today('2026-07-01', '').label", "town.today('1800-01-01', '').ok",
+                     "town.estimate([10, 12], 1, 'saved', false).time", "town.keepFile('no-such-file.apk').error",
+                     "town.startDay({locals: []})", "town.compare('no-such-day', 'nor-this')", "town.comparison.rows",
+                     "town.endCompare()"):
             said = QQmlExpression(engine.rootContext(), window, call)
             said.evaluate()
             self.assertFalse(said.hasError(), f"{call}: {said.error().toString()}")

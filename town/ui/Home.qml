@@ -4,6 +4,7 @@ import QtQuick
 // local is looking at and what they think, the town below, and a strip and a feed beside it.
 Item {
     id: home
+    signal setUp()
     readonly property var now: town.now
     readonly property bool day: now.open
     readonly property int total: town.families.reduce((n, f) => n + f.people.length, 0)
@@ -84,6 +85,14 @@ Item {
             font.pixelSize: home.day ? 14 : 16; color: Theme.dim
         }
 
+        Btn {
+            anchors.top: sub.bottom; anchors.topMargin: 22
+            visible: !home.day && !home.now.running
+            strong: true
+            text: "Set up a day"
+            onPressed: home.setUp()
+        }
+
         // Who the pointer is on, in a fixed place so nothing jumps or covers the windows.
         Item {
             id: who
@@ -109,7 +118,7 @@ Item {
             width: parent.width
             // With a day on the page the town steps back to a band along the bottom, and off a short window altogether.
             readonly property real band: left.height < 520 ? 0 : Math.max(120, Math.min(190, left.height * 0.24))
-            height: home.day ? band : Math.max(0, left.height - sub.y - sub.height - 24 - who.height - 20)
+            height: home.day ? band : Math.max(0, left.height - sub.y - sub.height - 78 - who.height - 20)
             visible: height > 0
             Behavior on height { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
             states: home.now.states

@@ -10,6 +10,7 @@ Rectangle {
 
     readonly property var places: [
         { name: "town", label: "Town", rows: ["...X...", "..XXX..", ".XXXXX.", "XXXXXXX", ".X...X.", ".X.X.X.", ".X.X.X."] },
+        { name: "setup", label: "Set up", rows: [".X.....", "XXXXXXX", ".X.....", ".....X.", "XXXXXXX", ".....X.", "......."] },
         { name: "days", label: "Days", rows: ["XXXXXXX", "X.....X", "XXXXXXX", "X.X.X.X", "XXXXXXX", "X.X.X.X", "XXXXXXX"] }
     ]
 

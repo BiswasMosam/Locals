@@ -14,6 +14,7 @@ It opens where and as big as it was last closed, if that place is still on a mon
 import json
 import os
 import sys
+from datetime import date
 import threading
 import time
 from pathlib import Path
@@ -23,7 +24,7 @@ from PySide6.QtGui import QGuiApplication, QIcon, QImage, QPainter, QColor, QPix
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuick import QQuickWindow  # noqa: F401  (without it the window arrives as a plain QWindow, which cannot be grabbed)
 
-from . import appstate, mind, records, session
+from . import appstate, mind, records, session, year
 
 UI = Path(__file__).resolve().parent / "ui"
 NIGHT = "#0c0e13"
@@ -37,6 +38,7 @@ class Town(QObject):
     heard = Signal("QVariantMap")  # each moment of the day as it arrives, for the feed
     dayReset = Signal()      # the feed began again: a day started, or a kept one was opened or closed
     noticeChanged = Signal()
+    comparisonChanged = Signal()
     _arrived = Signal(object)
     _loaded = Signal(object)
 
@@ -46,7 +48,7 @@ class Town(QObject):
         self.runs = Path(runs)
         self.live = appstate.Live()
         self._info, self._families, self._days, self._meta, self._notice = {}, [], [], {}, ""
-        self._names, self._asked = {}, 0.0
+        self._names, self._asked, self._comparison = {}, 0.0, {}
         self.ran = False  # whether this window has run a day, and so may have left the model loaded
         self._arrived.connect(self._hear)
         self._loaded.connect(self._take)
@@ -111,6 +113,80 @@ class Town(QObject):
     @Property(bool, notify=liveChanged)
     def busy(self):
         return self.live.running
+
+    # ---------- setting up a day ----------
+
+    @Property("QVariantList", notify=changed)
+    def tasks(self):
+        return self._info.get("tasks", [])
+
+    @Property("QVariantList", notify=changed)
+    def roster(self):
+        return appstate.roster(self._info.get("groups", []))
+
+    @Property("QVariantMap", notify=changed)
+    def calendar(self):
+        return self._info.get("calendar", {})
+
+    @Slot(str, str, result="QVariantMap")
+    def today(self, day, pandemic):
+        """What that date is like in town, in a line; or why it cannot be run."""
+        try:
+            return {"ok": True, "label": year.today(date.fromisoformat(day), pandemic or None).label()}
+        except ValueError as e:
+            return {"ok": False, "label": str(e)}
+
+    @Slot("QVariantList", int, str, bool, result="QVariantMap")
+    def estimate(self, patience, days, kind, has_apk):
+        return appstate.estimate(self._info.get("machine", {}), [int(p) for p in patience], max(1, days), kind, has_apk)
+
+    @Slot(str, result="QVariantMap")
+    def keepFile(self, url):
+        """A file dropped on the window or chosen from disk, copied to where a task card can use it."""
+        try:
+            return session.keep_file(QUrl(url).toLocalFile() if "://" in url else url, self.runs)
+        except (OSError, ValueError) as e:
+            return {"error": str(e)}
+
+    @Slot("QVariantMap", result=str)
+    def startDay(self, body):
+        """Starts the day the setup page describes. Returns nothing when it started, or the reason it did not."""
+        if self.live.running:
+            return "A day is already running."
+        try:
+            spec = session.plan(body)
+            self.live.start()
+            self.dayReset.emit()
+            self.session.start(spec)
+            self.ran = True
+        except (ValueError, session.Busy, OSError) as e:
+            self.live.clear()
+            self.dayReset.emit()
+            self.liveChanged.emit()
+            return str(e)
+        self.liveChanged.emit()
+        self.refresh()  # a new site or app is now a saved task
+        return ""
+
+    # ---------- two days side by side ----------
+
+    @Property("QVariantMap", notify=comparisonChanged)
+    def comparison(self):
+        return self._comparison
+
+    @Slot(str, str)
+    def compare(self, one, other):
+        try:
+            self._comparison = appstate.compare(records.day_log(one, self.runs), records.day_log(other, self.runs), self._names)
+        except (OSError, ValueError, KeyError) as e:
+            self._say(f"Those days could not be compared: {e}")
+            self._comparison = {}
+        self.comparisonChanged.emit()
+
+    @Slot()
+    def endCompare(self):
+        self._comparison = {}
+        self.comparisonChanged.emit()
 
     @Property("QVariantList", notify=liveChanged)
     def strips(self):
