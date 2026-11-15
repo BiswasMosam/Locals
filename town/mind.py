@@ -133,6 +133,16 @@ def describe(screen, local, history, notes, only=None):
     return "\n".join(lines)
 
 
+def unload():
+    """Hands the GPU memory back. Other things on this machine want it, and the model would sit there ten more minutes."""
+    body = json.dumps({"model": MODEL, "keep_alive": 0}).encode()
+    try:
+        urllib.request.urlopen(urllib.request.Request(f"{OLLAMA}/api/generate", data=body,
+                                                      headers={"Content-Type": "application/json"}), timeout=5).read()
+    except (OSError, ValueError):
+        pass
+
+
 def decide(system, user, seed):
     return chat(system, user, DECISION, seed)
 

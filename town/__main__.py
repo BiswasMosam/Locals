@@ -14,7 +14,11 @@ def main():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(prog="python -m town", description="Locals: a small town of AI users that lives on your machine.")
-    sub = ap.add_subparsers(dest="cmd", required=True)
+    sub = ap.add_subparsers(dest="cmd")
+    win = sub.add_parser("app", help="open the town in its own window (what python -m town does with nothing after it)")
+    win.add_argument("--demo", action="store_true", help="a scripted day, with no model and no browser")
+    win.add_argument("--snapshot", help="offscreen: save each page as a PNG in this folder, then quit")
+    win.add_argument("--size", help="open at this size, like 1360x860, for checking")
     board = sub.add_parser("dashboard", help="open the town in your browser")
     board.add_argument("--port", type=int, default=7300)
     board.add_argument("--no-open", action="store_true", help="do not open a browser tab")
@@ -68,6 +72,15 @@ def main():
     cal.add_argument("local", help="local id, for example prakash")
     cal.add_argument("--apply", action="store_true", help="write the measured numbers into the local's file")
     args = ap.parse_args()
+
+    if args.cmd in (None, "app"):
+        try:
+            from .app import main as window
+        except ImportError as e:
+            raise SystemExit(f"The window needs PySide6 ({e.name} is missing). Run: pip install -r requirements.txt\n"
+                             "Everything else works without it: python -m town --help")
+        size = tuple(int(v) for v in args.size.split("x")) if getattr(args, "size", None) else None
+        return window(getattr(args, "demo", False), getattr(args, "snapshot", None), size)
 
     if args.cmd == "dashboard":
         from .dashboard import serve
