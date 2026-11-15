@@ -3,7 +3,8 @@ window itself knows, worked out by its own code (town/appstate.py, town/records.
 
     .venv/Scripts/python docs/make_data.py      (macOS or Linux: .venv/bin/python)
 
-Kept days of your own sites (tasks/mine) and Android days stay out, and so do interview talks: they are personal."""
+Kept days of your own sites (tasks/mine) and Android days stay out, and so do interview talks: they are personal.
+The report counts only days of the public tasks, so runs of your own sites stay out of its numbers as well."""
 import json
 import sys
 from datetime import date, timedelta
@@ -90,6 +91,14 @@ for t in records.talks(RUNS, limit=200):
     hall.load(row["talk"], records.talk_log(row["talk"], RUNS))
     talk_rows.append(row)
     talk_views[row["talk"]] = hall.view()
+
+# ---- the town's report, worked out by the window's own summary() over the public tasks' days only ----
+from town import report as town_report  # noqa: E402
+
+public_tasks = {t["ref"] for t in catalogue}
+shown_days = {m["day"] for m in records.days(RUNS, limit=10_000) if m.get("ref") in public_tasks}
+every_row = town_report.rows
+town_report.rows = lambda runs_dir: [r for r in every_row(runs_dir) if r["day"] in shown_days]
 
 data = {
     "families": fams,

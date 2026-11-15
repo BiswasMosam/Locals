@@ -26,6 +26,8 @@
 
 A hundred and fourteen locals live here: cooks, shop owners, lawyers, photographers, engineers, nurses, teachers, students and more. One at a time they try your website or Android app, thinking out loud, while the window shows every step and the exact screen they saw.
 
+You can walk around the window in your browser, on real kept days, at [mosambiswas.com/Locals](https://www.mosambiswas.com/Locals/).
+
 ## A real run
 
 Rohit is a junior advocate in a court corridor with an old phone. He reads the first six words of anything. His task: make a photo smaller in [PixelShift](https://github.com/BiswasMosam/PixelShift).
